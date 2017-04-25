@@ -1,0 +1,5 @@
+#! /usr/bin/python
+import os
+os.system("gcc -g -o r3 rec03.c")
+os.system("./r3")
+

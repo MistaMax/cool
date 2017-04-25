@@ -1,0 +1,14 @@
+60
+Before:
+a=10 b=20 
+After:
+a=20 b=10 
+a=20 b=10 *pa=10 *pb=20
+a=20
+a=20
+a=20
+a=21
+pa=0x7fff2a033338 pb=0x7fff2a033334 *pa=10 *pb=21
+pa=0x7fff2a033334 pb=0x7fff2a033338 *pa=21 *pb=10
+pa=0x7fff2a033338 pb=0x7fff2a033334 *pa=10 *pb=21
+pa=0x7fff2a033334 pb=0x7fff2a033338 *pa=21 *pb=10

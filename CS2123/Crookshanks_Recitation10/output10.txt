@@ -1,0 +1,16 @@
+Enter commands in the following forms:
+  enqueue x   -- Enqueue the token x
+  dequeue     -- Dequeue the value at the head of the queue
+  reverse     -- Reverses queue order
+  display     -- Display the contents of the queue
+  quit        -- Exit from the program
+:enqueue 10
+:enqueue 9
+:enqueue 8
+:enqueue 7 
+:display
+Queue contains: 10, 9, 8, 7
+:reverse
+:display
+Queue contains: 7, 8, 9, 10
+:quit

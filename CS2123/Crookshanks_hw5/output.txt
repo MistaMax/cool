@@ -1,0 +1,68 @@
+Enter a command:
+ I for Insert,
+ F for Find
+ D for Delete
+ T for List inorder
+ P for List preorder
+ O for List postorder
+ L for List levelorder
+ M for Max
+ N for Min
+ H for Height
+ C for Count
+ S for Sum
+ Q to quit
+I
+Enter a positive int:
+1
+1
+Enter a command again.
+I
+Enter a positive int:
+2
+1 2
+Enter a command again.
+I
+Enter a positive int:
+3
+1 2 3
+Enter a command again.
+I
+Enter a positive int:
+4
+1 2 3 4
+Enter a command again.
+I
+Enter a positive int:
+5
+1 2 3 4 5
+Enter a command again.
+D 3
+Enter a positive int:
+1 2 4 5
+Enter a command again.
+T
+1 2 4 5
+Enter a command again.
+P
+1 2 4 5
+Enter a command again.
+O
+2 4 5 1
+Enter a command again.
+L
+1 2 4 5
+Enter a command again.
+M
+Max element is 5
+Enter a command again.
+N
+Min element is 1
+Enter a command again.
+C
+The count of the number of elements is 4
+Enter a command again.
+S
+Sum of all elements is 12
+Enter a command again.
+Q

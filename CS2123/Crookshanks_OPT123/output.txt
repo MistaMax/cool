@@ -1,0 +1,8 @@
+fox04:~/CS2123/Crookshanks_OPT123> ./wordsearch abc dc dad -f search.txt
+file name: search.txt
+The word abc is found horizontally starting at [0][0]
+dc could not be found
+dad could not be found
+fox04:~/CS2123/Crookshanks_OPT123> ./wordsearch abcd dad
+The word abcd is found horizontally starting at [0][0]
+The word dad is found vertically starting at [0][3]

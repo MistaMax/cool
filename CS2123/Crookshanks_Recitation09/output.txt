@@ -1,0 +1,26 @@
+abcd
+ a b c d
+         ^
+         *j
+          a b c d
+          ^
+          *raz
+           z b c d
+             ^
+             *Szb
+             Szb
+              z b c d
+                ^
+                *sbc
+                sbc
+                 z b c d
+                   ^
+                   *j
+                    z b c d
+                    ^
+                    *szb
+                    szb
+                     z b c d
+                     ^
+                     *q
+

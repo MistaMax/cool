@@ -1,0 +1,26 @@
+9 Tony Parker
+FT Y
+FT Y
+FT N
+3P Y
+3P N
+3P N
+3P N
+2P Y
+2P N
+XX X
+20 Manu Ginobli
+FT Y
+FT Y
+3P Y
+3P Y
+2P Y
+2P Y
+3P N
+XX X
+00 Katy Perry
+2P N
+2P Y
+FT N
+FT N
+XX X

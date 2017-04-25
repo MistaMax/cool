@@ -1,0 +1,46 @@
+
+Possibilities for Row: 0  Collumn: 0 are, 
+Possibilities for Row: 0  Collumn: 1 are, 
+Possibilities for Row: 0  Collumn: 4 are, 
+Possibilities for Row: 0  Collumn: 7 are, 
+Possibilities for Row: 0  Collumn: 8 are, 
+Possibilities for Row: 1  Collumn: 0 are, 
+Possibilities for Row: 1  Collumn: 4 are, 6 
+Possibilities for Row: 1  Collumn: 5 are, 3 
+Possibilities for Row: 1  Collumn: 6 are, 6 7 
+Possibilities for Row: 1  Collumn: 8 are, 5 7 
+Possibilities for Row: 2  Collumn: 1 are, 
+Possibilities for Row: 2  Collumn: 2 are, 
+Possibilities for Row: 2  Collumn: 3 are, 1 2 
+Possibilities for Row: 2  Collumn: 5 are, 1 2 
+Possibilities for Row: 2  Collumn: 6 are, 4 
+Possibilities for Row: 3  Collumn: 1 are, 5 
+Possibilities for Row: 3  Collumn: 2 are, 4 5 
+Possibilities for Row: 3  Collumn: 3 are, 1 
+Possibilities for Row: 3  Collumn: 5 are, 1 4 
+Possibilities for Row: 3  Collumn: 6 are, 4 7 
+Possibilities for Row: 4  Collumn: 0 are, 
+Possibilities for Row: 4  Collumn: 1 are, 3 5 
+Possibilities for Row: 4  Collumn: 4 are, 2 4 
+Possibilities for Row: 4  Collumn: 7 are, 4 5 8 
+Possibilities for Row: 4  Collumn: 8 are, 2 4 5 
+Possibilities for Row: 5  Collumn: 2 are, 4 6 
+Possibilities for Row: 5  Collumn: 3 are, 2 9 
+Possibilities for Row: 5  Collumn: 5 are, 2 4 8 
+Possibilities for Row: 5  Collumn: 6 are, 2 4 
+Possibilities for Row: 5  Collumn: 7 are, 4 8 
+Possibilities for Row: 6  Collumn: 2 are, 3 4 5 
+Possibilities for Row: 6  Collumn: 3 are, 2 5 7 
+Possibilities for Row: 6  Collumn: 5 are, 2 4 
+Possibilities for Row: 6  Collumn: 6 are, 2 3 4 7 
+Possibilities for Row: 6  Collumn: 7 are, 4 7 
+Possibilities for Row: 7  Collumn: 0 are, 
+Possibilities for Row: 7  Collumn: 2 are, 3 4 
+Possibilities for Row: 7  Collumn: 3 are, 1 7 
+Possibilities for Row: 7  Collumn: 4 are, 1 4 
+Possibilities for Row: 7  Collumn: 8 are, 4 7 
+Possibilities for Row: 8  Collumn: 0 are, 
+Possibilities for Row: 8  Collumn: 1 are, 1 5 
+Possibilities for Row: 8  Collumn: 4 are, 1 2 4 
+Possibilities for Row: 8  Collumn: 7 are, 4 7 
+Possibilities for Row: 8  Collumn: 8 are, 2 4 7 

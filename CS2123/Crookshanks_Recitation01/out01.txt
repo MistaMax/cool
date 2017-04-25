@@ -1,0 +1,20 @@
+Enter numbers in figures; use a negative value to stop
+101010
+
+Number: 101010
+one hundred one  thousand ten
+123456
+
+Number: 123456
+one hundred twenty three  thousand four hundred fifty six
+578999
+
+Number: 578999
+five hundred seventy eight  thousand nine hundred ninety nine
+999999
+
+Number: 999999
+nine hundred ninety nine  thousand nine hundred ninety nine
+-1
+
+Number: -1

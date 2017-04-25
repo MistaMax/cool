@@ -1,0 +1,51 @@
+Enter Number 1
+1
+Enter Number 2
+2
+Enter Number 3
+3
+Enter Number 4
+4
+Enter Number 5
+5
+Enter Number 6
+6
+list X contents
+1
+2
+3
+4
+5
+6
+list Y contents
+1
+2
+3
+4
+5
+6
+X Average = 3
+  Y Average = 3
+Give me a number to delete in list X
+2
+Give me a number to delete in list Y
+3
+list X contents
+1
+3
+4
+5
+6
+list Y contents
+1
+2
+4
+5
+6
+X Average = 3
+  Y Average = 3
+list Z contents
+1
+3
+4
+Z Average = 2

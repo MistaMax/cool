@@ -1,0 +1,23 @@
+How many employees: 2
+
+Employee #1:
+Name: Max Crookshanks
+Title: Boss
+SSNum: 123-12-1234
+Salary: 500.00
+Withholding exemptions: 20
+
+Employee #2:
+Name: Vol DeMorte
+Title: Dark Manager
+SSNum: 456-45-4567
+Salary: 15
+Withholding exemptions: 16
+
+Max Crookshanks (Boss)
+Vol DeMorte (Dark Manager)
+
+
+Name                                                                   Gross      Tax     Net
+Max Crookshanks                                                        500.00   - 120.00 = 380.00
+Vol DeMorte                                                            15.00    - 0.00  = 15.00
