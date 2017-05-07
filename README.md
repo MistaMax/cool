@@ -1,1 +1,1 @@
-# cool
+# schoolCode
