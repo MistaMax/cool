@@ -1,2 +1,2 @@
-board@xyz.com Bill Board
-APT-5A 1100.00 0.00 2017-10-01
+board@xyz.com Peg Board
+APT-2F 0 900 2017-11-02

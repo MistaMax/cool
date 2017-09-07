@@ -5,9 +5,9 @@ echo "C - create a customer file"
 echo "P - accept a customer file"
 echo "F - find customer by apartment number"
 cmnd=0
-while true
+while read -p "Input Command: " input
 do
-    read -p "Input Command: " input
+    #read -p "Input Command: " input
     case "$input" in
         [Cc])
             read -p "Enter your new customer email: " custEmail
@@ -18,15 +18,19 @@ do
             accBal=0
             {
                 echo "$custEmail $custFirstName $custLastName"
-                echo "APT-$apptNum $accBal $rentAmnt $rentDueDt"
-            }>$custEmail
+                echo "$apptNum $accBal $rentAmnt $rentDueDt"
+            }>"Data/$custEmail"
             ;;
         [Pp])
             read -p "Enter the customer email: " recCustEmail
             read -p "Enter the ammount you want to transfer: " transAmmnt
-            find -r $recCustEmail
+            bash pay.bash $transAmmnt <"Data/$recCustEmail"
             ;;
         [Ff])
-            cmnd=3;;
+            read -p "Enter the Apartment Number: " aptNum
+            for fn in $(grep -r -l "$aptNum" Data);do
+                bash find.bash<$fn;
+            done
+            ;;
     esac
 done
