@@ -1,0 +1,13 @@
+Enter one of the following actions or press CTRL-D to exit
+C - create a customer file
+P - accept a customer file
+F - find customer by apartment number
+Error: customer already exists
+Email: sweet@xyz.com
+Name: Candy Barr
+Apt: APT-3D
+Balance: 900
+Rent Amnt: 0
+Due Date: 2017-10-07
+Error: apartment number not found
+Error: customer does not exist
