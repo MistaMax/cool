@@ -13,7 +13,8 @@ void * mmAllocate(StorageManager *pMgr, short shDataSize, short shNodeType, char
 void mmMark(StorageManager *pMgr, MMResult *pmmResult){
     //sets the shSize to 0 as an initialization step
     short shSizeCurrNodeCount = 0;
-    for(char * cursor = pMgr->pBeginStorage;cursor != pMgr->pEndStorage;cursor++)//increments the cursor by 1 byte
+    void * cursor = NULL;
+    for(cursor = pMgr->pBeginStorage;cursor != pMgr->pEndStorage;cursor++)//increments the cursor by 1 byte
     {
         if(shSizeCurrNodeCount == 0)
         {
@@ -27,7 +28,6 @@ void mmMark(StorageManager *pMgr, MMResult *pmmResult){
 
 void mmFollow(StorageManager *pMgr, void *pUserData, MMResult *pmmResult){
     char * followed[500];//keeps track of all the nodes that have been read completely
-    //pMgr->metaAttrM
 }
 
 void mmCollect(StorageManager *pMgr, MMResult *pmmResult){
