@@ -31,6 +31,7 @@ void mmMark(StorageManager *pMgr){
     {
         if(shSizeCurrNodeCount == 0)
         {
+            
             //add
             cursor->cgC = 'C';
             shSizeCurrNodeCount = cursor->shNodeSize;

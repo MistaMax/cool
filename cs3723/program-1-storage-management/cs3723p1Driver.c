@@ -73,6 +73,7 @@ Notes:
 
 #define MAX_TOKEN_SIZE 50		// largest token size for tokenizer
 #define MAX_BUFFER_SZ 100       // size of input buffer
+#define HEAP_SIZE 900
 
 // prototypes only used by the driver
 void processCommands(StorageManager *pMgr, FILE *pfileCommand);
