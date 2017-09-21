@@ -11,16 +11,13 @@ void mmInit(StorageManager *pMgr){
 
 void * mmAllocate(StorageManager *pMgr, short shDataSize, short shNodeType, char sbData[]){
     FreeNode * f;
+    short shTotalSize = shDataSize + NODE_OVERHEAD_SZ;
     for(f=pMgr->pFreeHead;f != NULL;f=f->pFreeNext){
-        if(f->shNodeSize >= shDataSize + pMgr->nodeTypeM[shNodeType]->shNodeTotalSize){//add exception if the i minimum node size is not met for the free node
-            f->shNodeSize = f->shNodeSize - shDataSize - pMgr->nodeTypeM[shNodeType]->shNodeTotalSize;
-            //finding the memory address for the allocated space
-            char * pTemp = (char *) f;
-            pTemp += shDataSize + pMgr->nodeTypeM[shNodeType]->shNodeTotalSize;
-            //add part where you define the Node
+        if(f->shNodeSize >= shTotalSize)//add exception if the i minimum node size is not met for the free node
             break;
-        }
     }
+    //check size
+    //allocate
 }
 
 void mmMark(StorageManager *pMgr){
@@ -31,7 +28,7 @@ void mmMark(StorageManager *pMgr){
     {
         if(shSizeCurrNodeCount == 0)
         {
-            
+
             //add
             cursor->cgC = 'C';
             shSizeCurrNodeCount = cursor->shNodeSize;
