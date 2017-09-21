@@ -1,5 +1,5 @@
 #!/bin/bash
 
-cat lastlog1.out lastlog2.out | sed '/2017$/d;/^Username/d' | sort | sed -f p2aDollar.sed | sed -f p2a.sed | sed 's/\$$//' >p2a.out
-
-#grep -Fwh "**Never logged in**" *.out | sort | sed -f p2aDollar.sed | sed -f p2a.sed >p2a.out
+sed -f p2aDollar.sed lastlog1.out >res1.txt
+sed -f p2a.sed lastlog2.out >res2.txt
+grep -f res1.txt res2.txt >p2a.out
