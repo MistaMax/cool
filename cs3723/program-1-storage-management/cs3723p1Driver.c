@@ -129,11 +129,6 @@ Notes:
     - Inovkes student's mmInit to initialize the free list and
       its initially huge free node.
 **************************************************************************/
-#if defined(_WIN32) 
-#define HEAP_SIZE 810
-#else
-#define HEAP_SIZE 900
-#endif
 
 void smInit(StorageManager *pMgr)
 {

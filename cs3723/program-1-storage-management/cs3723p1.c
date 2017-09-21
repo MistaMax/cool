@@ -5,23 +5,37 @@
 
 void mmInit(StorageManager *pMgr){
     pMgr->pFreeHead = (FreeNode *)pMgr->pBeginStorage;
+    memset(pMgr->pBeginStorage,'\0',pMgr->iHeapSize);
     pMgr->pFreeHead->cGC = 'F';
-    pMgr->pFreeHead->shNodeSize = pMgr->iHeapSize;
+    pMgr->pFreeHead->shNodeSize = pMgr->iHeapSize + NODE_OVERHEAD_SZ;
+
 }
 
 void * mmAllocate(StorageManager *pMgr, short shDataSize, short shNodeType, char sbData[]){
-    FreeNode * f;
+    FreeNode * p;
+    InUseNode * pAlloc;
     short shTotalSize = shDataSize + NODE_OVERHEAD_SZ;
-    for(f=pMgr->pFreeHead;f != NULL;f=f->pFreeNext){
-        if(f->shNodeSize >= shTotalSize)//add exception if the i minimum node size is not met for the free node
+    for(p=pMgr->pFreeHead;p != NULL;p=p->pFreeNext){
+        if(p->shNodeSize >= shTotalSize)//add exception if the i minimum node size is not met for the free node
             break;
     }
     //check size
+    if(p->shNodeSize < shTotalSize || p == NULL)
+    {
+        //pmmResult->rc = RC_NOT_AVAIL
+        //pmmResult->szErrorMessage = "Not enough space available"
+        return NULL;
+    }
     //allocate
+    
+    //set object to beginning of free node
+    //remove free node
+    //re-allocate free node
 }
 
 void mmMark(StorageManager *pMgr){
     //sets the shSize to 0 as an initialization step
+    //check shDump
     short shSizeCurrNodeCount = 0;
     char * cursor = NULL;
     for(cursor = pMgr->pBeginStorage;cursor != pMgr->pEndStorage;cursor++)//increments the cursor by 1 byte
