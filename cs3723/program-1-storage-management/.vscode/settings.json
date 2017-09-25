@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "cs3723p1.h": "c"
+        "cs3723p1.h": "c",
+        "tuple": "c"
     }
 }

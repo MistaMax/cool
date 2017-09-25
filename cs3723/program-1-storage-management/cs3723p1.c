@@ -2,9 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-typedef int bool;
-#define true 1
-#define false 0
 //ADD PMM RESULT TO EVERYTHING
 void mmInit(StorageManager *pMgr, MMResult *pmmResult){
     pMgr->pFreeHead = (FreeNode *)pMgr->pBeginStorage;
@@ -27,8 +24,8 @@ void * mmAllocate(StorageManager *pMgr, short shDataSize, short shNodeType, char
     //check size
     if(p == NULL)
     {
-        pmmResult->rc = RC_NOT_AVAIL
-        pmmResult->szErrorMessage = "Not enough space available"
+        pmmResult->rc = RC_NOT_AVAIL;
+        //pmmResult->szErrorMessage = "No Space";
         return NULL;
     }
     //bridging the gap
@@ -43,11 +40,11 @@ void * mmAllocate(StorageManager *pMgr, short shDataSize, short shNodeType, char
         }
         
         //setting up pNewNode
-        pNewNode = (InUseNode *)p;
-        pNewNode->cGC = 'U';
-        pNewNode->shNodeSize = shTotalSize;
-        pNewNode->nodeTypeM = shNodeType;
-        memcpy((void *)pNewNode->sbData, (void *)sbData, shDataSize);
+        pAlloc = (InUseNode *)p;
+        pAlloc->cGC = 'U';
+        pAlloc->shNodeSize = shTotalSize;
+        pAlloc->shNodeType = shNodeType;
+        memcpy((void *)(pAlloc->sbData), (void *)sbData, shDataSize);
         
         //
         p = (FreeNode *)((char *)p + shTotalSize);
@@ -67,16 +64,16 @@ void * mmAllocate(StorageManager *pMgr, short shDataSize, short shNodeType, char
             pPrev->pFreeNext = p->pFreeNext;
         }
 
-        pNewNode = (InUseNode *)p;
-        pNewNode->cGC = 'U';
-        pNewNode->shNodeSize = shTotalSize;
-        pNewNode->nodeTypeM = shNodeType;
-        memcpy((void *)pNewNode->sbData, (void *)sbData, shDataSize);
+        pAlloc = (InUseNode *)p;
+        pAlloc->cGC = 'U';
+        pAlloc->shNodeSize = shTotalSize;
+        pAlloc->shNodeType = shNodeType;
+        memcpy((void *)pAlloc->sbData, (void *)sbData, shDataSize);
     }
     //set object to beginning of free node
     //remove free node
     //re-allocate free node
-    return pNewNode->sbData;
+    return pAlloc->sbData;
 }
 
 void mmMark(StorageManager *pMgr, MMResult *pmmResult){
@@ -108,7 +105,7 @@ void mmFollow(StorageManager *pMgr, void *pUserData, MMResult *pmmResult){
             break;
         case 'C':
             pCurr->cGC = 'U';
-            for(iAttr = pMgr->nodeTypeM[shNodeType].shBeginMetaAttr; pMgr->metAttrM[iAttr].shNodeType == shNodeType; iAttr++)
+            for(iAttr = pMgr->nodeTypeM[shNodeType].shBeginMetaAttr; pMgr->metaAttrM[iAttr].shNodeType == shNodeType; iAttr++)
             {
                 pAttr = &(pMgr->metaAttrM[iAttr]);
                 if(pAttr->cDataType == 'P')
@@ -188,8 +185,8 @@ void mmCollect(StorageManager *pMgr, MMResult *pmmResult){
 
 void mmAssoc(StorageManager *pMgr, void *pUserDataFrom, char szAttrName[], void *pUserDataTo, MMResult *pmmResult){
     int iAttr;
-    for(iAttr = 0;((MetaAttr *)pUserDataFrom[iAttr])->szAttrName != szAttrName; iAttr++)
+    /*for(iAttr = 0;((MetaAttr *)pUserDataFrom[iAttr])->szAttrName != szAttrName; iAttr++)
     {
-        
-    }
+
+    }*/
 }

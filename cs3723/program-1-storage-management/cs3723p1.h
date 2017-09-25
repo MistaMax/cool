@@ -127,13 +127,13 @@ typedef struct
 
 // student functions
 void * mmAllocate(StorageManager *pMgr
-    , short shDataSize, short shNodeType, char sbData[]);
-void mmInit(StorageManager *pMgr);
-void mmMark(StorageManager *pMgr);
-void mmFollow(StorageManager *pMgr, void *pUserData);
-void mmCollect(StorageManager *pMgr);
+    , short shDataSize, short shNodeType, char sbData[], MMResult *pmmResult);
+void mmInit(StorageManager *pMgr, MMResult *pmmResult);
+void mmMark(StorageManager *pMgr, MMResult *pmmResult);
+void mmFollow(StorageManager *pMgr, void *pUserData, MMResult *pmmResult);
+void mmCollect(StorageManager *pMgr, MMResult *pmmResult);
 void mmAssoc(StorageManager *pMgr
-    , void *pUserDataFrom, char szAttrName[], void *pUserDataTo);
+    , void *pUserDataFrom, char szAttrName[], void *pUserDataTo, MMResult *pmmResult);
 
 // Driver functions
 void smPrintMeta(StorageManager *pMgr);
