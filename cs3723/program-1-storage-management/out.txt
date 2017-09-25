@@ -1,0 +1,571 @@
+Metadata
+Node Type  Beg Attr Sub Total Sz
+Customer      0           48
+		Attribute Name Type Offset Size
+		customerId       S       0    8
+		name             S       8   16
+		pFirstItem       P      24    8
+		pNextCust        P      32    8
+		balance          D      40    8
+LineItem      5           32
+		Attribute Name Type Offset Size
+		productId        S       0   10
+		iQtyReq          I      12    4
+		dCost            D      16    8
+		pNextItem        P      24    8
+>>> ALLOC C111 Customer 111,Sal A Mander,NULL,NULL,100.00
+>>> PRTNODE C111
+	Alloc Address  Size Node Type Data Address  
+ 	0x1cfbc20        53      0    01CFBC25
+			Attr Name      Type Value     
+			customerId       S  111
+			name             S  Sal A Mander
+			pFirstItem       P  00000000
+			pNextCust        P  00000000
+			balance          D  100.000000
+>>> ALLOC C222 Customer 222,Barb Wire,NULL,NULL,200.00
+>>> ALLOC PPF001 LineItem PPF001,5,9.95,NULL
+>>> PRTALL
+	Alloc Address  Size Node Type Data Address  
+ 	0x1cfbc8a        37      1    01CFBC8F
+			Attr Name      Type Value     
+			productId        S  PPF001
+			iQtyReq          I  5
+			dCost            D  9.950000
+			pNextItem        P  00000000
+	Alloc Address  Size Node Type Data Address  
+ 	0x1cfbc55        53      0    01CFBC5A
+			Attr Name      Type Value     
+			customerId       S  222
+			name             S  Barb Wire
+			pFirstItem       P  00000000
+			pNextCust        P  00000000
+			balance          D  200.000000
+	Alloc Address  Size Node Type Data Address  
+ 	0x1cfbc20        53      0    01CFBC25
+			Attr Name      Type Value     
+			customerId       S  111
+			name             S  Sal A Mander
+			pFirstItem       P  00000000
+			pNextCust        P  00000000
+			balance          D  100.000000
+
+*
+* associate customer 111 with a next pointing to 222
+*
+>>> ASSOC C111 pNextCust C222
+* customer 111's  pNextCust should point to 222
+>>> PRTNODE C111 
+	Alloc Address  Size Node Type Data Address  
+ 	0x1cfbc20        53      0    01CFBC25
+			Attr Name      Type Value     
+			customerId       S  111
+			name             S  Sal A Mander
+			pFirstItem       P  00000000
+			pNextCust        P  01CFBC5A
+			balance          D  100.000000
+*
+* associate customer 111 to PPF001
+*
+>>> ASSOC C111 pFirstItem PPF001
+>>> PRTNODE C111
+	Alloc Address  Size Node Type Data Address  
+ 	0x1cfbc20        53      0    01CFBC25
+			Attr Name      Type Value     
+			customerId       S  111
+			name             S  Sal A Mander
+			pFirstItem       P  01CFBC8F
+			pNextCust        P  01CFBC5A
+			balance          D  100.000000
+* associate customer 222 to 333
+>>> ALLOC C333 Customer 333,Misty Wind,NULL,NULL,70.00
+>>> ASSOC C222 pNextCust C333
+*
+* 111 should point to 222 which points to 333
+* 111 should also point to PPF001
+*
+>>> PRTALL
+	Alloc Address  Size Node Type Data Address  
+ 	0x1cfbcaf        53      0    01CFBCB4
+			Attr Name      Type Value     
+			customerId       S  333
+			name             S  Misty Wind
+			pFirstItem       P  00000000
+			pNextCust        P  00000000
+			balance          D  70.000000
+	Alloc Address  Size Node Type Data Address  
+ 	0x1cfbc8a        37      1    01CFBC8F
+			Attr Name      Type Value     
+			productId        S  PPF001
+			iQtyReq          I  5
+			dCost            D  9.950000
+			pNextItem        P  00000000
+	Alloc Address  Size Node Type Data Address  
+ 	0x1cfbc55        53      0    01CFBC5A
+			Attr Name      Type Value     
+			customerId       S  222
+			name             S  Barb Wire
+			pFirstItem       P  00000000
+			pNextCust        P  01CFBCB4
+			balance          D  200.000000
+	Alloc Address  Size Node Type Data Address  
+ 	0x1cfbc20        53      0    01CFBC25
+			Attr Name      Type Value     
+			customerId       S  111
+			name             S  Sal A Mander
+			pFirstItem       P  01CFBC8F
+			pNextCust        P  01CFBC5A
+			balance          D  100.000000
+
+* add another customer
+>>> ALLOC C444 Customer 444,Emory Board,NULL,NULL,44.44
+>>> ASSOC C333 pNextCust C444
+>>> DUMP
+	Address  Mem   Size NodeType
+	01CFBC20 InUse   53   0
+			   01CFBC25 1  1  1  .  .  .  .  .  S  a  l     A     M  a  n  d  e  r  
+			            31 31 31 00 00 00 00 00 53 61 6C 20 41 20 4D 61 6E 64 65 72 
+			   01CFBC39 .  .  .  .  .  .  .  .  .  .  .  .  Z  .  .  .  .  .  .  .  
+			            00 00 00 00 8F BC CF 01 00 00 00 00 5A BC CF 01 00 00 00 00 
+			   01CFBC4D .  .  .  .  .  .  Y  @  
+			            00 00 00 00 00 00 59 40 
+	01CFBC55 InUse   53   0
+			   01CFBC5A 2  2  2  .  .  .  .  .  B  a  r  b     W  i  r  e  .  .  .  
+			            32 32 32 00 00 00 00 00 42 61 72 62 20 57 69 72 65 00 00 00 
+			   01CFBC6E .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 B4 BC CF 01 00 00 00 00 
+			   01CFBC82 .  .  .  .  .  .  i  @  
+			            00 00 00 00 00 00 69 40 
+	01CFBC8A InUse   37   1
+			   01CFBC8F P  P  F  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+			            50 50 46 30 30 31 00 00 00 00 00 00 05 00 00 00 66 66 66 66 
+			   01CFBCA3 f  .  #  @  .  .  .  .  .  .  .  .  
+			            66 E6 23 40 00 00 00 00 00 00 00 00 
+	01CFBCAF InUse   53   0
+			   01CFBCB4 3  3  3  .  .  .  .  .  M  i  s  t  y     W  i  n  d  .  .  
+			            33 33 33 00 00 00 00 00 4D 69 73 74 79 20 57 69 6E 64 00 00 
+			   01CFBCC8 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 E9 BC CF 01 00 00 00 00 
+			   01CFBCDC .  .  .  .  .  .  Q  @  
+			            00 00 00 00 00 80 51 40 
+	01CFBCE4 InUse   53   0
+			   01CFBCE9 4  4  4  .  .  .  .  .  E  m  o  r  y     B  o  a  r  d  .  
+			            34 34 34 00 00 00 00 00 45 6D 6F 72 79 20 42 6F 61 72 64 00 
+			   01CFBCFD thru 01CFBD10 (1 lines) suppressed - all zero
+			   01CFBD11 .  .  .  .  Q  8  F  @  
+			            B8 1E 85 EB 51 38 46 40 
+	01CFBD19 Free   651
+			Next:00000000
+*
+* Allocate another node and associate it with 222
+* Allocate another line item and associate 555 to it
+*
+>>> ALLOC C555 Customer 555,Holly Graph,NULL,NULL,55.00
+>>> ASSOC C555 pNextCust C222
+>>> ALLOC SBB001 LineItem SBB001,2,19.95,NULL
+>>> ASSOC C555 pFirstItem SBB001
+*
+* assoc the line items 
+*
+>>> ALLOC BOM001 LineItem BOM001,1,29.95,NULL
+>>> ASSOC SBB001 pNextItem BOM001
+*
+>>> ALLOC C666 Customer 666,Bob L Head,NULL,NULL,66.00
+>>> ASSOC C444 pNextCust C666
+*
+* Assoc C444 with a different customer, 
+* causing the old customer assoc (C666) to not be associated
+*
+>>> ALLOC C777 Customer 777,Flo N Water,NULL,NULL,77.00
+>>> ASSOC C444 pNextCust C777
+*
+* Add many customers and line items
+*
+>>> ALLOC C888 Customer 888,Joe King,NULL,NULL,88.00
+>>> ALLOC C911 Customer 911,Lee King,NULL,NULL,91.00
+>>> ALLOC C922 Customer 922,Mae King,NULL,NULL,92.00
+>>> ALLOC MCW001 LineItem MCW001,1,12.45,NULL
+>>> ALLOC C933 Customer 933,Ray King,NULL,NULL,93.00
+>>> ALLOC C944 Customer 944,Freida King,NULL,NULL,94.00
+>>> ALLOC SSX001 LineItem SSX001,1,29.95,NULL
+>>> ASSOC MCW001 pNextItem SSX001
+>>> ALLOC TTP001 LineItem TTP001,2,9.95,NULL
+>>> DEREF SSX001
+>>> DUMP
+	Address  Mem   Size NodeType
+	01CFBC20 InUse   53   0
+			   01CFBC25 1  1  1  .  .  .  .  .  S  a  l     A     M  a  n  d  e  r  
+			            31 31 31 00 00 00 00 00 53 61 6C 20 41 20 4D 61 6E 64 65 72 
+			   01CFBC39 .  .  .  .  .  .  .  .  .  .  .  .  Z  .  .  .  .  .  .  .  
+			            00 00 00 00 8F BC CF 01 00 00 00 00 5A BC CF 01 00 00 00 00 
+			   01CFBC4D .  .  .  .  .  .  Y  @  
+			            00 00 00 00 00 00 59 40 
+	01CFBC55 InUse   53   0
+			   01CFBC5A 2  2  2  .  .  .  .  .  B  a  r  b     W  i  r  e  .  .  .  
+			            32 32 32 00 00 00 00 00 42 61 72 62 20 57 69 72 65 00 00 00 
+			   01CFBC6E .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 B4 BC CF 01 00 00 00 00 
+			   01CFBC82 .  .  .  .  .  .  i  @  
+			            00 00 00 00 00 00 69 40 
+	01CFBC8A InUse   37   1
+			   01CFBC8F P  P  F  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+			            50 50 46 30 30 31 00 00 00 00 00 00 05 00 00 00 66 66 66 66 
+			   01CFBCA3 f  .  #  @  .  .  .  .  .  .  .  .  
+			            66 E6 23 40 00 00 00 00 00 00 00 00 
+	01CFBCAF InUse   53   0
+			   01CFBCB4 3  3  3  .  .  .  .  .  M  i  s  t  y     W  i  n  d  .  .  
+			            33 33 33 00 00 00 00 00 4D 69 73 74 79 20 57 69 6E 64 00 00 
+			   01CFBCC8 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 E9 BC CF 01 00 00 00 00 
+			   01CFBCDC .  .  .  .  .  .  Q  @  
+			            00 00 00 00 00 80 51 40 
+	01CFBCE4 InUse   53   0
+			   01CFBCE9 4  4  4  .  .  .  .  .  E  m  o  r  y     B  o  a  r  d  .  
+			            34 34 34 00 00 00 00 00 45 6D 6F 72 79 20 42 6F 61 72 64 00 
+			   01CFBCFD .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 D2 BD CF 01 00 00 00 00 
+			   01CFBD11 .  .  .  .  Q  8  F  @  
+			            B8 1E 85 EB 51 38 46 40 
+	01CFBD19 InUse   53   0
+			   01CFBD1E 5  5  5  .  .  .  .  .  H  o  l  l  y     G  r  a  p  h  .  
+			            35 35 35 00 00 00 00 00 48 6F 6C 6C 79 20 47 72 61 70 68 00 
+			   01CFBD32 .  .  .  .  S  .  .  .  .  .  .  .  Z  .  .  .  .  .  .  .  
+			            00 00 00 00 53 BD CF 01 00 00 00 00 5A BC CF 01 00 00 00 00 
+			   01CFBD46 .  .  .  .  .  .  K  @  
+			            00 00 00 00 00 80 4B 40 
+	01CFBD4E InUse   37   1
+			   01CFBD53 S  B  B  0  0  1  .  .  .  .  .  .  .  .  .  .  3  3  3  3  
+			            53 42 42 30 30 31 00 00 00 00 00 00 02 00 00 00 33 33 33 33 
+			   01CFBD67 3  .  3  @  x  .  .  .  .  .  .  .  
+			            33 F3 33 40 78 BD CF 01 00 00 00 00 
+	01CFBD73 InUse   37   1
+			   01CFBD78 B  O  M  0  0  1  .  .  .  .  .  .  .  .  .  .  3  3  3  3  
+			            42 4F 4D 30 30 31 00 00 00 00 00 00 01 00 00 00 33 33 33 33 
+			   01CFBD8C 3  .  =  @  .  .  .  .  .  .  .  .  
+			            33 F3 3D 40 00 00 00 00 00 00 00 00 
+	01CFBD98 InUse   53   0
+			   01CFBD9D 6  6  6  .  .  .  .  .  B  o  b     L     H  e  a  d  .  .  
+			            36 36 36 00 00 00 00 00 42 6F 62 20 4C 20 48 65 61 64 00 00 
+			   01CFBDB1 thru 01CFBDC4 (1 lines) suppressed - all zero
+			   01CFBDC5 .  .  .  .  .  .  P  @  
+			            00 00 00 00 00 80 50 40 
+	01CFBDCD InUse   53   0
+			   01CFBDD2 7  7  7  .  .  .  .  .  F  l  o     N     W  a  t  e  r  .  
+			            37 37 37 00 00 00 00 00 46 6C 6F 20 4E 20 57 61 74 65 72 00 
+			   01CFBDE6 thru 01CFBDF9 (1 lines) suppressed - all zero
+			   01CFBDFA .  .  .  .  .  @  S  @  
+			            00 00 00 00 00 40 53 40 
+	01CFBE02 InUse   53   0
+			   01CFBE07 8  8  8  .  .  .  .  .  J  o  e     K  i  n  g  .  .  .  .  
+			            38 38 38 00 00 00 00 00 4A 6F 65 20 4B 69 6E 67 00 00 00 00 
+			   01CFBE1B thru 01CFBE2E (1 lines) suppressed - all zero
+			   01CFBE2F .  .  .  .  .  .  V  @  
+			            00 00 00 00 00 00 56 40 
+	01CFBE37 InUse   53   0
+			   01CFBE3C 9  1  1  .  .  .  .  .  L  e  e     K  i  n  g  .  .  .  .  
+			            39 31 31 00 00 00 00 00 4C 65 65 20 4B 69 6E 67 00 00 00 00 
+			   01CFBE50 thru 01CFBE63 (1 lines) suppressed - all zero
+			   01CFBE64 .  .  .  .  .  .  V  @  
+			            00 00 00 00 00 C0 56 40 
+	01CFBE6C InUse   53   0
+			   01CFBE71 9  2  2  .  .  .  .  .  M  a  e     K  i  n  g  .  .  .  .  
+			            39 32 32 00 00 00 00 00 4D 61 65 20 4B 69 6E 67 00 00 00 00 
+			   01CFBE85 thru 01CFBE98 (1 lines) suppressed - all zero
+			   01CFBE99 .  .  .  .  .  .  W  @  
+			            00 00 00 00 00 00 57 40 
+	01CFBEA1 InUse   37   1
+			   01CFBEA6 M  C  W  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+			            4D 43 57 30 30 31 00 00 00 00 00 00 01 00 00 00 66 66 66 66 
+			   01CFBEBA f  .  (  @  5  .  .  .  .  .  .  .  
+			            66 E6 28 40 35 BF CF 01 00 00 00 00 
+	01CFBEC6 InUse   53   0
+			   01CFBECB 9  3  3  .  .  .  .  .  R  a  y     K  i  n  g  .  .  .  .  
+			            39 33 33 00 00 00 00 00 52 61 79 20 4B 69 6E 67 00 00 00 00 
+			   01CFBEDF thru 01CFBEF2 (1 lines) suppressed - all zero
+			   01CFBEF3 .  .  .  .  .  @  W  @  
+			            00 00 00 00 00 40 57 40 
+	01CFBEFB InUse   53   0
+			   01CFBF00 9  4  4  .  .  .  .  .  F  r  e  i  d  a     K  i  n  g  .  
+			            39 34 34 00 00 00 00 00 46 72 65 69 64 61 20 4B 69 6E 67 00 
+			   01CFBF14 thru 01CFBF27 (1 lines) suppressed - all zero
+			   01CFBF28 .  .  .  .  .  .  W  @  
+			            00 00 00 00 00 80 57 40 
+	01CFBF30 InUse   37   1
+			   01CFBF35 S  S  X  0  0  1  .  .  .  .  .  .  .  .  .  .  3  3  3  3  
+			            53 53 58 30 30 31 00 00 00 00 00 00 01 00 00 00 33 33 33 33 
+			   01CFBF49 3  .  =  @  .  .  .  .  .  .  .  .  
+			            33 F3 3D 40 00 00 00 00 00 00 00 00 
+	01CFBF55 InUse   37   1
+			   01CFBF5A T  T  P  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+			            54 54 50 30 30 31 00 00 00 00 00 00 02 00 00 00 66 66 66 66 
+			   01CFBF6E f  .  #  @  .  .  .  .  .  .  .  .  
+			            66 E6 23 40 00 00 00 00 00 00 00 00 
+	01CFBF7A Free    42
+			Next:00000000
+*
+* XXXXXX 1
+* This line item is smaller than the last free node;
+* however, the remaining free size is too small for a
+* free node.  We give NHC001 all of the free node's
+* size as its size.
+>>> ALLOC NHC001 LineItem NHC001,1,9.95,NULL
+>>> PRTALL
+	Alloc Address  Size Node Type Data Address  
+ 	0x1cfbefb        53      0    01CFBF00
+			Attr Name      Type Value     
+			customerId       S  944
+			name             S  Freida King
+			pFirstItem       P  00000000
+			pNextCust        P  00000000
+			balance          D  94.000000
+	Alloc Address  Size Node Type Data Address  
+ 	0x1cfbea1        37      1    01CFBEA6
+			Attr Name      Type Value     
+			productId        S  MCW001
+			iQtyReq          I  1
+			dCost            D  12.450000
+			pNextItem        P  01CFBF35
+	Alloc Address  Size Node Type Data Address  
+ 	0x1cfbe37        53      0    01CFBE3C
+			Attr Name      Type Value     
+			customerId       S  911
+			name             S  Lee King
+			pFirstItem       P  00000000
+			pNextCust        P  00000000
+			balance          D  91.000000
+	Alloc Address  Size Node Type Data Address  
+ 	0x1cfbe02        53      0    01CFBE07
+			Attr Name      Type Value     
+			customerId       S  888
+			name             S  Joe King
+			pFirstItem       P  00000000
+			pNextCust        P  00000000
+			balance          D  88.000000
+	Alloc Address  Size Node Type Data Address  
+ 	0x1cfbcaf        53      0    01CFBCB4
+			Attr Name      Type Value     
+			customerId       S  333
+			name             S  Misty Wind
+			pFirstItem       P  00000000
+			pNextCust        P  01CFBCE9
+			balance          D  70.000000
+	Alloc Address  Size Node Type Data Address  
+ 	0x1cfbe6c        53      0    01CFBE71
+			Attr Name      Type Value     
+			customerId       S  922
+			name             S  Mae King
+			pFirstItem       P  00000000
+			pNextCust        P  00000000
+			balance          D  92.000000
+	Alloc Address  Size Node Type Data Address  
+ 	0x1cfbc55        53      0    01CFBC5A
+			Attr Name      Type Value     
+			customerId       S  222
+			name             S  Barb Wire
+			pFirstItem       P  00000000
+			pNextCust        P  01CFBCB4
+			balance          D  200.000000
+	Alloc Address  Size Node Type Data Address  
+ 	0x1cfbd73        37      1    01CFBD78
+			Attr Name      Type Value     
+			productId        S  BOM001
+			iQtyReq          I  1
+			dCost            D  29.950000
+			pNextItem        P  00000000
+	Alloc Address  Size Node Type Data Address  
+ 	0x1cfbec6        53      0    01CFBECB
+			Attr Name      Type Value     
+			customerId       S  933
+			name             S  Ray King
+			pFirstItem       P  00000000
+			pNextCust        P  00000000
+			balance          D  93.000000
+	Alloc Address  Size Node Type Data Address  
+ 	0x1cfbc8a        37      1    01CFBC8F
+			Attr Name      Type Value     
+			productId        S  PPF001
+			iQtyReq          I  5
+			dCost            D  9.950000
+			pNextItem        P  00000000
+	Alloc Address  Size Node Type Data Address  
+ 	0x1cfbd19        53      0    01CFBD1E
+			Attr Name      Type Value     
+			customerId       S  555
+			name             S  Holly Graph
+			pFirstItem       P  01CFBD53
+			pNextCust        P  01CFBC5A
+			balance          D  55.000000
+	Alloc Address  Size Node Type Data Address  
+ 	0x1cfbc20        53      0    01CFBC25
+			Attr Name      Type Value     
+			customerId       S  111
+			name             S  Sal A Mander
+			pFirstItem       P  01CFBC8F
+			pNextCust        P  01CFBC5A
+			balance          D  100.000000
+	Alloc Address  Size Node Type Data Address  
+ 	0x1cfbf7a        37      1    01CFBF7F
+			Attr Name      Type Value     
+			productId        S  NHC001
+			iQtyReq          I  1
+			dCost            D  9.950000
+			pNextItem        P  00000000
+	Alloc Address  Size Node Type Data Address  
+ 	0x1cfbf55        37      1    01CFBF5A
+			Attr Name      Type Value     
+			productId        S  TTP001
+			iQtyReq          I  2
+			dCost            D  9.950000
+			pNextItem        P  00000000
+	Alloc Address  Size Node Type Data Address  
+ 	0x1cfbce4        53      0    01CFBCE9
+			Attr Name      Type Value     
+			customerId       S  444
+			name             S  Emory Board
+			pFirstItem       P  00000000
+			pNextCust        P  01CFBDD2
+			balance          D  44.440000
+	Alloc Address  Size Node Type Data Address  
+ 	0x1cfbd4e        37      1    01CFBD53
+			Attr Name      Type Value     
+			productId        S  SBB001
+			iQtyReq          I  2
+			dCost            D  19.950000
+			pNextItem        P  01CFBD78
+	Alloc Address  Size Node Type Data Address  
+ 	0x1cfbd98        53      0    01CFBD9D
+			Attr Name      Type Value     
+			customerId       S  666
+			name             S  Bob L Head
+			pFirstItem       P  00000000
+			pNextCust        P  00000000
+			balance          D  66.000000
+	Alloc Address  Size Node Type Data Address  
+ 	0x1cfbdcd        53      0    01CFBDD2
+			Attr Name      Type Value     
+			customerId       S  777
+			name             S  Flo N Water
+			pFirstItem       P  00000000
+			pNextCust        P  00000000
+			balance          D  77.000000
+
+*
+* XXXXXX 2
+* Do a Garbage Collection ... should not collect anything
+* Note that SSX001 is still referenced by a linked list
+* so it shouldn't be freed.
+* 
+>>> DUMP
+	Address  Mem   Size NodeType
+	01CFBC20 InUse   53   0
+			   01CFBC25 1  1  1  .  .  .  .  .  S  a  l     A     M  a  n  d  e  r  
+			            31 31 31 00 00 00 00 00 53 61 6C 20 41 20 4D 61 6E 64 65 72 
+			   01CFBC39 .  .  .  .  .  .  .  .  .  .  .  .  Z  .  .  .  .  .  .  .  
+			            00 00 00 00 8F BC CF 01 00 00 00 00 5A BC CF 01 00 00 00 00 
+			   01CFBC4D .  .  .  .  .  .  Y  @  
+			            00 00 00 00 00 00 59 40 
+	01CFBC55 InUse   53   0
+			   01CFBC5A 2  2  2  .  .  .  .  .  B  a  r  b     W  i  r  e  .  .  .  
+			            32 32 32 00 00 00 00 00 42 61 72 62 20 57 69 72 65 00 00 00 
+			   01CFBC6E .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 B4 BC CF 01 00 00 00 00 
+			   01CFBC82 .  .  .  .  .  .  i  @  
+			            00 00 00 00 00 00 69 40 
+	01CFBC8A InUse   37   1
+			   01CFBC8F P  P  F  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+			            50 50 46 30 30 31 00 00 00 00 00 00 05 00 00 00 66 66 66 66 
+			   01CFBCA3 f  .  #  @  .  .  .  .  .  .  .  .  
+			            66 E6 23 40 00 00 00 00 00 00 00 00 
+	01CFBCAF InUse   53   0
+			   01CFBCB4 3  3  3  .  .  .  .  .  M  i  s  t  y     W  i  n  d  .  .  
+			            33 33 33 00 00 00 00 00 4D 69 73 74 79 20 57 69 6E 64 00 00 
+			   01CFBCC8 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 E9 BC CF 01 00 00 00 00 
+			   01CFBCDC .  .  .  .  .  .  Q  @  
+			            00 00 00 00 00 80 51 40 
+	01CFBCE4 InUse   53   0
+			   01CFBCE9 4  4  4  .  .  .  .  .  E  m  o  r  y     B  o  a  r  d  .  
+			            34 34 34 00 00 00 00 00 45 6D 6F 72 79 20 42 6F 61 72 64 00 
+			   01CFBCFD .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 D2 BD CF 01 00 00 00 00 
+			   01CFBD11 .  .  .  .  Q  8  F  @  
+			            B8 1E 85 EB 51 38 46 40 
+	01CFBD19 InUse   53   0
+			   01CFBD1E 5  5  5  .  .  .  .  .  H  o  l  l  y     G  r  a  p  h  .  
+			            35 35 35 00 00 00 00 00 48 6F 6C 6C 79 20 47 72 61 70 68 00 
+			   01CFBD32 .  .  .  .  S  .  .  .  .  .  .  .  Z  .  .  .  .  .  .  .  
+			            00 00 00 00 53 BD CF 01 00 00 00 00 5A BC CF 01 00 00 00 00 
+			   01CFBD46 .  .  .  .  .  .  K  @  
+			            00 00 00 00 00 80 4B 40 
+	01CFBD4E InUse   37   1
+			   01CFBD53 S  B  B  0  0  1  .  .  .  .  .  .  .  .  .  .  3  3  3  3  
+			            53 42 42 30 30 31 00 00 00 00 00 00 02 00 00 00 33 33 33 33 
+			   01CFBD67 3  .  3  @  x  .  .  .  .  .  .  .  
+			            33 F3 33 40 78 BD CF 01 00 00 00 00 
+	01CFBD73 InUse   37   1
+			   01CFBD78 B  O  M  0  0  1  .  .  .  .  .  .  .  .  .  .  3  3  3  3  
+			            42 4F 4D 30 30 31 00 00 00 00 00 00 01 00 00 00 33 33 33 33 
+			   01CFBD8C 3  .  =  @  .  .  .  .  .  .  .  .  
+			            33 F3 3D 40 00 00 00 00 00 00 00 00 
+	01CFBD98 InUse   53   0
+			   01CFBD9D 6  6  6  .  .  .  .  .  B  o  b     L     H  e  a  d  .  .  
+			            36 36 36 00 00 00 00 00 42 6F 62 20 4C 20 48 65 61 64 00 00 
+			   01CFBDB1 thru 01CFBDC4 (1 lines) suppressed - all zero
+			   01CFBDC5 .  .  .  .  .  .  P  @  
+			            00 00 00 00 00 80 50 40 
+	01CFBDCD InUse   53   0
+			   01CFBDD2 7  7  7  .  .  .  .  .  F  l  o     N     W  a  t  e  r  .  
+			            37 37 37 00 00 00 00 00 46 6C 6F 20 4E 20 57 61 74 65 72 00 
+			   01CFBDE6 thru 01CFBDF9 (1 lines) suppressed - all zero
+			   01CFBDFA .  .  .  .  .  @  S  @  
+			            00 00 00 00 00 40 53 40 
+	01CFBE02 InUse   53   0
+			   01CFBE07 8  8  8  .  .  .  .  .  J  o  e     K  i  n  g  .  .  .  .  
+			            38 38 38 00 00 00 00 00 4A 6F 65 20 4B 69 6E 67 00 00 00 00 
+			   01CFBE1B thru 01CFBE2E (1 lines) suppressed - all zero
+			   01CFBE2F .  .  .  .  .  .  V  @  
+			            00 00 00 00 00 00 56 40 
+	01CFBE37 InUse   53   0
+			   01CFBE3C 9  1  1  .  .  .  .  .  L  e  e     K  i  n  g  .  .  .  .  
+			            39 31 31 00 00 00 00 00 4C 65 65 20 4B 69 6E 67 00 00 00 00 
+			   01CFBE50 thru 01CFBE63 (1 lines) suppressed - all zero
+			   01CFBE64 .  .  .  .  .  .  V  @  
+			            00 00 00 00 00 C0 56 40 
+	01CFBE6C InUse   53   0
+			   01CFBE71 9  2  2  .  .  .  .  .  M  a  e     K  i  n  g  .  .  .  .  
+			            39 32 32 00 00 00 00 00 4D 61 65 20 4B 69 6E 67 00 00 00 00 
+			   01CFBE85 thru 01CFBE98 (1 lines) suppressed - all zero
+			   01CFBE99 .  .  .  .  .  .  W  @  
+			            00 00 00 00 00 00 57 40 
+	01CFBEA1 InUse   37   1
+			   01CFBEA6 M  C  W  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+			            4D 43 57 30 30 31 00 00 00 00 00 00 01 00 00 00 66 66 66 66 
+			   01CFBEBA f  .  (  @  5  .  .  .  .  .  .  .  
+			            66 E6 28 40 35 BF CF 01 00 00 00 00 
+	01CFBEC6 InUse   53   0
+			   01CFBECB 9  3  3  .  .  .  .  .  R  a  y     K  i  n  g  .  .  .  .  
+			            39 33 33 00 00 00 00 00 52 61 79 20 4B 69 6E 67 00 00 00 00 
+			   01CFBEDF thru 01CFBEF2 (1 lines) suppressed - all zero
+			   01CFBEF3 .  .  .  .  .  @  W  @  
+			            00 00 00 00 00 40 57 40 
+	01CFBEFB InUse   53   0
+			   01CFBF00 9  4  4  .  .  .  .  .  F  r  e  i  d  a     K  i  n  g  .  
+			            39 34 34 00 00 00 00 00 46 72 65 69 64 61 20 4B 69 6E 67 00 
+			   01CFBF14 thru 01CFBF27 (1 lines) suppressed - all zero
+			   01CFBF28 .  .  .  .  .  .  W  @  
+			            00 00 00 00 00 80 57 40 
+	01CFBF30 InUse   37   1
+			   01CFBF35 S  S  X  0  0  1  .  .  .  .  .  .  .  .  .  .  3  3  3  3  
+			            53 53 58 30 30 31 00 00 00 00 00 00 01 00 00 00 33 33 33 33 
+			   01CFBF49 3  .  =  @  .  .  .  .  .  .  .  .  
+			            33 F3 3D 40 00 00 00 00 00 00 00 00 
+	01CFBF55 InUse   37   1
+			   01CFBF5A T  T  P  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+			            54 54 50 30 30 31 00 00 00 00 00 00 02 00 00 00 66 66 66 66 
+			   01CFBF6E f  .  #  @  .  .  .  .  .  .  .  .  
+			            66 E6 23 40 00 00 00 00 00 00 00 00 
+	01CFBF7A InUse   37   1
+			   01CFBF7F N  H  C  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+			            4E 48 43 30 30 31 00 00 00 00 00 00 01 00 00 00 66 66 66 66 
+			   01CFBF93 f  .  #  @  .  .  .  .  .  .  .  .  
+			            66 E6 23 40 00 0

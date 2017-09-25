@@ -12,11 +12,12 @@ void mmInit(StorageManager *pMgr){
 }
 
 void * mmAllocate(StorageManager *pMgr, short shDataSize, short shNodeType, char sbData[], MMResult *pmmResult){//re-add pmm result
-    FreeNode * pPrev;
+    FreeNode * pPrev = (FreeNode *)0;
     FreeNode * p;
     InUseNode * pAlloc = (InUseNode *)0;
     short shDiff; 
     short shTotalSize = shDataSize + NODE_OVERHEAD_SZ;
+
     for(p=pMgr->pFreeHead;p != NULL;pPrev=p, p=p->pFreeNext){
         if(p->shNodeSize >= shTotalSize)//add exception if the i minimum node size is not met for the free node
             break;
@@ -95,6 +96,7 @@ void mmFollow(StorageManager *pMgr, void *pUserData, MMResult *pmmResult){
     int iAttr;
     short shNodeType;
     MetaAttr *pAttr;
+    void **pp;
 
     pCurr = (InUseNode *)((char *)pUserData - NODE_OVERHEAD_SZ);
     shNodeType = pCurr->shNodeType;
@@ -102,14 +104,15 @@ void mmFollow(StorageManager *pMgr, void *pUserData, MMResult *pmmResult){
     {
         case 'U':
             return;
-            break;
+            //break;
         case 'C':
             pCurr->cGC = 'U';
             for(iAttr = pMgr->nodeTypeM[shNodeType].shBeginMetaAttr; pMgr->metaAttrM[iAttr].shNodeType == shNodeType; iAttr++)
             {
                 pAttr = &(pMgr->metaAttrM[iAttr]);
                 if(pAttr->cDataType == 'P')
-                    mmFollow(pMgr, ((char *)pUserData + pAttr->shOffset), pmmResult);
+                    pp = (void **)&pCurr->sbData[pAttr->shOffset];
+                    mmFollow(pMgr, *pp, pmmResult);
                 /*{
                     pp = (void **)&pCurr->sbData[]
                 }*/
@@ -126,8 +129,10 @@ void mmCollect(StorageManager *pMgr, MMResult *pmmResult){
     FreeNode * pNewNode;
     short shTempSize;
     int iTotalSize;
+
     pMgr->pFreeHead = (FreeNode *)0;
     pCur = pMgr->pBeginStorage;
+
     while(pCur < pMgr->pEndStorage)
     {
         shTempSize = ((FreeNode *)pCur)->shNodeSize;
@@ -184,9 +189,39 @@ void mmCollect(StorageManager *pMgr, MMResult *pmmResult){
 }*/
 
 void mmAssoc(StorageManager *pMgr, void *pUserDataFrom, char szAttrName[], void *pUserDataTo, MMResult *pmmResult){
-    int iAttr;
-    /*for(iAttr = 0;((MetaAttr *)pUserDataFrom[iAttr])->szAttrName != szAttrName; iAttr++)
+    char *pUserNode;
+    MetaAttr *pAttr;
+    char *errMsg;
+    short shNodeType;
+    int iAt;
+    void **ppNode;
+
+    pUserNode = (char *)pUserDataFrom - NODE_OVERHEAD_SZ;
+    shNodeType = ((InUseNode *)pUserNode)->shNodeType;
+
+    for(iAt = pMgr->nodeTypeM[shNodeType].shBeginMetaAttr; iAt < MAX_NODE_ATTR && pMgr->metaAttrM[iAt].shNodeType == shNodeType; iAt++)
     {
 
-    }*/
+        pAttr = &(pMgr->metaAttrM[iAt]);
+
+        if(strcmp(pAttr->szAttrName, szAttrName) == 0)
+        {
+            if(pAttr->cDataType == 'P')
+            {
+                ppNode = (void **)&(((InUseNode *)pUserNode)->sbData[pAttr->shOffset]);
+                *ppNode = pUserDataTo;
+                return;
+            }
+            else
+            {
+                pmmResult->rc = RC_ASSOC_ATTR_NOT_PTR;
+                sscanf(errMsg, "Attribute not a pointer: %s", szAttrName);
+                memcpy((void *)pmmResult->szErrorMessage, errMsg, strlen(errMsg)+1);
+                return;
+            }
+        }
+    }
+    pmmResult->rc = RC_ASSOC_ATTR_NOT_FOUND;
+    sscanf(errMsg, "Attribute not found: %s", szAttrName);
+    memcpy((void *)pmmResult->szErrorMessage, errMsg, strlen(errMsg)+1);
 }
