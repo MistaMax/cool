@@ -128,7 +128,7 @@ typedef struct
 // student functions
 void * mmAllocate(StorageManager *pMgr
     , short shDataSize, short shNodeType, char sbData[], MMResult *pmmResult);
-void mmInit(StorageManager *pMgr, MMResult *pmmResult);
+void mmInit(StorageManager *pMgr);
 void mmMark(StorageManager *pMgr, MMResult *pmmResult);
 void mmFollow(StorageManager *pMgr, void *pUserData, MMResult *pmmResult);
 void mmCollect(StorageManager *pMgr, MMResult *pmmResult);

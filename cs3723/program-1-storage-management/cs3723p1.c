@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 //ADD PMM RESULT TO EVERYTHING
-void mmInit(StorageManager *pMgr, MMResult *pmmResult){
+void mmInit(StorageManager *pMgr){
     pMgr->pFreeHead = (FreeNode *)pMgr->pBeginStorage;
     memset(pMgr->pBeginStorage,'\0',pMgr->iHeapSize);
     pMgr->pFreeHead->cGC = 'F';

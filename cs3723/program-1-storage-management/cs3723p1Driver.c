@@ -146,10 +146,8 @@ void smInit(StorageManager *pMgr)
     // 1 byte - cGC
     // 3 slack bytes
     // 4 or 8 byte pointer to the next free node.
-    pMgr->iMinimumNodeSize = sizeof(FreeNode);
-    MMResult *pmmResult;
     // Invoke student's mmInit to initialize the free list and a huge free node
-    mmInit(pMgr, pmmResult);
+    mmInit(pMgr);
 }
 
 /******************** initMetadata **************************************
