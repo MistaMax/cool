@@ -73,7 +73,6 @@ Notes:
 
 #define MAX_TOKEN_SIZE 50		// largest token size for tokenizer
 #define MAX_BUFFER_SZ 100       // size of input buffer
-#define HEAP_SIZE 900
 
 // prototypes only used by the driver
 void processCommands(StorageManager *pMgr, FILE *pfileCommand);
@@ -130,6 +129,8 @@ Notes:
       its initially huge free node.
 **************************************************************************/
 
+#define HEAP_SIZE 900
+
 void smInit(StorageManager *pMgr)
 {
     pMgr->pBeginStorage = (char *)malloc(HEAP_SIZE);
@@ -146,6 +147,8 @@ void smInit(StorageManager *pMgr)
     // 1 byte - cGC
     // 3 slack bytes
     // 4 or 8 byte pointer to the next free node.
+    pMgr->iMinimumNodeSize = sizeof(FreeNode);
+
     // Invoke student's mmInit to initialize the free list and a huge free node
     mmInit(pMgr);
 }

@@ -8,74 +8,72 @@ void mmInit(StorageManager *pMgr){
     memset(pMgr->pBeginStorage,'\0',pMgr->iHeapSize);
     pMgr->pFreeHead->cGC = 'F';
     pMgr->pFreeHead->shNodeSize = pMgr->iHeapSize;
-
+    pMgr->pFreeHead->pFreeNext = (FreeNode *)0;
 }
 
-void * mmAllocate(StorageManager *pMgr, short shDataSize, short shNodeType, char sbData[], MMResult *pmmResult){//re-add pmm result
-    FreeNode * pPrev = (FreeNode *)0;
-    FreeNode * p;
-    InUseNode * pAlloc = (InUseNode *)0;
-    short shDiff; 
-    short shTotalSize = shDataSize + NODE_OVERHEAD_SZ;
+void * mmAllocate(StorageManager *pMgr, short shDataSize, short shNodeType, char sbData[], MMResult *pmmResult)
+{
+    char *errMsg; //temp pointer for error message
+    FreeNode *pPrev = (FreeNode *)0; //previous free node in free list
+    FreeNode *pCurr = pMgr->pFreeHead; //the current free node in the list
+    InUseNode *pNewNode = (InUseNode *)0; //enhance readability
+    short shDiff; //stores leftover space after allocation
+    int totalSize; //stores pNewNodes size
 
-    for(p=pMgr->pFreeHead;p != NULL;pPrev=p, p=p->pFreeNext){
-        if(p->shNodeSize >= shTotalSize)//add exception if the i minimum node size is not met for the free node
-            break;
-    }
-    //check size
-    if(p == NULL)
+    while(pCurr && (char *)pCurr < pMgr->pEndStorage) //traces through free node list
     {
-        pmmResult->rc = RC_NOT_AVAIL;
-        //pmmResult->szErrorMessage = "No Space";
-        return NULL;
-    }
-    //bridging the gap
-    if((shDiff = p->shNodeSize - (shTotalSize)) >= pMgr->iMinimumNodeSize){
-        if(!pPrev)
+        if(pCurr->shNodeSize >= (shDataSize + NODE_OVERHEAD_SZ)) //find a node large enough to fit another one
         {
-            pMgr->pFreeHead = p->pFreeNext;
-        }
+            shDiff = pCurr->shNodeSize - (shDataSize + NODE_OVERHEAD_SZ); //check if there's enough space for an in use node + free node
+            if(shDiff >= pMgr->iMinimumNodeSize)
+            {
+                if(!pPrev)
+                    pMgr->pFreeHead = pCurr->pFreeNext; //free node is in beginning of list
+                else
+                    pPrev->pFreeNext = pCurr->pFreeNext; //free node is somewhere else in the list
+
+                totalSize = shDataSize + NODE_OVERHEAD_SZ;
+                //totalSize = shDataSize + iMinumumNodeSize;
+                pNewNode = (InUseNode *)pCurr;
+                pNewNode->cGC = 'U'; //user input mark node as in use
+                pNewNode->shNodeType = shNodeType;
+                pNewNode->shNodeSize = totalSize;
+                memcpy((void *)pNewNode->sbData, (void *)sbData, shDataSize);//allocate user node
+
+                //if enough space is left over for a free node make a new free node
+                pCurr = (FreeNode *)((char *)pCurr + totalSize);
+                pCurr->cGC = 'F'; //set current to Free
+                pCurr->shNodeSize = shDiff;
+                pCurr->pFreeNext = pMgr->pFreeHead;
+                pMgr->pFreeHead = pCurr; //insert free node at beginning of free list
+
+            } //end if
+            else{
+                if(!pPrev) //beginning of free list
+                    pMgr->pFreeHead = pCurr->pFreeNext;
+                else
+                    pPrev->pFreeNext = pCurr->pFreeNext;
+
+                pNewNode = (InUseNode *)pCurr;
+                pNewNode->cGC = 'U';
+                pNewNode->shNodeType = shNodeType;
+                memcpy((void *)pNewNode->sbData, (void *)sbData, shDataSize);
+            }//end else
+
+            return pNewNode->sbData;
+        }//end if large enough node
         else
         {
-            pPrev->pFreeNext = p->pFreeNext;
+            pPrev = pCurr;
+            pCurr = pCurr->pFreeNext;
         }
-        
-        //setting up pNewNode
-        pAlloc = (InUseNode *)p;
-        pAlloc->cGC = 'U';
-        pAlloc->shNodeSize = shTotalSize;
-        pAlloc->shNodeType = shNodeType;
-        memcpy((void *)(pAlloc->sbData), (void *)sbData, shDataSize);
-        
-        //
-        p = (FreeNode *)((char *)p + shTotalSize);
-        p->cGC = 'F';
-        p->shNodeSize = shDiff;
-        p->pFreeNext = pMgr->pFreeHead;
-        pMgr->pFreeHead = p;
-    }
-    else
-    {
-        if(!pPrev)
-        {
-            pMgr->pFreeHead = p->pFreeNext;
-        }
-        else
-        {
-            pPrev->pFreeNext = p->pFreeNext;
-        }
+    }//end while
 
-        pAlloc = (InUseNode *)p;
-        pAlloc->cGC = 'U';
-        pAlloc->shNodeSize = shTotalSize;
-        pAlloc->shNodeType = shNodeType;
-        memcpy((void *)pAlloc->sbData, (void *)sbData, shDataSize);
-    }
-    //set object to beginning of free node
-    //remove free node
-    //re-allocate free node
-    return pAlloc->sbData;
-}
+    pmmResult->rc = RC_NOT_AVAIL;
+    errMsg = "Free node not found";
+    memcpy((void*)pmmResult->szErrorMessage, errMsg, strlen(errMsg)+1);
+    return (void *)0;
+} //end mmAllocate
 
 void mmMark(StorageManager *pMgr, MMResult *pmmResult){
     char * cursor = NULL;
@@ -120,7 +118,7 @@ void mmFollow(StorageManager *pMgr, void *pUserData, MMResult *pmmResult){
             break;
     }
 }
-//cory code
+
 void mmCollect(StorageManager *pMgr, MMResult *pmmResult){
     //sets free nodes to F from C
     char * pCur;
@@ -164,28 +162,47 @@ void mmCollect(StorageManager *pMgr, MMResult *pmmResult){
     pMgr->pFreeHead = (FreeNode *)pPrev;
 }
 
-/*void mmCollect(StorageManager *pMgr)
+/*void mmCollect(StorageManager *pMgr, MMResult *pmmResult)
 {
-    char * pCur;
-    char * pLoop;
-    char * pNext;
-    char * pPrev = NULL;
-    FreeNode * pNewFreeNode = (FreeNode *)0;
-    short shTotalNodeSize = 0;
-    short shTempSize=0;
+    char *pCurr;
+    char *pTrace;
+    char *pPrev = (char *)0;
+    FreeNode *pNewNode;
+    short shTempSize;
+    int totalSize;
 
-    for(pCur = pMgr->pBeginStorage;pCur < pMgr->pEndStorage; pCur = pNext)
+    pMgr->pFreeHead = (FreeNode *)0;
+
+    pCurr = pMgr->pBeginStorage;
+    while(pCurr < pMgr->pEndStorage)
     {
-        shTotalNodeSize = ((FreeNode *)pCur)->shNodeSize;
-        pNext = pCur + shTotalNodeSize;
-        if(((FreeNode *)pCur)->cGC == 'C')
+        shTempSize = ((FreeNode *)pCurr)->shNodeSize;
+        pTrace = pCurr + shTempSize;
+        if(((FreeNode *)pCurr)->cGC == 'C')\
         {
-            for(pLoop = pNext;((FreeNode *)pLoop)->cGC != 'U' && pLoop < pMgr->pEndStorage;pLoop += shTempSize)
+            if(pTrace < pMgr->pEndStorage && ((FreeNode *)pTrace)->cGC == 'C')
             {
-                
+                printf("\tCombining  %08lX with %08lX\n", ULAddr(pCurr), ULAddr(pTrace));
+                pNewNode = (FreeNode *)pCurr;
+                totalSize = ((FreeNode *)pCurr)->shNodeSize + ((FreeNode *)pTrace)->shNodeSize;
+                pNewNode->shNodeSize = totalSize;
+            }
+            else
+            {
+                printf("\tCollecting %08lX\n", ULAddr(pCurr));
+                pNewNode = (FreeNode *)pCurr;
+                pNewNode->cGC = 'F';
+                pNewNode->pFreeNext = (FreeNode *)pPrev;
+                pPrev = pCurr;
+                pCurr += shTempSize;
             }
         }
+        else
+        {
+            pCurr += shTempSize;
+        }
     }
+    pMgr->pFreeHead = (FreeNode *)pPrev;
 }*/
 
 void mmAssoc(StorageManager *pMgr, void *pUserDataFrom, char szAttrName[], void *pUserDataTo, MMResult *pmmResult){

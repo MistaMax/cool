@@ -16,7 +16,7 @@ LineItem      5           32
 >>> ALLOC C111 Customer 111,Sal A Mander,NULL,NULL,100.00
 >>> PRTNODE C111
 	Alloc Address  Size Node Type Data Address  
- 	0x1cfbc20        53      0    01CFBC25
+ 	0x13d1c20        53      0    013D1C25
 			Attr Name      Type Value     
 			customerId       S  111
 			name             S  Sal A Mander
@@ -27,14 +27,14 @@ LineItem      5           32
 >>> ALLOC PPF001 LineItem PPF001,5,9.95,NULL
 >>> PRTALL
 	Alloc Address  Size Node Type Data Address  
- 	0x1cfbc8a        37      1    01CFBC8F
+ 	0x13d1c8a        37      1    013D1C8F
 			Attr Name      Type Value     
 			productId        S  PPF001
 			iQtyReq          I  5
 			dCost            D  9.950000
 			pNextItem        P  00000000
 	Alloc Address  Size Node Type Data Address  
- 	0x1cfbc55        53      0    01CFBC5A
+ 	0x13d1c55        53      0    013D1C5A
 			Attr Name      Type Value     
 			customerId       S  222
 			name             S  Barb Wire
@@ -42,7 +42,7 @@ LineItem      5           32
 			pNextCust        P  00000000
 			balance          D  200.000000
 	Alloc Address  Size Node Type Data Address  
- 	0x1cfbc20        53      0    01CFBC25
+ 	0x13d1c20        53      0    013D1C25
 			Attr Name      Type Value     
 			customerId       S  111
 			name             S  Sal A Mander
@@ -57,12 +57,12 @@ LineItem      5           32
 * customer 111's  pNextCust should point to 222
 >>> PRTNODE C111 
 	Alloc Address  Size Node Type Data Address  
- 	0x1cfbc20        53      0    01CFBC25
+ 	0x13d1c20        53      0    013D1C25
 			Attr Name      Type Value     
 			customerId       S  111
 			name             S  Sal A Mander
 			pFirstItem       P  00000000
-			pNextCust        P  01CFBC5A
+			pNextCust        P  013D1C5A
 			balance          D  100.000000
 *
 * associate customer 111 to PPF001
@@ -70,12 +70,12 @@ LineItem      5           32
 >>> ASSOC C111 pFirstItem PPF001
 >>> PRTNODE C111
 	Alloc Address  Size Node Type Data Address  
- 	0x1cfbc20        53      0    01CFBC25
+ 	0x13d1c20        53      0    013D1C25
 			Attr Name      Type Value     
 			customerId       S  111
 			name             S  Sal A Mander
-			pFirstItem       P  01CFBC8F
-			pNextCust        P  01CFBC5A
+			pFirstItem       P  013D1C8F
+			pNextCust        P  013D1C5A
 			balance          D  100.000000
 * associate customer 222 to 333
 >>> ALLOC C333 Customer 333,Misty Wind,NULL,NULL,70.00
@@ -86,7 +86,7 @@ LineItem      5           32
 *
 >>> PRTALL
 	Alloc Address  Size Node Type Data Address  
- 	0x1cfbcaf        53      0    01CFBCB4
+ 	0x13d1caf        53      0    013D1CB4
 			Attr Name      Type Value     
 			customerId       S  333
 			name             S  Misty Wind
@@ -94,27 +94,27 @@ LineItem      5           32
 			pNextCust        P  00000000
 			balance          D  70.000000
 	Alloc Address  Size Node Type Data Address  
- 	0x1cfbc8a        37      1    01CFBC8F
+ 	0x13d1c8a        37      1    013D1C8F
 			Attr Name      Type Value     
 			productId        S  PPF001
 			iQtyReq          I  5
 			dCost            D  9.950000
 			pNextItem        P  00000000
 	Alloc Address  Size Node Type Data Address  
- 	0x1cfbc55        53      0    01CFBC5A
+ 	0x13d1c55        53      0    013D1C5A
 			Attr Name      Type Value     
 			customerId       S  222
 			name             S  Barb Wire
 			pFirstItem       P  00000000
-			pNextCust        P  01CFBCB4
+			pNextCust        P  013D1CB4
 			balance          D  200.000000
 	Alloc Address  Size Node Type Data Address  
- 	0x1cfbc20        53      0    01CFBC25
+ 	0x13d1c20        53      0    013D1C25
 			Attr Name      Type Value     
 			customerId       S  111
 			name             S  Sal A Mander
-			pFirstItem       P  01CFBC8F
-			pNextCust        P  01CFBC5A
+			pFirstItem       P  013D1C8F
+			pNextCust        P  013D1C5A
 			balance          D  100.000000
 
 * add another customer
@@ -122,39 +122,39 @@ LineItem      5           32
 >>> ASSOC C333 pNextCust C444
 >>> DUMP
 	Address  Mem   Size NodeType
-	01CFBC20 InUse   53   0
-			   01CFBC25 1  1  1  .  .  .  .  .  S  a  l     A     M  a  n  d  e  r  
+	013D1C20 InUse   53   0
+			   013D1C25 1  1  1  .  .  .  .  .  S  a  l     A     M  a  n  d  e  r  
 			            31 31 31 00 00 00 00 00 53 61 6C 20 41 20 4D 61 6E 64 65 72 
-			   01CFBC39 .  .  .  .  .  .  .  .  .  .  .  .  Z  .  .  .  .  .  .  .  
-			            00 00 00 00 8F BC CF 01 00 00 00 00 5A BC CF 01 00 00 00 00 
-			   01CFBC4D .  .  .  .  .  .  Y  @  
+			   013D1C39 .  .  .  .  .  .  =  .  .  .  .  .  Z  .  =  .  .  .  .  .  
+			            00 00 00 00 8F 1C 3D 01 00 00 00 00 5A 1C 3D 01 00 00 00 00 
+			   013D1C4D .  .  .  .  .  .  Y  @  
 			            00 00 00 00 00 00 59 40 
-	01CFBC55 InUse   53   0
-			   01CFBC5A 2  2  2  .  .  .  .  .  B  a  r  b     W  i  r  e  .  .  .  
+	013D1C55 InUse   53   0
+			   013D1C5A 2  2  2  .  .  .  .  .  B  a  r  b     W  i  r  e  .  .  .  
 			            32 32 32 00 00 00 00 00 42 61 72 62 20 57 69 72 65 00 00 00 
-			   01CFBC6E .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
-			            00 00 00 00 00 00 00 00 00 00 00 00 B4 BC CF 01 00 00 00 00 
-			   01CFBC82 .  .  .  .  .  .  i  @  
+			   013D1C6E .  .  .  .  .  .  .  .  .  .  .  .  .  .  =  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 B4 1C 3D 01 00 00 00 00 
+			   013D1C82 .  .  .  .  .  .  i  @  
 			            00 00 00 00 00 00 69 40 
-	01CFBC8A InUse   37   1
-			   01CFBC8F P  P  F  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+	013D1C8A InUse   37   1
+			   013D1C8F P  P  F  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
 			            50 50 46 30 30 31 00 00 00 00 00 00 05 00 00 00 66 66 66 66 
-			   01CFBCA3 f  .  #  @  .  .  .  .  .  .  .  .  
+			   013D1CA3 f  .  #  @  .  .  .  .  .  .  .  .  
 			            66 E6 23 40 00 00 00 00 00 00 00 00 
-	01CFBCAF InUse   53   0
-			   01CFBCB4 3  3  3  .  .  .  .  .  M  i  s  t  y     W  i  n  d  .  .  
+	013D1CAF InUse   53   0
+			   013D1CB4 3  3  3  .  .  .  .  .  M  i  s  t  y     W  i  n  d  .  .  
 			            33 33 33 00 00 00 00 00 4D 69 73 74 79 20 57 69 6E 64 00 00 
-			   01CFBCC8 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
-			            00 00 00 00 00 00 00 00 00 00 00 00 E9 BC CF 01 00 00 00 00 
-			   01CFBCDC .  .  .  .  .  .  Q  @  
+			   013D1CC8 .  .  .  .  .  .  .  .  .  .  .  .  .  .  =  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 E9 1C 3D 01 00 00 00 00 
+			   013D1CDC .  .  .  .  .  .  Q  @  
 			            00 00 00 00 00 80 51 40 
-	01CFBCE4 InUse   53   0
-			   01CFBCE9 4  4  4  .  .  .  .  .  E  m  o  r  y     B  o  a  r  d  .  
+	013D1CE4 InUse   53   0
+			   013D1CE9 4  4  4  .  .  .  .  .  E  m  o  r  y     B  o  a  r  d  .  
 			            34 34 34 00 00 00 00 00 45 6D 6F 72 79 20 42 6F 61 72 64 00 
-			   01CFBCFD thru 01CFBD10 (1 lines) suppressed - all zero
-			   01CFBD11 .  .  .  .  Q  8  F  @  
+			   013D1CFD thru 013D1D10 (1 lines) suppressed - all zero
+			   013D1D11 .  .  .  .  Q  8  F  @  
 			            B8 1E 85 EB 51 38 46 40 
-	01CFBD19 Free   651
+	013D1D19 Free   651
 			Next:00000000
 *
 * Allocate another node and associate it with 222
@@ -193,114 +193,114 @@ LineItem      5           32
 >>> DEREF SSX001
 >>> DUMP
 	Address  Mem   Size NodeType
-	01CFBC20 InUse   53   0
-			   01CFBC25 1  1  1  .  .  .  .  .  S  a  l     A     M  a  n  d  e  r  
+	013D1C20 InUse   53   0
+			   013D1C25 1  1  1  .  .  .  .  .  S  a  l     A     M  a  n  d  e  r  
 			            31 31 31 00 00 00 00 00 53 61 6C 20 41 20 4D 61 6E 64 65 72 
-			   01CFBC39 .  .  .  .  .  .  .  .  .  .  .  .  Z  .  .  .  .  .  .  .  
-			            00 00 00 00 8F BC CF 01 00 00 00 00 5A BC CF 01 00 00 00 00 
-			   01CFBC4D .  .  .  .  .  .  Y  @  
+			   013D1C39 .  .  .  .  .  .  =  .  .  .  .  .  Z  .  =  .  .  .  .  .  
+			            00 00 00 00 8F 1C 3D 01 00 00 00 00 5A 1C 3D 01 00 00 00 00 
+			   013D1C4D .  .  .  .  .  .  Y  @  
 			            00 00 00 00 00 00 59 40 
-	01CFBC55 InUse   53   0
-			   01CFBC5A 2  2  2  .  .  .  .  .  B  a  r  b     W  i  r  e  .  .  .  
+	013D1C55 InUse   53   0
+			   013D1C5A 2  2  2  .  .  .  .  .  B  a  r  b     W  i  r  e  .  .  .  
 			            32 32 32 00 00 00 00 00 42 61 72 62 20 57 69 72 65 00 00 00 
-			   01CFBC6E .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
-			            00 00 00 00 00 00 00 00 00 00 00 00 B4 BC CF 01 00 00 00 00 
-			   01CFBC82 .  .  .  .  .  .  i  @  
+			   013D1C6E .  .  .  .  .  .  .  .  .  .  .  .  .  .  =  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 B4 1C 3D 01 00 00 00 00 
+			   013D1C82 .  .  .  .  .  .  i  @  
 			            00 00 00 00 00 00 69 40 
-	01CFBC8A InUse   37   1
-			   01CFBC8F P  P  F  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+	013D1C8A InUse   37   1
+			   013D1C8F P  P  F  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
 			            50 50 46 30 30 31 00 00 00 00 00 00 05 00 00 00 66 66 66 66 
-			   01CFBCA3 f  .  #  @  .  .  .  .  .  .  .  .  
+			   013D1CA3 f  .  #  @  .  .  .  .  .  .  .  .  
 			            66 E6 23 40 00 00 00 00 00 00 00 00 
-	01CFBCAF InUse   53   0
-			   01CFBCB4 3  3  3  .  .  .  .  .  M  i  s  t  y     W  i  n  d  .  .  
+	013D1CAF InUse   53   0
+			   013D1CB4 3  3  3  .  .  .  .  .  M  i  s  t  y     W  i  n  d  .  .  
 			            33 33 33 00 00 00 00 00 4D 69 73 74 79 20 57 69 6E 64 00 00 
-			   01CFBCC8 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
-			            00 00 00 00 00 00 00 00 00 00 00 00 E9 BC CF 01 00 00 00 00 
-			   01CFBCDC .  .  .  .  .  .  Q  @  
+			   013D1CC8 .  .  .  .  .  .  .  .  .  .  .  .  .  .  =  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 E9 1C 3D 01 00 00 00 00 
+			   013D1CDC .  .  .  .  .  .  Q  @  
 			            00 00 00 00 00 80 51 40 
-	01CFBCE4 InUse   53   0
-			   01CFBCE9 4  4  4  .  .  .  .  .  E  m  o  r  y     B  o  a  r  d  .  
+	013D1CE4 InUse   53   0
+			   013D1CE9 4  4  4  .  .  .  .  .  E  m  o  r  y     B  o  a  r  d  .  
 			            34 34 34 00 00 00 00 00 45 6D 6F 72 79 20 42 6F 61 72 64 00 
-			   01CFBCFD .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
-			            00 00 00 00 00 00 00 00 00 00 00 00 D2 BD CF 01 00 00 00 00 
-			   01CFBD11 .  .  .  .  Q  8  F  @  
+			   013D1CFD .  .  .  .  .  .  .  .  .  .  .  .  .  .  =  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 D2 1D 3D 01 00 00 00 00 
+			   013D1D11 .  .  .  .  Q  8  F  @  
 			            B8 1E 85 EB 51 38 46 40 
-	01CFBD19 InUse   53   0
-			   01CFBD1E 5  5  5  .  .  .  .  .  H  o  l  l  y     G  r  a  p  h  .  
+	013D1D19 InUse   53   0
+			   013D1D1E 5  5  5  .  .  .  .  .  H  o  l  l  y     G  r  a  p  h  .  
 			            35 35 35 00 00 00 00 00 48 6F 6C 6C 79 20 47 72 61 70 68 00 
-			   01CFBD32 .  .  .  .  S  .  .  .  .  .  .  .  Z  .  .  .  .  .  .  .  
-			            00 00 00 00 53 BD CF 01 00 00 00 00 5A BC CF 01 00 00 00 00 
-			   01CFBD46 .  .  .  .  .  .  K  @  
+			   013D1D32 .  .  .  .  S  .  =  .  .  .  .  .  Z  .  =  .  .  .  .  .  
+			            00 00 00 00 53 1D 3D 01 00 00 00 00 5A 1C 3D 01 00 00 00 00 
+			   013D1D46 .  .  .  .  .  .  K  @  
 			            00 00 00 00 00 80 4B 40 
-	01CFBD4E InUse   37   1
-			   01CFBD53 S  B  B  0  0  1  .  .  .  .  .  .  .  .  .  .  3  3  3  3  
+	013D1D4E InUse   37   1
+			   013D1D53 S  B  B  0  0  1  .  .  .  .  .  .  .  .  .  .  3  3  3  3  
 			            53 42 42 30 30 31 00 00 00 00 00 00 02 00 00 00 33 33 33 33 
-			   01CFBD67 3  .  3  @  x  .  .  .  .  .  .  .  
-			            33 F3 33 40 78 BD CF 01 00 00 00 00 
-	01CFBD73 InUse   37   1
-			   01CFBD78 B  O  M  0  0  1  .  .  .  .  .  .  .  .  .  .  3  3  3  3  
+			   013D1D67 3  .  3  @  x  .  =  .  .  .  .  .  
+			            33 F3 33 40 78 1D 3D 01 00 00 00 00 
+	013D1D73 InUse   37   1
+			   013D1D78 B  O  M  0  0  1  .  .  .  .  .  .  .  .  .  .  3  3  3  3  
 			            42 4F 4D 30 30 31 00 00 00 00 00 00 01 00 00 00 33 33 33 33 
-			   01CFBD8C 3  .  =  @  .  .  .  .  .  .  .  .  
+			   013D1D8C 3  .  =  @  .  .  .  .  .  .  .  .  
 			            33 F3 3D 40 00 00 00 00 00 00 00 00 
-	01CFBD98 InUse   53   0
-			   01CFBD9D 6  6  6  .  .  .  .  .  B  o  b     L     H  e  a  d  .  .  
+	013D1D98 InUse   53   0
+			   013D1D9D 6  6  6  .  .  .  .  .  B  o  b     L     H  e  a  d  .  .  
 			            36 36 36 00 00 00 00 00 42 6F 62 20 4C 20 48 65 61 64 00 00 
-			   01CFBDB1 thru 01CFBDC4 (1 lines) suppressed - all zero
-			   01CFBDC5 .  .  .  .  .  .  P  @  
+			   013D1DB1 thru 013D1DC4 (1 lines) suppressed - all zero
+			   013D1DC5 .  .  .  .  .  .  P  @  
 			            00 00 00 00 00 80 50 40 
-	01CFBDCD InUse   53   0
-			   01CFBDD2 7  7  7  .  .  .  .  .  F  l  o     N     W  a  t  e  r  .  
+	013D1DCD InUse   53   0
+			   013D1DD2 7  7  7  .  .  .  .  .  F  l  o     N     W  a  t  e  r  .  
 			            37 37 37 00 00 00 00 00 46 6C 6F 20 4E 20 57 61 74 65 72 00 
-			   01CFBDE6 thru 01CFBDF9 (1 lines) suppressed - all zero
-			   01CFBDFA .  .  .  .  .  @  S  @  
+			   013D1DE6 thru 013D1DF9 (1 lines) suppressed - all zero
+			   013D1DFA .  .  .  .  .  @  S  @  
 			            00 00 00 00 00 40 53 40 
-	01CFBE02 InUse   53   0
-			   01CFBE07 8  8  8  .  .  .  .  .  J  o  e     K  i  n  g  .  .  .  .  
+	013D1E02 InUse   53   0
+			   013D1E07 8  8  8  .  .  .  .  .  J  o  e     K  i  n  g  .  .  .  .  
 			            38 38 38 00 00 00 00 00 4A 6F 65 20 4B 69 6E 67 00 00 00 00 
-			   01CFBE1B thru 01CFBE2E (1 lines) suppressed - all zero
-			   01CFBE2F .  .  .  .  .  .  V  @  
+			   013D1E1B thru 013D1E2E (1 lines) suppressed - all zero
+			   013D1E2F .  .  .  .  .  .  V  @  
 			            00 00 00 00 00 00 56 40 
-	01CFBE37 InUse   53   0
-			   01CFBE3C 9  1  1  .  .  .  .  .  L  e  e     K  i  n  g  .  .  .  .  
+	013D1E37 InUse   53   0
+			   013D1E3C 9  1  1  .  .  .  .  .  L  e  e     K  i  n  g  .  .  .  .  
 			            39 31 31 00 00 00 00 00 4C 65 65 20 4B 69 6E 67 00 00 00 00 
-			   01CFBE50 thru 01CFBE63 (1 lines) suppressed - all zero
-			   01CFBE64 .  .  .  .  .  .  V  @  
+			   013D1E50 thru 013D1E63 (1 lines) suppressed - all zero
+			   013D1E64 .  .  .  .  .  .  V  @  
 			            00 00 00 00 00 C0 56 40 
-	01CFBE6C InUse   53   0
-			   01CFBE71 9  2  2  .  .  .  .  .  M  a  e     K  i  n  g  .  .  .  .  
+	013D1E6C InUse   53   0
+			   013D1E71 9  2  2  .  .  .  .  .  M  a  e     K  i  n  g  .  .  .  .  
 			            39 32 32 00 00 00 00 00 4D 61 65 20 4B 69 6E 67 00 00 00 00 
-			   01CFBE85 thru 01CFBE98 (1 lines) suppressed - all zero
-			   01CFBE99 .  .  .  .  .  .  W  @  
+			   013D1E85 thru 013D1E98 (1 lines) suppressed - all zero
+			   013D1E99 .  .  .  .  .  .  W  @  
 			            00 00 00 00 00 00 57 40 
-	01CFBEA1 InUse   37   1
-			   01CFBEA6 M  C  W  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+	013D1EA1 InUse   37   1
+			   013D1EA6 M  C  W  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
 			            4D 43 57 30 30 31 00 00 00 00 00 00 01 00 00 00 66 66 66 66 
-			   01CFBEBA f  .  (  @  5  .  .  .  .  .  .  .  
-			            66 E6 28 40 35 BF CF 01 00 00 00 00 
-	01CFBEC6 InUse   53   0
-			   01CFBECB 9  3  3  .  .  .  .  .  R  a  y     K  i  n  g  .  .  .  .  
+			   013D1EBA f  .  (  @  5  .  =  .  .  .  .  .  
+			            66 E6 28 40 35 1F 3D 01 00 00 00 00 
+	013D1EC6 InUse   53   0
+			   013D1ECB 9  3  3  .  .  .  .  .  R  a  y     K  i  n  g  .  .  .  .  
 			            39 33 33 00 00 00 00 00 52 61 79 20 4B 69 6E 67 00 00 00 00 
-			   01CFBEDF thru 01CFBEF2 (1 lines) suppressed - all zero
-			   01CFBEF3 .  .  .  .  .  @  W  @  
+			   013D1EDF thru 013D1EF2 (1 lines) suppressed - all zero
+			   013D1EF3 .  .  .  .  .  @  W  @  
 			            00 00 00 00 00 40 57 40 
-	01CFBEFB InUse   53   0
-			   01CFBF00 9  4  4  .  .  .  .  .  F  r  e  i  d  a     K  i  n  g  .  
+	013D1EFB InUse   53   0
+			   013D1F00 9  4  4  .  .  .  .  .  F  r  e  i  d  a     K  i  n  g  .  
 			            39 34 34 00 00 00 00 00 46 72 65 69 64 61 20 4B 69 6E 67 00 
-			   01CFBF14 thru 01CFBF27 (1 lines) suppressed - all zero
-			   01CFBF28 .  .  .  .  .  .  W  @  
+			   013D1F14 thru 013D1F27 (1 lines) suppressed - all zero
+			   013D1F28 .  .  .  .  .  .  W  @  
 			            00 00 00 00 00 80 57 40 
-	01CFBF30 InUse   37   1
-			   01CFBF35 S  S  X  0  0  1  .  .  .  .  .  .  .  .  .  .  3  3  3  3  
+	013D1F30 InUse   37   1
+			   013D1F35 S  S  X  0  0  1  .  .  .  .  .  .  .  .  .  .  3  3  3  3  
 			            53 53 58 30 30 31 00 00 00 00 00 00 01 00 00 00 33 33 33 33 
-			   01CFBF49 3  .  =  @  .  .  .  .  .  .  .  .  
+			   013D1F49 3  .  =  @  .  .  .  .  .  .  .  .  
 			            33 F3 3D 40 00 00 00 00 00 00 00 00 
-	01CFBF55 InUse   37   1
-			   01CFBF5A T  T  P  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+	013D1F55 InUse   37   1
+			   013D1F5A T  T  P  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
 			            54 54 50 30 30 31 00 00 00 00 00 00 02 00 00 00 66 66 66 66 
-			   01CFBF6E f  .  #  @  .  .  .  .  .  .  .  .  
+			   013D1F6E f  .  #  @  .  .  .  .  .  .  .  .  
 			            66 E6 23 40 00 00 00 00 00 00 00 00 
-	01CFBF7A Free    42
+	013D1F7A Free    42
 			Next:00000000
 *
 * XXXXXX 1
@@ -311,7 +311,7 @@ LineItem      5           32
 >>> ALLOC NHC001 LineItem NHC001,1,9.95,NULL
 >>> PRTALL
 	Alloc Address  Size Node Type Data Address  
- 	0x1cfbefb        53      0    01CFBF00
+ 	0x13d1efb        53      0    013D1F00
 			Attr Name      Type Value     
 			customerId       S  944
 			name             S  Freida King
@@ -319,14 +319,14 @@ LineItem      5           32
 			pNextCust        P  00000000
 			balance          D  94.000000
 	Alloc Address  Size Node Type Data Address  
- 	0x1cfbea1        37      1    01CFBEA6
+ 	0x13d1ea1        37      1    013D1EA6
 			Attr Name      Type Value     
 			productId        S  MCW001
 			iQtyReq          I  1
 			dCost            D  12.450000
-			pNextItem        P  01CFBF35
+			pNextItem        P  013D1F35
 	Alloc Address  Size Node Type Data Address  
- 	0x1cfbe37        53      0    01CFBE3C
+ 	0x13d1e37        53      0    013D1E3C
 			Attr Name      Type Value     
 			customerId       S  911
 			name             S  Lee King
@@ -334,7 +334,7 @@ LineItem      5           32
 			pNextCust        P  00000000
 			balance          D  91.000000
 	Alloc Address  Size Node Type Data Address  
- 	0x1cfbe02        53      0    01CFBE07
+ 	0x13d1e02        53      0    013D1E07
 			Attr Name      Type Value     
 			customerId       S  888
 			name             S  Joe King
@@ -342,15 +342,15 @@ LineItem      5           32
 			pNextCust        P  00000000
 			balance          D  88.000000
 	Alloc Address  Size Node Type Data Address  
- 	0x1cfbcaf        53      0    01CFBCB4
+ 	0x13d1caf        53      0    013D1CB4
 			Attr Name      Type Value     
 			customerId       S  333
 			name             S  Misty Wind
 			pFirstItem       P  00000000
-			pNextCust        P  01CFBCE9
+			pNextCust        P  013D1CE9
 			balance          D  70.000000
 	Alloc Address  Size Node Type Data Address  
- 	0x1cfbe6c        53      0    01CFBE71
+ 	0x13d1e6c        53      0    013D1E71
 			Attr Name      Type Value     
 			customerId       S  922
 			name             S  Mae King
@@ -358,22 +358,22 @@ LineItem      5           32
 			pNextCust        P  00000000
 			balance          D  92.000000
 	Alloc Address  Size Node Type Data Address  
- 	0x1cfbc55        53      0    01CFBC5A
+ 	0x13d1c55        53      0    013D1C5A
 			Attr Name      Type Value     
 			customerId       S  222
 			name             S  Barb Wire
 			pFirstItem       P  00000000
-			pNextCust        P  01CFBCB4
+			pNextCust        P  013D1CB4
 			balance          D  200.000000
 	Alloc Address  Size Node Type Data Address  
- 	0x1cfbd73        37      1    01CFBD78
+ 	0x13d1d73        37      1    013D1D78
 			Attr Name      Type Value     
 			productId        S  BOM001
 			iQtyReq          I  1
 			dCost            D  29.950000
 			pNextItem        P  00000000
 	Alloc Address  Size Node Type Data Address  
- 	0x1cfbec6        53      0    01CFBECB
+ 	0x13d1ec6        53      0    013D1ECB
 			Attr Name      Type Value     
 			customerId       S  933
 			name             S  Ray King
@@ -381,59 +381,59 @@ LineItem      5           32
 			pNextCust        P  00000000
 			balance          D  93.000000
 	Alloc Address  Size Node Type Data Address  
- 	0x1cfbc8a        37      1    01CFBC8F
+ 	0x13d1c8a        37      1    013D1C8F
 			Attr Name      Type Value     
 			productId        S  PPF001
 			iQtyReq          I  5
 			dCost            D  9.950000
 			pNextItem        P  00000000
 	Alloc Address  Size Node Type Data Address  
- 	0x1cfbd19        53      0    01CFBD1E
+ 	0x13d1d19        53      0    013D1D1E
 			Attr Name      Type Value     
 			customerId       S  555
 			name             S  Holly Graph
-			pFirstItem       P  01CFBD53
-			pNextCust        P  01CFBC5A
+			pFirstItem       P  013D1D53
+			pNextCust        P  013D1C5A
 			balance          D  55.000000
 	Alloc Address  Size Node Type Data Address  
- 	0x1cfbc20        53      0    01CFBC25
+ 	0x13d1c20        53      0    013D1C25
 			Attr Name      Type Value     
 			customerId       S  111
 			name             S  Sal A Mander
-			pFirstItem       P  01CFBC8F
-			pNextCust        P  01CFBC5A
+			pFirstItem       P  013D1C8F
+			pNextCust        P  013D1C5A
 			balance          D  100.000000
 	Alloc Address  Size Node Type Data Address  
- 	0x1cfbf7a        37      1    01CFBF7F
+ 	0x13d1f7a        42      1    013D1F7F
 			Attr Name      Type Value     
 			productId        S  NHC001
 			iQtyReq          I  1
 			dCost            D  9.950000
 			pNextItem        P  00000000
 	Alloc Address  Size Node Type Data Address  
- 	0x1cfbf55        37      1    01CFBF5A
+ 	0x13d1f55        37      1    013D1F5A
 			Attr Name      Type Value     
 			productId        S  TTP001
 			iQtyReq          I  2
 			dCost            D  9.950000
 			pNextItem        P  00000000
 	Alloc Address  Size Node Type Data Address  
- 	0x1cfbce4        53      0    01CFBCE9
+ 	0x13d1ce4        53      0    013D1CE9
 			Attr Name      Type Value     
 			customerId       S  444
 			name             S  Emory Board
 			pFirstItem       P  00000000
-			pNextCust        P  01CFBDD2
+			pNextCust        P  013D1DD2
 			balance          D  44.440000
 	Alloc Address  Size Node Type Data Address  
- 	0x1cfbd4e        37      1    01CFBD53
+ 	0x13d1d4e        37      1    013D1D53
 			Attr Name      Type Value     
 			productId        S  SBB001
 			iQtyReq          I  2
 			dCost            D  19.950000
-			pNextItem        P  01CFBD78
+			pNextItem        P  013D1D78
 	Alloc Address  Size Node Type Data Address  
- 	0x1cfbd98        53      0    01CFBD9D
+ 	0x13d1d98        53      0    013D1D9D
 			Attr Name      Type Value     
 			customerId       S  666
 			name             S  Bob L Head
@@ -441,7 +441,7 @@ LineItem      5           32
 			pNextCust        P  00000000
 			balance          D  66.000000
 	Alloc Address  Size Node Type Data Address  
- 	0x1cfbdcd        53      0    01CFBDD2
+ 	0x13d1dcd        53      0    013D1DD2
 			Attr Name      Type Value     
 			customerId       S  777
 			name             S  Flo N Water
@@ -457,115 +457,115 @@ LineItem      5           32
 * 
 >>> DUMP
 	Address  Mem   Size NodeType
-	01CFBC20 InUse   53   0
-			   01CFBC25 1  1  1  .  .  .  .  .  S  a  l     A     M  a  n  d  e  r  
+	013D1C20 InUse   53   0
+			   013D1C25 1  1  1  .  .  .  .  .  S  a  l     A     M  a  n  d  e  r  
 			            31 31 31 00 00 00 00 00 53 61 6C 20 41 20 4D 61 6E 64 65 72 
-			   01CFBC39 .  .  .  .  .  .  .  .  .  .  .  .  Z  .  .  .  .  .  .  .  
-			            00 00 00 00 8F BC CF 01 00 00 00 00 5A BC CF 01 00 00 00 00 
-			   01CFBC4D .  .  .  .  .  .  Y  @  
+			   013D1C39 .  .  .  .  .  .  =  .  .  .  .  .  Z  .  =  .  .  .  .  .  
+			            00 00 00 00 8F 1C 3D 01 00 00 00 00 5A 1C 3D 01 00 00 00 00 
+			   013D1C4D .  .  .  .  .  .  Y  @  
 			            00 00 00 00 00 00 59 40 
-	01CFBC55 InUse   53   0
-			   01CFBC5A 2  2  2  .  .  .  .  .  B  a  r  b     W  i  r  e  .  .  .  
+	013D1C55 InUse   53   0
+			   013D1C5A 2  2  2  .  .  .  .  .  B  a  r  b     W  i  r  e  .  .  .  
 			            32 32 32 00 00 00 00 00 42 61 72 62 20 57 69 72 65 00 00 00 
-			   01CFBC6E .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
-			            00 00 00 00 00 00 00 00 00 00 00 00 B4 BC CF 01 00 00 00 00 
-			   01CFBC82 .  .  .  .  .  .  i  @  
+			   013D1C6E .  .  .  .  .  .  .  .  .  .  .  .  .  .  =  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 B4 1C 3D 01 00 00 00 00 
+			   013D1C82 .  .  .  .  .  .  i  @  
 			            00 00 00 00 00 00 69 40 
-	01CFBC8A InUse   37   1
-			   01CFBC8F P  P  F  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+	013D1C8A InUse   37   1
+			   013D1C8F P  P  F  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
 			            50 50 46 30 30 31 00 00 00 00 00 00 05 00 00 00 66 66 66 66 
-			   01CFBCA3 f  .  #  @  .  .  .  .  .  .  .  .  
+			   013D1CA3 f  .  #  @  .  .  .  .  .  .  .  .  
 			            66 E6 23 40 00 00 00 00 00 00 00 00 
-	01CFBCAF InUse   53   0
-			   01CFBCB4 3  3  3  .  .  .  .  .  M  i  s  t  y     W  i  n  d  .  .  
+	013D1CAF InUse   53   0
+			   013D1CB4 3  3  3  .  .  .  .  .  M  i  s  t  y     W  i  n  d  .  .  
 			            33 33 33 00 00 00 00 00 4D 69 73 74 79 20 57 69 6E 64 00 00 
-			   01CFBCC8 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
-			            00 00 00 00 00 00 00 00 00 00 00 00 E9 BC CF 01 00 00 00 00 
-			   01CFBCDC .  .  .  .  .  .  Q  @  
+			   013D1CC8 .  .  .  .  .  .  .  .  .  .  .  .  .  .  =  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 E9 1C 3D 01 00 00 00 00 
+			   013D1CDC .  .  .  .  .  .  Q  @  
 			            00 00 00 00 00 80 51 40 
-	01CFBCE4 InUse   53   0
-			   01CFBCE9 4  4  4  .  .  .  .  .  E  m  o  r  y     B  o  a  r  d  .  
+	013D1CE4 InUse   53   0
+			   013D1CE9 4  4  4  .  .  .  .  .  E  m  o  r  y     B  o  a  r  d  .  
 			            34 34 34 00 00 00 00 00 45 6D 6F 72 79 20 42 6F 61 72 64 00 
-			   01CFBCFD .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
-			            00 00 00 00 00 00 00 00 00 00 00 00 D2 BD CF 01 00 00 00 00 
-			   01CFBD11 .  .  .  .  Q  8  F  @  
+			   013D1CFD .  .  .  .  .  .  .  .  .  .  .  .  .  .  =  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 D2 1D 3D 01 00 00 00 00 
+			   013D1D11 .  .  .  .  Q  8  F  @  
 			            B8 1E 85 EB 51 38 46 40 
-	01CFBD19 InUse   53   0
-			   01CFBD1E 5  5  5  .  .  .  .  .  H  o  l  l  y     G  r  a  p  h  .  
+	013D1D19 InUse   53   0
+			   013D1D1E 5  5  5  .  .  .  .  .  H  o  l  l  y     G  r  a  p  h  .  
 			            35 35 35 00 00 00 00 00 48 6F 6C 6C 79 20 47 72 61 70 68 00 
-			   01CFBD32 .  .  .  .  S  .  .  .  .  .  .  .  Z  .  .  .  .  .  .  .  
-			            00 00 00 00 53 BD CF 01 00 00 00 00 5A BC CF 01 00 00 00 00 
-			   01CFBD46 .  .  .  .  .  .  K  @  
+			   013D1D32 .  .  .  .  S  .  =  .  .  .  .  .  Z  .  =  .  .  .  .  .  
+			            00 00 00 00 53 1D 3D 01 00 00 00 00 5A 1C 3D 01 00 00 00 00 
+			   013D1D46 .  .  .  .  .  .  K  @  
 			            00 00 00 00 00 80 4B 40 
-	01CFBD4E InUse   37   1
-			   01CFBD53 S  B  B  0  0  1  .  .  .  .  .  .  .  .  .  .  3  3  3  3  
+	013D1D4E InUse   37   1
+			   013D1D53 S  B  B  0  0  1  .  .  .  .  .  .  .  .  .  .  3  3  3  3  
 			            53 42 42 30 30 31 00 00 00 00 00 00 02 00 00 00 33 33 33 33 
-			   01CFBD67 3  .  3  @  x  .  .  .  .  .  .  .  
-			            33 F3 33 40 78 BD CF 01 00 00 00 00 
-	01CFBD73 InUse   37   1
-			   01CFBD78 B  O  M  0  0  1  .  .  .  .  .  .  .  .  .  .  3  3  3  3  
+			   013D1D67 3  .  3  @  x  .  =  .  .  .  .  .  
+			            33 F3 33 40 78 1D 3D 01 00 00 00 00 
+	013D1D73 InUse   37   1
+			   013D1D78 B  O  M  0  0  1  .  .  .  .  .  .  .  .  .  .  3  3  3  3  
 			            42 4F 4D 30 30 31 00 00 00 00 00 00 01 00 00 00 33 33 33 33 
-			   01CFBD8C 3  .  =  @  .  .  .  .  .  .  .  .  
+			   013D1D8C 3  .  =  @  .  .  .  .  .  .  .  .  
 			            33 F3 3D 40 00 00 00 00 00 00 00 00 
-	01CFBD98 InUse   53   0
-			   01CFBD9D 6  6  6  .  .  .  .  .  B  o  b     L     H  e  a  d  .  .  
+	013D1D98 InUse   53   0
+			   013D1D9D 6  6  6  .  .  .  .  .  B  o  b     L     H  e  a  d  .  .  
 			            36 36 36 00 00 00 00 00 42 6F 62 20 4C 20 48 65 61 64 00 00 
-			   01CFBDB1 thru 01CFBDC4 (1 lines) suppressed - all zero
-			   01CFBDC5 .  .  .  .  .  .  P  @  
+			   013D1DB1 thru 013D1DC4 (1 lines) suppressed - all zero
+			   013D1DC5 .  .  .  .  .  .  P  @  
 			            00 00 00 00 00 80 50 40 
-	01CFBDCD InUse   53   0
-			   01CFBDD2 7  7  7  .  .  .  .  .  F  l  o     N     W  a  t  e  r  .  
+	013D1DCD InUse   53   0
+			   013D1DD2 7  7  7  .  .  .  .  .  F  l  o     N     W  a  t  e  r  .  
 			            37 37 37 00 00 00 00 00 46 6C 6F 20 4E 20 57 61 74 65 72 00 
-			   01CFBDE6 thru 01CFBDF9 (1 lines) suppressed - all zero
-			   01CFBDFA .  .  .  .  .  @  S  @  
+			   013D1DE6 thru 013D1DF9 (1 lines) suppressed - all zero
+			   013D1DFA .  .  .  .  .  @  S  @  
 			            00 00 00 00 00 40 53 40 
-	01CFBE02 InUse   53   0
-			   01CFBE07 8  8  8  .  .  .  .  .  J  o  e     K  i  n  g  .  .  .  .  
+	013D1E02 InUse   53   0
+			   013D1E07 8  8  8  .  .  .  .  .  J  o  e     K  i  n  g  .  .  .  .  
 			            38 38 38 00 00 00 00 00 4A 6F 65 20 4B 69 6E 67 00 00 00 00 
-			   01CFBE1B thru 01CFBE2E (1 lines) suppressed - all zero
-			   01CFBE2F .  .  .  .  .  .  V  @  
+			   013D1E1B thru 013D1E2E (1 lines) suppressed - all zero
+			   013D1E2F .  .  .  .  .  .  V  @  
 			            00 00 00 00 00 00 56 40 
-	01CFBE37 InUse   53   0
-			   01CFBE3C 9  1  1  .  .  .  .  .  L  e  e     K  i  n  g  .  .  .  .  
+	013D1E37 InUse   53   0
+			   013D1E3C 9  1  1  .  .  .  .  .  L  e  e     K  i  n  g  .  .  .  .  
 			            39 31 31 00 00 00 00 00 4C 65 65 20 4B 69 6E 67 00 00 00 00 
-			   01CFBE50 thru 01CFBE63 (1 lines) suppressed - all zero
-			   01CFBE64 .  .  .  .  .  .  V  @  
+			   013D1E50 thru 013D1E63 (1 lines) suppressed - all zero
+			   013D1E64 .  .  .  .  .  .  V  @  
 			            00 00 00 00 00 C0 56 40 
-	01CFBE6C InUse   53   0
-			   01CFBE71 9  2  2  .  .  .  .  .  M  a  e     K  i  n  g  .  .  .  .  
+	013D1E6C InUse   53   0
+			   013D1E71 9  2  2  .  .  .  .  .  M  a  e     K  i  n  g  .  .  .  .  
 			            39 32 32 00 00 00 00 00 4D 61 65 20 4B 69 6E 67 00 00 00 00 
-			   01CFBE85 thru 01CFBE98 (1 lines) suppressed - all zero
-			   01CFBE99 .  .  .  .  .  .  W  @  
+			   013D1E85 thru 013D1E98 (1 lines) suppressed - all zero
+			   013D1E99 .  .  .  .  .  .  W  @  
 			            00 00 00 00 00 00 57 40 
-	01CFBEA1 InUse   37   1
-			   01CFBEA6 M  C  W  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+	013D1EA1 InUse   37   1
+			   013D1EA6 M  C  W  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
 			            4D 43 57 30 30 31 00 00 00 00 00 00 01 00 00 00 66 66 66 66 
-			   01CFBEBA f  .  (  @  5  .  .  .  .  .  .  .  
-			            66 E6 28 40 35 BF CF 01 00 00 00 00 
-	01CFBEC6 InUse   53   0
-			   01CFBECB 9  3  3  .  .  .  .  .  R  a  y     K  i  n  g  .  .  .  .  
+			   013D1EBA f  .  (  @  5  .  =  .  .  .  .  .  
+			            66 E6 28 40 35 1F 3D 01 00 00 00 00 
+	013D1EC6 InUse   53   0
+			   013D1ECB 9  3  3  .  .  .  .  .  R  a  y     K  i  n  g  .  .  .  .  
 			            39 33 33 00 00 00 00 00 52 61 79 20 4B 69 6E 67 00 00 00 00 
-			   01CFBEDF thru 01CFBEF2 (1 lines) suppressed - all zero
-			   01CFBEF3 .  .  .  .  .  @  W  @  
+			   013D1EDF thru 013D1EF2 (1 lines) suppressed - all zero
+			   013D1EF3 .  .  .  .  .  @  W  @  
 			            00 00 00 00 00 40 57 40 
-	01CFBEFB InUse   53   0
-			   01CFBF00 9  4  4  .  .  .  .  .  F  r  e  i  d  a     K  i  n  g  .  
+	013D1EFB InUse   53   0
+			   013D1F00 9  4  4  .  .  .  .  .  F  r  e  i  d  a     K  i  n  g  .  
 			            39 34 34 00 00 00 00 00 46 72 65 69 64 61 20 4B 69 6E 67 00 
-			   01CFBF14 thru 01CFBF27 (1 lines) suppressed - all zero
-			   01CFBF28 .  .  .  .  .  .  W  @  
+			   013D1F14 thru 013D1F27 (1 lines) suppressed - all zero
+			   013D1F28 .  .  .  .  .  .  W  @  
 			            00 00 00 00 00 80 57 40 
-	01CFBF30 InUse   37   1
-			   01CFBF35 S  S  X  0  0  1  .  .  .  .  .  .  .  .  .  .  3  3  3  3  
+	013D1F30 InUse   37   1
+			   013D1F35 S  S  X  0  0  1  .  .  .  .  .  .  .  .  .  .  3  3  3  3  
 			            53 53 58 30 30 31 00 00 00 00 00 00 01 00 00 00 33 33 33 33 
-			   01CFBF49 3  .  =  @  .  .  .  .  .  .  .  .  
+			   013D1F49 3  .  =  @  .  .  .  .  .  .  .  .  
 			            33 F3 3D 40 00 00 00 00 00 00 00 00 
-	01CFBF55 InUse   37   1
-			   01CFBF5A T  T  P  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+	013D1F55 InUse   37   1
+			   013D1F5A T  T  P  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
 			            54 54 50 30 30 31 00 00 00 00 00 00 02 00 00 00 66 66 66 66 
-			   01CFBF6E f  .  #  @  .  .  .  .  .  .  .  .  
+			   013D1F6E f  .  #  @  .  .  .  .  .  .  .  .  
 			            66 E6 23 40 00 00 00 00 00 00 00 00 
-	01CFBF7A InUse   37   1
-			   01CFBF7F N  H  C  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+	013D1F7A InUse   42   1
+			   013D1F7F N  H  C  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
 			            4E 48 43 30 30 31 00 00 00 00 00 00 01 00 00 00 66 66 66 66 
-			   01CFBF93 f  .  #  @  .  .  .  .  .  .  .  .  
-			            66 E6 23 40 00 0
+			   013D1F93 f  .  #  @  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            6
