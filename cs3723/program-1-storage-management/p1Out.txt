@@ -1,0 +1,1328 @@
+Metadata
+Node Type  Beg Attr Sub Total Sz
+Customer      0           48
+		Attribute Name Type Offset Size
+		customerId       S       0    8
+		name             S       8   16
+		pFirstItem       P      24    8
+		pNextCust        P      32    8
+		balance          D      40    8
+LineItem      5           32
+		Attribute Name Type Offset Size
+		productId        S       0   10
+		iQtyReq          I      12    4
+		dCost            D      16    8
+		pNextItem        P      24    8
+>>> ALLOC C111 Customer 111,Sal A Mander,NULL,NULL,100.00
+>>> PRTNODE C111
+	Alloc Address  Size Node Type Data Address  
+ 	0x107bc20        53      0    0107BC25
+			Attr Name      Type Value     
+			customerId       S  111
+			name             S  Sal A Mander
+			pFirstItem       P  00000000
+			pNextCust        P  00000000
+			balance          D  100.000000
+>>> ALLOC C222 Customer 222,Barb Wire,NULL,NULL,200.00
+>>> ALLOC PPF001 LineItem PPF001,5,9.95,NULL
+>>> PRTALL
+	Alloc Address  Size Node Type Data Address  
+ 	0x107bc8a        37      1    0107BC8F
+			Attr Name      Type Value     
+			productId        S  PPF001
+			iQtyReq          I  5
+			dCost            D  9.950000
+			pNextItem        P  00000000
+	Alloc Address  Size Node Type Data Address  
+ 	0x107bc55        53      0    0107BC5A
+			Attr Name      Type Value     
+			customerId       S  222
+			name             S  Barb Wire
+			pFirstItem       P  00000000
+			pNextCust        P  00000000
+			balance          D  200.000000
+	Alloc Address  Size Node Type Data Address  
+ 	0x107bc20        53      0    0107BC25
+			Attr Name      Type Value     
+			customerId       S  111
+			name             S  Sal A Mander
+			pFirstItem       P  00000000
+			pNextCust        P  00000000
+			balance          D  100.000000
+
+*
+* associate customer 111 with a next pointing to 222
+*
+>>> ASSOC C111 pNextCust C222
+* customer 111's  pNextCust should point to 222
+>>> PRTNODE C111 
+	Alloc Address  Size Node Type Data Address  
+ 	0x107bc20        53      0    0107BC25
+			Attr Name      Type Value     
+			customerId       S  111
+			name             S  Sal A Mander
+			pFirstItem       P  00000000
+			pNextCust        P  0107BC5A
+			balance          D  100.000000
+*
+* associate customer 111 to PPF001
+*
+>>> ASSOC C111 pFirstItem PPF001
+>>> PRTNODE C111
+	Alloc Address  Size Node Type Data Address  
+ 	0x107bc20        53      0    0107BC25
+			Attr Name      Type Value     
+			customerId       S  111
+			name             S  Sal A Mander
+			pFirstItem       P  0107BC8F
+			pNextCust        P  0107BC5A
+			balance          D  100.000000
+* associate customer 222 to 333
+>>> ALLOC C333 Customer 333,Misty Wind,NULL,NULL,70.00
+>>> ASSOC C222 pNextCust C333
+*
+* 111 should point to 222 which points to 333
+* 111 should also point to PPF001
+*
+>>> PRTALL
+	Alloc Address  Size Node Type Data Address  
+ 	0x107bcaf        53      0    0107BCB4
+			Attr Name      Type Value     
+			customerId       S  333
+			name             S  Misty Wind
+			pFirstItem       P  00000000
+			pNextCust        P  00000000
+			balance          D  70.000000
+	Alloc Address  Size Node Type Data Address  
+ 	0x107bc8a        37      1    0107BC8F
+			Attr Name      Type Value     
+			productId        S  PPF001
+			iQtyReq          I  5
+			dCost            D  9.950000
+			pNextItem        P  00000000
+	Alloc Address  Size Node Type Data Address  
+ 	0x107bc55        53      0    0107BC5A
+			Attr Name      Type Value     
+			customerId       S  222
+			name             S  Barb Wire
+			pFirstItem       P  00000000
+			pNextCust        P  0107BCB4
+			balance          D  200.000000
+	Alloc Address  Size Node Type Data Address  
+ 	0x107bc20        53      0    0107BC25
+			Attr Name      Type Value     
+			customerId       S  111
+			name             S  Sal A Mander
+			pFirstItem       P  0107BC8F
+			pNextCust        P  0107BC5A
+			balance          D  100.000000
+
+* add another customer
+>>> ALLOC C444 Customer 444,Emory Board,NULL,NULL,44.44
+>>> ASSOC C333 pNextCust C444
+>>> DUMP
+	Address  Mem   Size NodeType
+	0107BC20 InUse   53   0
+			   0107BC25 1  1  1  .  .  .  .  .  S  a  l     A     M  a  n  d  e  r  
+			            31 31 31 00 00 00 00 00 53 61 6C 20 41 20 4D 61 6E 64 65 72 
+			   0107BC39 .  .  .  .  .  .  .  .  .  .  .  .  Z  .  .  .  .  .  .  .  
+			            00 00 00 00 8F BC 07 01 00 00 00 00 5A BC 07 01 00 00 00 00 
+			   0107BC4D .  .  .  .  .  .  Y  @  
+			            00 00 00 00 00 00 59 40 
+	0107BC55 InUse   53   0
+			   0107BC5A 2  2  2  .  .  .  .  .  B  a  r  b     W  i  r  e  .  .  .  
+			            32 32 32 00 00 00 00 00 42 61 72 62 20 57 69 72 65 00 00 00 
+			   0107BC6E .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 B4 BC 07 01 00 00 00 00 
+			   0107BC82 .  .  .  .  .  .  i  @  
+			            00 00 00 00 00 00 69 40 
+	0107BC8A InUse   37   1
+			   0107BC8F P  P  F  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+			            50 50 46 30 30 31 00 00 00 00 00 00 05 00 00 00 66 66 66 66 
+			   0107BCA3 f  .  #  @  .  .  .  .  .  .  .  .  
+			            66 E6 23 40 00 00 00 00 00 00 00 00 
+	0107BCAF InUse   53   0
+			   0107BCB4 3  3  3  .  .  .  .  .  M  i  s  t  y     W  i  n  d  .  .  
+			            33 33 33 00 00 00 00 00 4D 69 73 74 79 20 57 69 6E 64 00 00 
+			   0107BCC8 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 E9 BC 07 01 00 00 00 00 
+			   0107BCDC .  .  .  .  .  .  Q  @  
+			            00 00 00 00 00 80 51 40 
+	0107BCE4 InUse   53   0
+			   0107BCE9 4  4  4  .  .  .  .  .  E  m  o  r  y     B  o  a  r  d  .  
+			            34 34 34 00 00 00 00 00 45 6D 6F 72 79 20 42 6F 61 72 64 00 
+			   0107BCFD thru 0107BD10 (1 lines) suppressed - all zero
+			   0107BD11 .  .  .  .  Q  8  F  @  
+			            B8 1E 85 EB 51 38 46 40 
+	0107BD19 Free   651
+			Next:00000000
+*
+* Allocate another node and associate it with 222
+* Allocate another line item and associate 555 to it
+*
+>>> ALLOC C555 Customer 555,Holly Graph,NULL,NULL,55.00
+>>> ASSOC C555 pNextCust C222
+>>> ALLOC SBB001 LineItem SBB001,2,19.95,NULL
+>>> ASSOC C555 pFirstItem SBB001
+*
+* assoc the line items 
+*
+>>> ALLOC BOM001 LineItem BOM001,1,29.95,NULL
+>>> ASSOC SBB001 pNextItem BOM001
+*
+>>> ALLOC C666 Customer 666,Bob L Head,NULL,NULL,66.00
+>>> ASSOC C444 pNextCust C666
+*
+* Assoc C444 with a different customer, 
+* causing the old customer assoc (C666) to not be associated
+*
+>>> ALLOC C777 Customer 777,Flo N Water,NULL,NULL,77.00
+>>> ASSOC C444 pNextCust C777
+*
+* Add many customers and line items
+*
+>>> ALLOC C888 Customer 888,Joe King,NULL,NULL,88.00
+>>> ALLOC C911 Customer 911,Lee King,NULL,NULL,91.00
+>>> ALLOC C922 Customer 922,Mae King,NULL,NULL,92.00
+>>> ALLOC MCW001 LineItem MCW001,1,12.45,NULL
+>>> ALLOC C933 Customer 933,Ray King,NULL,NULL,93.00
+>>> ALLOC C944 Customer 944,Freida King,NULL,NULL,94.00
+>>> ALLOC SSX001 LineItem SSX001,1,29.95,NULL
+>>> ASSOC MCW001 pNextItem SSX001
+>>> ALLOC TTP001 LineItem TTP001,2,9.95,NULL
+>>> DEREF SSX001
+>>> DUMP
+	Address  Mem   Size NodeType
+	0107BC20 InUse   53   0
+			   0107BC25 1  1  1  .  .  .  .  .  S  a  l     A     M  a  n  d  e  r  
+			            31 31 31 00 00 00 00 00 53 61 6C 20 41 20 4D 61 6E 64 65 72 
+			   0107BC39 .  .  .  .  .  .  .  .  .  .  .  .  Z  .  .  .  .  .  .  .  
+			            00 00 00 00 8F BC 07 01 00 00 00 00 5A BC 07 01 00 00 00 00 
+			   0107BC4D .  .  .  .  .  .  Y  @  
+			            00 00 00 00 00 00 59 40 
+	0107BC55 InUse   53   0
+			   0107BC5A 2  2  2  .  .  .  .  .  B  a  r  b     W  i  r  e  .  .  .  
+			            32 32 32 00 00 00 00 00 42 61 72 62 20 57 69 72 65 00 00 00 
+			   0107BC6E .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 B4 BC 07 01 00 00 00 00 
+			   0107BC82 .  .  .  .  .  .  i  @  
+			            00 00 00 00 00 00 69 40 
+	0107BC8A InUse   37   1
+			   0107BC8F P  P  F  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+			            50 50 46 30 30 31 00 00 00 00 00 00 05 00 00 00 66 66 66 66 
+			   0107BCA3 f  .  #  @  .  .  .  .  .  .  .  .  
+			            66 E6 23 40 00 00 00 00 00 00 00 00 
+	0107BCAF InUse   53   0
+			   0107BCB4 3  3  3  .  .  .  .  .  M  i  s  t  y     W  i  n  d  .  .  
+			            33 33 33 00 00 00 00 00 4D 69 73 74 79 20 57 69 6E 64 00 00 
+			   0107BCC8 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 E9 BC 07 01 00 00 00 00 
+			   0107BCDC .  .  .  .  .  .  Q  @  
+			            00 00 00 00 00 80 51 40 
+	0107BCE4 InUse   53   0
+			   0107BCE9 4  4  4  .  .  .  .  .  E  m  o  r  y     B  o  a  r  d  .  
+			            34 34 34 00 00 00 00 00 45 6D 6F 72 79 20 42 6F 61 72 64 00 
+			   0107BCFD .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 D2 BD 07 01 00 00 00 00 
+			   0107BD11 .  .  .  .  Q  8  F  @  
+			            B8 1E 85 EB 51 38 46 40 
+	0107BD19 InUse   53   0
+			   0107BD1E 5  5  5  .  .  .  .  .  H  o  l  l  y     G  r  a  p  h  .  
+			            35 35 35 00 00 00 00 00 48 6F 6C 6C 79 20 47 72 61 70 68 00 
+			   0107BD32 .  .  .  .  S  .  .  .  .  .  .  .  Z  .  .  .  .  .  .  .  
+			            00 00 00 00 53 BD 07 01 00 00 00 00 5A BC 07 01 00 00 00 00 
+			   0107BD46 .  .  .  .  .  .  K  @  
+			            00 00 00 00 00 80 4B 40 
+	0107BD4E InUse   37   1
+			   0107BD53 S  B  B  0  0  1  .  .  .  .  .  .  .  .  .  .  3  3  3  3  
+			            53 42 42 30 30 31 00 00 00 00 00 00 02 00 00 00 33 33 33 33 
+			   0107BD67 3  .  3  @  x  .  .  .  .  .  .  .  
+			            33 F3 33 40 78 BD 07 01 00 00 00 00 
+	0107BD73 InUse   37   1
+			   0107BD78 B  O  M  0  0  1  .  .  .  .  .  .  .  .  .  .  3  3  3  3  
+			            42 4F 4D 30 30 31 00 00 00 00 00 00 01 00 00 00 33 33 33 33 
+			   0107BD8C 3  .  =  @  .  .  .  .  .  .  .  .  
+			            33 F3 3D 40 00 00 00 00 00 00 00 00 
+	0107BD98 InUse   53   0
+			   0107BD9D 6  6  6  .  .  .  .  .  B  o  b     L     H  e  a  d  .  .  
+			            36 36 36 00 00 00 00 00 42 6F 62 20 4C 20 48 65 61 64 00 00 
+			   0107BDB1 thru 0107BDC4 (1 lines) suppressed - all zero
+			   0107BDC5 .  .  .  .  .  .  P  @  
+			            00 00 00 00 00 80 50 40 
+	0107BDCD InUse   53   0
+			   0107BDD2 7  7  7  .  .  .  .  .  F  l  o     N     W  a  t  e  r  .  
+			            37 37 37 00 00 00 00 00 46 6C 6F 20 4E 20 57 61 74 65 72 00 
+			   0107BDE6 thru 0107BDF9 (1 lines) suppressed - all zero
+			   0107BDFA .  .  .  .  .  @  S  @  
+			            00 00 00 00 00 40 53 40 
+	0107BE02 InUse   53   0
+			   0107BE07 8  8  8  .  .  .  .  .  J  o  e     K  i  n  g  .  .  .  .  
+			            38 38 38 00 00 00 00 00 4A 6F 65 20 4B 69 6E 67 00 00 00 00 
+			   0107BE1B thru 0107BE2E (1 lines) suppressed - all zero
+			   0107BE2F .  .  .  .  .  .  V  @  
+			            00 00 00 00 00 00 56 40 
+	0107BE37 InUse   53   0
+			   0107BE3C 9  1  1  .  .  .  .  .  L  e  e     K  i  n  g  .  .  .  .  
+			            39 31 31 00 00 00 00 00 4C 65 65 20 4B 69 6E 67 00 00 00 00 
+			   0107BE50 thru 0107BE63 (1 lines) suppressed - all zero
+			   0107BE64 .  .  .  .  .  .  V  @  
+			            00 00 00 00 00 C0 56 40 
+	0107BE6C InUse   53   0
+			   0107BE71 9  2  2  .  .  .  .  .  M  a  e     K  i  n  g  .  .  .  .  
+			            39 32 32 00 00 00 00 00 4D 61 65 20 4B 69 6E 67 00 00 00 00 
+			   0107BE85 thru 0107BE98 (1 lines) suppressed - all zero
+			   0107BE99 .  .  .  .  .  .  W  @  
+			            00 00 00 00 00 00 57 40 
+	0107BEA1 InUse   37   1
+			   0107BEA6 M  C  W  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+			            4D 43 57 30 30 31 00 00 00 00 00 00 01 00 00 00 66 66 66 66 
+			   0107BEBA f  .  (  @  5  .  .  .  .  .  .  .  
+			            66 E6 28 40 35 BF 07 01 00 00 00 00 
+	0107BEC6 InUse   53   0
+			   0107BECB 9  3  3  .  .  .  .  .  R  a  y     K  i  n  g  .  .  .  .  
+			            39 33 33 00 00 00 00 00 52 61 79 20 4B 69 6E 67 00 00 00 00 
+			   0107BEDF thru 0107BEF2 (1 lines) suppressed - all zero
+			   0107BEF3 .  .  .  .  .  @  W  @  
+			            00 00 00 00 00 40 57 40 
+	0107BEFB InUse   53   0
+			   0107BF00 9  4  4  .  .  .  .  .  F  r  e  i  d  a     K  i  n  g  .  
+			            39 34 34 00 00 00 00 00 46 72 65 69 64 61 20 4B 69 6E 67 00 
+			   0107BF14 thru 0107BF27 (1 lines) suppressed - all zero
+			   0107BF28 .  .  .  .  .  .  W  @  
+			            00 00 00 00 00 80 57 40 
+	0107BF30 InUse   37   1
+			   0107BF35 S  S  X  0  0  1  .  .  .  .  .  .  .  .  .  .  3  3  3  3  
+			            53 53 58 30 30 31 00 00 00 00 00 00 01 00 00 00 33 33 33 33 
+			   0107BF49 3  .  =  @  .  .  .  .  .  .  .  .  
+			            33 F3 3D 40 00 00 00 00 00 00 00 00 
+	0107BF55 InUse   37   1
+			   0107BF5A T  T  P  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+			            54 54 50 30 30 31 00 00 00 00 00 00 02 00 00 00 66 66 66 66 
+			   0107BF6E f  .  #  @  .  .  .  .  .  .  .  .  
+			            66 E6 23 40 00 00 00 00 00 00 00 00 
+	0107BF7A Free    42
+			Next:00000000
+*
+* XXXXXX 1
+* This line item is smaller than the last free node;
+* however, the remaining free size is too small for a
+* free node.  We give NHC001 all of the free node's
+* size as its size.
+>>> ALLOC NHC001 LineItem NHC001,1,9.95,NULL
+>>> PRTALL
+	Alloc Address  Size Node Type Data Address  
+ 	0x107befb        53      0    0107BF00
+			Attr Name      Type Value     
+			customerId       S  944
+			name             S  Freida King
+			pFirstItem       P  00000000
+			pNextCust        P  00000000
+			balance          D  94.000000
+	Alloc Address  Size Node Type Data Address  
+ 	0x107bea1        37      1    0107BEA6
+			Attr Name      Type Value     
+			productId        S  MCW001
+			iQtyReq          I  1
+			dCost            D  12.450000
+			pNextItem        P  0107BF35
+	Alloc Address  Size Node Type Data Address  
+ 	0x107be37        53      0    0107BE3C
+			Attr Name      Type Value     
+			customerId       S  911
+			name             S  Lee King
+			pFirstItem       P  00000000
+			pNextCust        P  00000000
+			balance          D  91.000000
+	Alloc Address  Size Node Type Data Address  
+ 	0x107be02        53      0    0107BE07
+			Attr Name      Type Value     
+			customerId       S  888
+			name             S  Joe King
+			pFirstItem       P  00000000
+			pNextCust        P  00000000
+			balance          D  88.000000
+	Alloc Address  Size Node Type Data Address  
+ 	0x107bcaf        53      0    0107BCB4
+			Attr Name      Type Value     
+			customerId       S  333
+			name             S  Misty Wind
+			pFirstItem       P  00000000
+			pNextCust        P  0107BCE9
+			balance          D  70.000000
+	Alloc Address  Size Node Type Data Address  
+ 	0x107be6c        53      0    0107BE71
+			Attr Name      Type Value     
+			customerId       S  922
+			name             S  Mae King
+			pFirstItem       P  00000000
+			pNextCust        P  00000000
+			balance          D  92.000000
+	Alloc Address  Size Node Type Data Address  
+ 	0x107bc55        53      0    0107BC5A
+			Attr Name      Type Value     
+			customerId       S  222
+			name             S  Barb Wire
+			pFirstItem       P  00000000
+			pNextCust        P  0107BCB4
+			balance          D  200.000000
+	Alloc Address  Size Node Type Data Address  
+ 	0x107bd73        37      1    0107BD78
+			Attr Name      Type Value     
+			productId        S  BOM001
+			iQtyReq          I  1
+			dCost            D  29.950000
+			pNextItem        P  00000000
+	Alloc Address  Size Node Type Data Address  
+ 	0x107bec6        53      0    0107BECB
+			Attr Name      Type Value     
+			customerId       S  933
+			name             S  Ray King
+			pFirstItem       P  00000000
+			pNextCust        P  00000000
+			balance          D  93.000000
+	Alloc Address  Size Node Type Data Address  
+ 	0x107bc8a        37      1    0107BC8F
+			Attr Name      Type Value     
+			productId        S  PPF001
+			iQtyReq          I  5
+			dCost            D  9.950000
+			pNextItem        P  00000000
+	Alloc Address  Size Node Type Data Address  
+ 	0x107bd19        53      0    0107BD1E
+			Attr Name      Type Value     
+			customerId       S  555
+			name             S  Holly Graph
+			pFirstItem       P  0107BD53
+			pNextCust        P  0107BC5A
+			balance          D  55.000000
+	Alloc Address  Size Node Type Data Address  
+ 	0x107bc20        53      0    0107BC25
+			Attr Name      Type Value     
+			customerId       S  111
+			name             S  Sal A Mander
+			pFirstItem       P  0107BC8F
+			pNextCust        P  0107BC5A
+			balance          D  100.000000
+	Alloc Address  Size Node Type Data Address  
+ 	0x107bf7a        42      1    0107BF7F
+			Attr Name      Type Value     
+			productId        S  NHC001
+			iQtyReq          I  1
+			dCost            D  9.950000
+			pNextItem        P  00000000
+	Alloc Address  Size Node Type Data Address  
+ 	0x107bf55        37      1    0107BF5A
+			Attr Name      Type Value     
+			productId        S  TTP001
+			iQtyReq          I  2
+			dCost            D  9.950000
+			pNextItem        P  00000000
+	Alloc Address  Size Node Type Data Address  
+ 	0x107bce4        53      0    0107BCE9
+			Attr Name      Type Value     
+			customerId       S  444
+			name             S  Emory Board
+			pFirstItem       P  00000000
+			pNextCust        P  0107BDD2
+			balance          D  44.440000
+	Alloc Address  Size Node Type Data Address  
+ 	0x107bd4e        37      1    0107BD53
+			Attr Name      Type Value     
+			productId        S  SBB001
+			iQtyReq          I  2
+			dCost            D  19.950000
+			pNextItem        P  0107BD78
+	Alloc Address  Size Node Type Data Address  
+ 	0x107bd98        53      0    0107BD9D
+			Attr Name      Type Value     
+			customerId       S  666
+			name             S  Bob L Head
+			pFirstItem       P  00000000
+			pNextCust        P  00000000
+			balance          D  66.000000
+	Alloc Address  Size Node Type Data Address  
+ 	0x107bdcd        53      0    0107BDD2
+			Attr Name      Type Value     
+			customerId       S  777
+			name             S  Flo N Water
+			pFirstItem       P  00000000
+			pNextCust        P  00000000
+			balance          D  77.000000
+
+*
+* XXXXXX 2
+* Do a Garbage Collection ... should not collect anything
+* Note that SSX001 is still referenced by a linked list
+* so it shouldn't be freed.
+* 
+>>> DUMP
+	Address  Mem   Size NodeType
+	0107BC20 InUse   53   0
+			   0107BC25 1  1  1  .  .  .  .  .  S  a  l     A     M  a  n  d  e  r  
+			            31 31 31 00 00 00 00 00 53 61 6C 20 41 20 4D 61 6E 64 65 72 
+			   0107BC39 .  .  .  .  .  .  .  .  .  .  .  .  Z  .  .  .  .  .  .  .  
+			            00 00 00 00 8F BC 07 01 00 00 00 00 5A BC 07 01 00 00 00 00 
+			   0107BC4D .  .  .  .  .  .  Y  @  
+			            00 00 00 00 00 00 59 40 
+	0107BC55 InUse   53   0
+			   0107BC5A 2  2  2  .  .  .  .  .  B  a  r  b     W  i  r  e  .  .  .  
+			            32 32 32 00 00 00 00 00 42 61 72 62 20 57 69 72 65 00 00 00 
+			   0107BC6E .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 B4 BC 07 01 00 00 00 00 
+			   0107BC82 .  .  .  .  .  .  i  @  
+			            00 00 00 00 00 00 69 40 
+	0107BC8A InUse   37   1
+			   0107BC8F P  P  F  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+			            50 50 46 30 30 31 00 00 00 00 00 00 05 00 00 00 66 66 66 66 
+			   0107BCA3 f  .  #  @  .  .  .  .  .  .  .  .  
+			            66 E6 23 40 00 00 00 00 00 00 00 00 
+	0107BCAF InUse   53   0
+			   0107BCB4 3  3  3  .  .  .  .  .  M  i  s  t  y     W  i  n  d  .  .  
+			            33 33 33 00 00 00 00 00 4D 69 73 74 79 20 57 69 6E 64 00 00 
+			   0107BCC8 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 E9 BC 07 01 00 00 00 00 
+			   0107BCDC .  .  .  .  .  .  Q  @  
+			            00 00 00 00 00 80 51 40 
+	0107BCE4 InUse   53   0
+			   0107BCE9 4  4  4  .  .  .  .  .  E  m  o  r  y     B  o  a  r  d  .  
+			            34 34 34 00 00 00 00 00 45 6D 6F 72 79 20 42 6F 61 72 64 00 
+			   0107BCFD .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 D2 BD 07 01 00 00 00 00 
+			   0107BD11 .  .  .  .  Q  8  F  @  
+			            B8 1E 85 EB 51 38 46 40 
+	0107BD19 InUse   53   0
+			   0107BD1E 5  5  5  .  .  .  .  .  H  o  l  l  y     G  r  a  p  h  .  
+			            35 35 35 00 00 00 00 00 48 6F 6C 6C 79 20 47 72 61 70 68 00 
+			   0107BD32 .  .  .  .  S  .  .  .  .  .  .  .  Z  .  .  .  .  .  .  .  
+			            00 00 00 00 53 BD 07 01 00 00 00 00 5A BC 07 01 00 00 00 00 
+			   0107BD46 .  .  .  .  .  .  K  @  
+			            00 00 00 00 00 80 4B 40 
+	0107BD4E InUse   37   1
+			   0107BD53 S  B  B  0  0  1  .  .  .  .  .  .  .  .  .  .  3  3  3  3  
+			            53 42 42 30 30 31 00 00 00 00 00 00 02 00 00 00 33 33 33 33 
+			   0107BD67 3  .  3  @  x  .  .  .  .  .  .  .  
+			            33 F3 33 40 78 BD 07 01 00 00 00 00 
+	0107BD73 InUse   37   1
+			   0107BD78 B  O  M  0  0  1  .  .  .  .  .  .  .  .  .  .  3  3  3  3  
+			            42 4F 4D 30 30 31 00 00 00 00 00 00 01 00 00 00 33 33 33 33 
+			   0107BD8C 3  .  =  @  .  .  .  .  .  .  .  .  
+			            33 F3 3D 40 00 00 00 00 00 00 00 00 
+	0107BD98 InUse   53   0
+			   0107BD9D 6  6  6  .  .  .  .  .  B  o  b     L     H  e  a  d  .  .  
+			            36 36 36 00 00 00 00 00 42 6F 62 20 4C 20 48 65 61 64 00 00 
+			   0107BDB1 thru 0107BDC4 (1 lines) suppressed - all zero
+			   0107BDC5 .  .  .  .  .  .  P  @  
+			            00 00 00 00 00 80 50 40 
+	0107BDCD InUse   53   0
+			   0107BDD2 7  7  7  .  .  .  .  .  F  l  o     N     W  a  t  e  r  .  
+			            37 37 37 00 00 00 00 00 46 6C 6F 20 4E 20 57 61 74 65 72 00 
+			   0107BDE6 thru 0107BDF9 (1 lines) suppressed - all zero
+			   0107BDFA .  .  .  .  .  @  S  @  
+			            00 00 00 00 00 40 53 40 
+	0107BE02 InUse   53   0
+			   0107BE07 8  8  8  .  .  .  .  .  J  o  e     K  i  n  g  .  .  .  .  
+			            38 38 38 00 00 00 00 00 4A 6F 65 20 4B 69 6E 67 00 00 00 00 
+			   0107BE1B thru 0107BE2E (1 lines) suppressed - all zero
+			   0107BE2F .  .  .  .  .  .  V  @  
+			            00 00 00 00 00 00 56 40 
+	0107BE37 InUse   53   0
+			   0107BE3C 9  1  1  .  .  .  .  .  L  e  e     K  i  n  g  .  .  .  .  
+			            39 31 31 00 00 00 00 00 4C 65 65 20 4B 69 6E 67 00 00 00 00 
+			   0107BE50 thru 0107BE63 (1 lines) suppressed - all zero
+			   0107BE64 .  .  .  .  .  .  V  @  
+			            00 00 00 00 00 C0 56 40 
+	0107BE6C InUse   53   0
+			   0107BE71 9  2  2  .  .  .  .  .  M  a  e     K  i  n  g  .  .  .  .  
+			            39 32 32 00 00 00 00 00 4D 61 65 20 4B 69 6E 67 00 00 00 00 
+			   0107BE85 thru 0107BE98 (1 lines) suppressed - all zero
+			   0107BE99 .  .  .  .  .  .  W  @  
+			            00 00 00 00 00 00 57 40 
+	0107BEA1 InUse   37   1
+			   0107BEA6 M  C  W  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+			            4D 43 57 30 30 31 00 00 00 00 00 00 01 00 00 00 66 66 66 66 
+			   0107BEBA f  .  (  @  5  .  .  .  .  .  .  .  
+			            66 E6 28 40 35 BF 07 01 00 00 00 00 
+	0107BEC6 InUse   53   0
+			   0107BECB 9  3  3  .  .  .  .  .  R  a  y     K  i  n  g  .  .  .  .  
+			            39 33 33 00 00 00 00 00 52 61 79 20 4B 69 6E 67 00 00 00 00 
+			   0107BEDF thru 0107BEF2 (1 lines) suppressed - all zero
+			   0107BEF3 .  .  .  .  .  @  W  @  
+			            00 00 00 00 00 40 57 40 
+	0107BEFB InUse   53   0
+			   0107BF00 9  4  4  .  .  .  .  .  F  r  e  i  d  a     K  i  n  g  .  
+			            39 34 34 00 00 00 00 00 46 72 65 69 64 61 20 4B 69 6E 67 00 
+			   0107BF14 thru 0107BF27 (1 lines) suppressed - all zero
+			   0107BF28 .  .  .  .  .  .  W  @  
+			            00 00 00 00 00 80 57 40 
+	0107BF30 InUse   37   1
+			   0107BF35 S  S  X  0  0  1  .  .  .  .  .  .  .  .  .  .  3  3  3  3  
+			            53 53 58 30 30 31 00 00 00 00 00 00 01 00 00 00 33 33 33 33 
+			   0107BF49 3  .  =  @  .  .  .  .  .  .  .  .  
+			            33 F3 3D 40 00 00 00 00 00 00 00 00 
+	0107BF55 InUse   37   1
+			   0107BF5A T  T  P  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+			            54 54 50 30 30 31 00 00 00 00 00 00 02 00 00 00 66 66 66 66 
+			   0107BF6E f  .  #  @  .  .  .  .  .  .  .  .  
+			            66 E6 23 40 00 00 00 00 00 00 00 00 
+	0107BF7A InUse   42   1
+			   0107BF7F N  H  C  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+			            4E 48 43 30 30 31 00 00 00 00 00 00 01 00 00 00 66 66 66 66 
+			   0107BF93 f  .  #  @  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            66 E6 23 40 00 00 00 00 00 00 00 00 00 00 00 00 00 
+>>> GCOLL
+>>> DUMP
+	Address  Mem   Size NodeType
+	0107BC20 InUse   53   0
+			   0107BC25 1  1  1  .  .  .  .  .  S  a  l     A     M  a  n  d  e  r  
+			            31 31 31 00 00 00 00 00 53 61 6C 20 41 20 4D 61 6E 64 65 72 
+			   0107BC39 .  .  .  .  .  .  .  .  .  .  .  .  Z  .  .  .  .  .  .  .  
+			            00 00 00 00 8F BC 07 01 00 00 00 00 5A BC 07 01 00 00 00 00 
+			   0107BC4D .  .  .  .  .  .  Y  @  
+			            00 00 00 00 00 00 59 40 
+	0107BC55 InUse   53   0
+			   0107BC5A 2  2  2  .  .  .  .  .  B  a  r  b     W  i  r  e  .  .  .  
+			            32 32 32 00 00 00 00 00 42 61 72 62 20 57 69 72 65 00 00 00 
+			   0107BC6E .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 B4 BC 07 01 00 00 00 00 
+			   0107BC82 .  .  .  .  .  .  i  @  
+			            00 00 00 00 00 00 69 40 
+	0107BC8A InUse   37   1
+			   0107BC8F P  P  F  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+			            50 50 46 30 30 31 00 00 00 00 00 00 05 00 00 00 66 66 66 66 
+			   0107BCA3 f  .  #  @  .  .  .  .  .  .  .  .  
+			            66 E6 23 40 00 00 00 00 00 00 00 00 
+	0107BCAF InUse   53   0
+			   0107BCB4 3  3  3  .  .  .  .  .  M  i  s  t  y     W  i  n  d  .  .  
+			            33 33 33 00 00 00 00 00 4D 69 73 74 79 20 57 69 6E 64 00 00 
+			   0107BCC8 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 E9 BC 07 01 00 00 00 00 
+			   0107BCDC .  .  .  .  .  .  Q  @  
+			            00 00 00 00 00 80 51 40 
+	0107BCE4 InUse   53   0
+			   0107BCE9 4  4  4  .  .  .  .  .  E  m  o  r  y     B  o  a  r  d  .  
+			            34 34 34 00 00 00 00 00 45 6D 6F 72 79 20 42 6F 61 72 64 00 
+			   0107BCFD .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 D2 BD 07 01 00 00 00 00 
+			   0107BD11 .  .  .  .  Q  8  F  @  
+			            B8 1E 85 EB 51 38 46 40 
+	0107BD19 InUse   53   0
+			   0107BD1E 5  5  5  .  .  .  .  .  H  o  l  l  y     G  r  a  p  h  .  
+			            35 35 35 00 00 00 00 00 48 6F 6C 6C 79 20 47 72 61 70 68 00 
+			   0107BD32 .  .  .  .  S  .  .  .  .  .  .  .  Z  .  .  .  .  .  .  .  
+			            00 00 00 00 53 BD 07 01 00 00 00 00 5A BC 07 01 00 00 00 00 
+			   0107BD46 .  .  .  .  .  .  K  @  
+			            00 00 00 00 00 80 4B 40 
+	0107BD4E InUse   37   1
+			   0107BD53 S  B  B  0  0  1  .  .  .  .  .  .  .  .  .  .  3  3  3  3  
+			            53 42 42 30 30 31 00 00 00 00 00 00 02 00 00 00 33 33 33 33 
+			   0107BD67 3  .  3  @  x  .  .  .  .  .  .  .  
+			            33 F3 33 40 78 BD 07 01 00 00 00 00 
+	0107BD73 InUse   37   1
+			   0107BD78 B  O  M  0  0  1  .  .  .  .  .  .  .  .  .  .  3  3  3  3  
+			            42 4F 4D 30 30 31 00 00 00 00 00 00 01 00 00 00 33 33 33 33 
+			   0107BD8C 3  .  =  @  .  .  .  .  .  .  .  .  
+			            33 F3 3D 40 00 00 00 00 00 00 00 00 
+	0107BD98 InUse   53   0
+			   0107BD9D 6  6  6  .  .  .  .  .  B  o  b     L     H  e  a  d  .  .  
+			            36 36 36 00 00 00 00 00 42 6F 62 20 4C 20 48 65 61 64 00 00 
+			   0107BDB1 thru 0107BDC4 (1 lines) suppressed - all zero
+			   0107BDC5 .  .  .  .  .  .  P  @  
+			            00 00 00 00 00 80 50 40 
+	0107BDCD InUse   53   0
+			   0107BDD2 7  7  7  .  .  .  .  .  F  l  o     N     W  a  t  e  r  .  
+			            37 37 37 00 00 00 00 00 46 6C 6F 20 4E 20 57 61 74 65 72 00 
+			   0107BDE6 thru 0107BDF9 (1 lines) suppressed - all zero
+			   0107BDFA .  .  .  .  .  @  S  @  
+			            00 00 00 00 00 40 53 40 
+	0107BE02 InUse   53   0
+			   0107BE07 8  8  8  .  .  .  .  .  J  o  e     K  i  n  g  .  .  .  .  
+			            38 38 38 00 00 00 00 00 4A 6F 65 20 4B 69 6E 67 00 00 00 00 
+			   0107BE1B thru 0107BE2E (1 lines) suppressed - all zero
+			   0107BE2F .  .  .  .  .  .  V  @  
+			            00 00 00 00 00 00 56 40 
+	0107BE37 InUse   53   0
+			   0107BE3C 9  1  1  .  .  .  .  .  L  e  e     K  i  n  g  .  .  .  .  
+			            39 31 31 00 00 00 00 00 4C 65 65 20 4B 69 6E 67 00 00 00 00 
+			   0107BE50 thru 0107BE63 (1 lines) suppressed - all zero
+			   0107BE64 .  .  .  .  .  .  V  @  
+			            00 00 00 00 00 C0 56 40 
+	0107BE6C InUse   53   0
+			   0107BE71 9  2  2  .  .  .  .  .  M  a  e     K  i  n  g  .  .  .  .  
+			            39 32 32 00 00 00 00 00 4D 61 65 20 4B 69 6E 67 00 00 00 00 
+			   0107BE85 thru 0107BE98 (1 lines) suppressed - all zero
+			   0107BE99 .  .  .  .  .  .  W  @  
+			            00 00 00 00 00 00 57 40 
+	0107BEA1 InUse   37   1
+			   0107BEA6 M  C  W  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+			            4D 43 57 30 30 31 00 00 00 00 00 00 01 00 00 00 66 66 66 66 
+			   0107BEBA f  .  (  @  5  .  .  .  .  .  .  .  
+			            66 E6 28 40 35 BF 07 01 00 00 00 00 
+	0107BEC6 InUse   53   0
+			   0107BECB 9  3  3  .  .  .  .  .  R  a  y     K  i  n  g  .  .  .  .  
+			            39 33 33 00 00 00 00 00 52 61 79 20 4B 69 6E 67 00 00 00 00 
+			   0107BEDF thru 0107BEF2 (1 lines) suppressed - all zero
+			   0107BEF3 .  .  .  .  .  @  W  @  
+			            00 00 00 00 00 40 57 40 
+	0107BEFB InUse   53   0
+			   0107BF00 9  4  4  .  .  .  .  .  F  r  e  i  d  a     K  i  n  g  .  
+			            39 34 34 00 00 00 00 00 46 72 65 69 64 61 20 4B 69 6E 67 00 
+			   0107BF14 thru 0107BF27 (1 lines) suppressed - all zero
+			   0107BF28 .  .  .  .  .  .  W  @  
+			            00 00 00 00 00 80 57 40 
+	0107BF30 InUse   37   1
+			   0107BF35 S  S  X  0  0  1  .  .  .  .  .  .  .  .  .  .  3  3  3  3  
+			            53 53 58 30 30 31 00 00 00 00 00 00 01 00 00 00 33 33 33 33 
+			   0107BF49 3  .  =  @  .  .  .  .  .  .  .  .  
+			            33 F3 3D 40 00 00 00 00 00 00 00 00 
+	0107BF55 InUse   37   1
+			   0107BF5A T  T  P  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+			            54 54 50 30 30 31 00 00 00 00 00 00 02 00 00 00 66 66 66 66 
+			   0107BF6E f  .  #  @  .  .  .  .  .  .  .  .  
+			            66 E6 23 40 00 00 00 00 00 00 00 00 
+	0107BF7A InUse   42   1
+			   0107BF7F N  H  C  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+			            4E 48 43 30 30 31 00 00 00 00 00 00 01 00 00 00 66 66 66 66 
+			   0107BF93 f  .  #  @  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            66 E6 23 40 00 00 00 00 00 00 00 00 00 00 00 00 00 
+*
+* Remove our reference to the beginning of the linked list
+*
+>>> DEREF MCW001
+*
+* XXXXXX 3
+* Do a Garbage Collection which will gain two free areas
+*
+>>> GCOLL
+	Collecting 0107BEA1
+	Collecting 0107BF30
+>>> DUMP
+	Address  Mem   Size NodeType
+	0107BC20 InUse   53   0
+			   0107BC25 1  1  1  .  .  .  .  .  S  a  l     A     M  a  n  d  e  r  
+			            31 31 31 00 00 00 00 00 53 61 6C 20 41 20 4D 61 6E 64 65 72 
+			   0107BC39 .  .  .  .  .  .  .  .  .  .  .  .  Z  .  .  .  .  .  .  .  
+			            00 00 00 00 8F BC 07 01 00 00 00 00 5A BC 07 01 00 00 00 00 
+			   0107BC4D .  .  .  .  .  .  Y  @  
+			            00 00 00 00 00 00 59 40 
+	0107BC55 InUse   53   0
+			   0107BC5A 2  2  2  .  .  .  .  .  B  a  r  b     W  i  r  e  .  .  .  
+			            32 32 32 00 00 00 00 00 42 61 72 62 20 57 69 72 65 00 00 00 
+			   0107BC6E .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 B4 BC 07 01 00 00 00 00 
+			   0107BC82 .  .  .  .  .  .  i  @  
+			            00 00 00 00 00 00 69 40 
+	0107BC8A InUse   37   1
+			   0107BC8F P  P  F  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+			            50 50 46 30 30 31 00 00 00 00 00 00 05 00 00 00 66 66 66 66 
+			   0107BCA3 f  .  #  @  .  .  .  .  .  .  .  .  
+			            66 E6 23 40 00 00 00 00 00 00 00 00 
+	0107BCAF InUse   53   0
+			   0107BCB4 3  3  3  .  .  .  .  .  M  i  s  t  y     W  i  n  d  .  .  
+			            33 33 33 00 00 00 00 00 4D 69 73 74 79 20 57 69 6E 64 00 00 
+			   0107BCC8 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 E9 BC 07 01 00 00 00 00 
+			   0107BCDC .  .  .  .  .  .  Q  @  
+			            00 00 00 00 00 80 51 40 
+	0107BCE4 InUse   53   0
+			   0107BCE9 4  4  4  .  .  .  .  .  E  m  o  r  y     B  o  a  r  d  .  
+			            34 34 34 00 00 00 00 00 45 6D 6F 72 79 20 42 6F 61 72 64 00 
+			   0107BCFD .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 D2 BD 07 01 00 00 00 00 
+			   0107BD11 .  .  .  .  Q  8  F  @  
+			            B8 1E 85 EB 51 38 46 40 
+	0107BD19 InUse   53   0
+			   0107BD1E 5  5  5  .  .  .  .  .  H  o  l  l  y     G  r  a  p  h  .  
+			            35 35 35 00 00 00 00 00 48 6F 6C 6C 79 20 47 72 61 70 68 00 
+			   0107BD32 .  .  .  .  S  .  .  .  .  .  .  .  Z  .  .  .  .  .  .  .  
+			            00 00 00 00 53 BD 07 01 00 00 00 00 5A BC 07 01 00 00 00 00 
+			   0107BD46 .  .  .  .  .  .  K  @  
+			            00 00 00 00 00 80 4B 40 
+	0107BD4E InUse   37   1
+			   0107BD53 S  B  B  0  0  1  .  .  .  .  .  .  .  .  .  .  3  3  3  3  
+			            53 42 42 30 30 31 00 00 00 00 00 00 02 00 00 00 33 33 33 33 
+			   0107BD67 3  .  3  @  x  .  .  .  .  .  .  .  
+			            33 F3 33 40 78 BD 07 01 00 00 00 00 
+	0107BD73 InUse   37   1
+			   0107BD78 B  O  M  0  0  1  .  .  .  .  .  .  .  .  .  .  3  3  3  3  
+			            42 4F 4D 30 30 31 00 00 00 00 00 00 01 00 00 00 33 33 33 33 
+			   0107BD8C 3  .  =  @  .  .  .  .  .  .  .  .  
+			            33 F3 3D 40 00 00 00 00 00 00 00 00 
+	0107BD98 InUse   53   0
+			   0107BD9D 6  6  6  .  .  .  .  .  B  o  b     L     H  e  a  d  .  .  
+			            36 36 36 00 00 00 00 00 42 6F 62 20 4C 20 48 65 61 64 00 00 
+			   0107BDB1 thru 0107BDC4 (1 lines) suppressed - all zero
+			   0107BDC5 .  .  .  .  .  .  P  @  
+			            00 00 00 00 00 80 50 40 
+	0107BDCD InUse   53   0
+			   0107BDD2 7  7  7  .  .  .  .  .  F  l  o     N     W  a  t  e  r  .  
+			            37 37 37 00 00 00 00 00 46 6C 6F 20 4E 20 57 61 74 65 72 00 
+			   0107BDE6 thru 0107BDF9 (1 lines) suppressed - all zero
+			   0107BDFA .  .  .  .  .  @  S  @  
+			            00 00 00 00 00 40 53 40 
+	0107BE02 InUse   53   0
+			   0107BE07 8  8  8  .  .  .  .  .  J  o  e     K  i  n  g  .  .  .  .  
+			            38 38 38 00 00 00 00 00 4A 6F 65 20 4B 69 6E 67 00 00 00 00 
+			   0107BE1B thru 0107BE2E (1 lines) suppressed - all zero
+			   0107BE2F .  .  .  .  .  .  V  @  
+			            00 00 00 00 00 00 56 40 
+	0107BE37 InUse   53   0
+			   0107BE3C 9  1  1  .  .  .  .  .  L  e  e     K  i  n  g  .  .  .  .  
+			            39 31 31 00 00 00 00 00 4C 65 65 20 4B 69 6E 67 00 00 00 00 
+			   0107BE50 thru 0107BE63 (1 lines) suppressed - all zero
+			   0107BE64 .  .  .  .  .  .  V  @  
+			            00 00 00 00 00 C0 56 40 
+	0107BE6C InUse   53   0
+			   0107BE71 9  2  2  .  .  .  .  .  M  a  e     K  i  n  g  .  .  .  .  
+			            39 32 32 00 00 00 00 00 4D 61 65 20 4B 69 6E 67 00 00 00 00 
+			   0107BE85 thru 0107BE98 (1 lines) suppressed - all zero
+			   0107BE99 .  .  .  .  .  .  W  @  
+			            00 00 00 00 00 00 57 40 
+	0107BEA1 Cand    37
+			   0107BEA6 M  C  W  .  .  .  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+			            4D 43 57 00 00 00 00 00 00 00 00 00 01 00 00 00 66 66 66 66 
+			   0107BEBA f  .  (  @  5  .  .  .  .  .  .  .  
+			            66 E6 28 40 35 BF 07 01 00 00 00 00 
+	0107BEC6 InUse   53   0
+			   0107BECB 9  3  3  .  .  .  .  .  R  a  y     K  i  n  g  .  .  .  .  
+			            39 33 33 00 00 00 00 00 52 61 79 20 4B 69 6E 67 00 00 00 00 
+			   0107BEDF thru 0107BEF2 (1 lines) suppressed - all zero
+			   0107BEF3 .  .  .  .  .  @  W  @  
+			            00 00 00 00 00 40 57 40 
+	0107BEFB InUse   53   0
+			   0107BF00 9  4  4  .  .  .  .  .  F  r  e  i  d  a     K  i  n  g  .  
+			            39 34 34 00 00 00 00 00 46 72 65 69 64 61 20 4B 69 6E 67 00 
+			   0107BF14 thru 0107BF27 (1 lines) suppressed - all zero
+			   0107BF28 .  .  .  .  .  .  W  @  
+			            00 00 00 00 00 80 57 40 
+	0107BF30 Cand    37
+			   0107BF35 S  S  X  .  .  .  .  .  .  .  .  .  .  .  .  .  3  3  3  3  
+			            53 53 58 A1 BE 07 01 00 00 00 00 00 01 00 00 00 33 33 33 33 
+			   0107BF49 3  .  =  @  .  .  .  .  .  .  .  .  
+			            33 F3 3D 40 00 00 00 00 00 00 00 00 
+	0107BF55 InUse   37   1
+			   0107BF5A T  T  P  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+			            54 54 50 30 30 31 00 00 00 00 00 00 02 00 00 00 66 66 66 66 
+			   0107BF6E f  .  #  @  .  .  .  .  .  .  .  .  
+			            66 E6 23 40 00 00 00 00 00 00 00 00 
+	0107BF7A InUse   42   1
+			   0107BF7F N  H  C  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+			            4E 48 43 30 30 31 00 00 00 00 00 00 01 00 00 00 66 66 66 66 
+			   0107BF93 f  .  #  @  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            66 E6 23 40 00 00 00 00 00 00 00 00 00 00 00 00 00 
+*
+* Remove some Hash Table references ... but some of these
+* will still be referenced by user pointers
+*
+>>> DEREF C888
+>>> DEREF C911
+>>> DEREF C333
+>>> DEREF C444
+>>> DEREF C666
+*
+* XXXXXX 4
+* Do a Garbage Collection which should find C666 to collect 
+*
+>>> GCOLL
+	Collecting 0107BD98
+	Combining 0107BE02 with 0107BE37
+	Collecting 0107BE02
+	Collecting 0107BEA1
+	Collecting 0107BF30
+>>> DUMP
+	Address  Mem   Size NodeType
+	0107BC20 InUse   53   0
+			   0107BC25 1  1  1  .  .  .  .  .  S  a  l     A     M  a  n  d  e  r  
+			            31 31 31 00 00 00 00 00 53 61 6C 20 41 20 4D 61 6E 64 65 72 
+			   0107BC39 .  .  .  .  .  .  .  .  .  .  .  .  Z  .  .  .  .  .  .  .  
+			            00 00 00 00 8F BC 07 01 00 00 00 00 5A BC 07 01 00 00 00 00 
+			   0107BC4D .  .  .  .  .  .  Y  @  
+			            00 00 00 00 00 00 59 40 
+	0107BC55 InUse   53   0
+			   0107BC5A 2  2  2  .  .  .  .  .  B  a  r  b     W  i  r  e  .  .  .  
+			            32 32 32 00 00 00 00 00 42 61 72 62 20 57 69 72 65 00 00 00 
+			   0107BC6E .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 B4 BC 07 01 00 00 00 00 
+			   0107BC82 .  .  .  .  .  .  i  @  
+			            00 00 00 00 00 00 69 40 
+	0107BC8A InUse   37   1
+			   0107BC8F P  P  F  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+			            50 50 46 30 30 31 00 00 00 00 00 00 05 00 00 00 66 66 66 66 
+			   0107BCA3 f  .  #  @  .  .  .  .  .  .  .  .  
+			            66 E6 23 40 00 00 00 00 00 00 00 00 
+	0107BCAF InUse   53   0
+			   0107BCB4 3  3  3  .  .  .  .  .  M  i  s  t  y     W  i  n  d  .  .  
+			            33 33 33 00 00 00 00 00 4D 69 73 74 79 20 57 69 6E 64 00 00 
+			   0107BCC8 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 E9 BC 07 01 00 00 00 00 
+			   0107BCDC .  .  .  .  .  .  Q  @  
+			            00 00 00 00 00 80 51 40 
+	0107BCE4 InUse   53   0
+			   0107BCE9 4  4  4  .  .  .  .  .  E  m  o  r  y     B  o  a  r  d  .  
+			            34 34 34 00 00 00 00 00 45 6D 6F 72 79 20 42 6F 61 72 64 00 
+			   0107BCFD .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 D2 BD 07 01 00 00 00 00 
+			   0107BD11 .  .  .  .  Q  8  F  @  
+			            B8 1E 85 EB 51 38 46 40 
+	0107BD19 InUse   53   0
+			   0107BD1E 5  5  5  .  .  .  .  .  H  o  l  l  y     G  r  a  p  h  .  
+			            35 35 35 00 00 00 00 00 48 6F 6C 6C 79 20 47 72 61 70 68 00 
+			   0107BD32 .  .  .  .  S  .  .  .  .  .  .  .  Z  .  .  .  .  .  .  .  
+			            00 00 00 00 53 BD 07 01 00 00 00 00 5A BC 07 01 00 00 00 00 
+			   0107BD46 .  .  .  .  .  .  K  @  
+			            00 00 00 00 00 80 4B 40 
+	0107BD4E InUse   37   1
+			   0107BD53 S  B  B  0  0  1  .  .  .  .  .  .  .  .  .  .  3  3  3  3  
+			            53 42 42 30 30 31 00 00 00 00 00 00 02 00 00 00 33 33 33 33 
+			   0107BD67 3  .  3  @  x  .  .  .  .  .  .  .  
+			            33 F3 33 40 78 BD 07 01 00 00 00 00 
+	0107BD73 InUse   37   1
+			   0107BD78 B  O  M  0  0  1  .  .  .  .  .  .  .  .  .  .  3  3  3  3  
+			            42 4F 4D 30 30 31 00 00 00 00 00 00 01 00 00 00 33 33 33 33 
+			   0107BD8C 3  .  =  @  .  .  .  .  .  .  .  .  
+			            33 F3 3D 40 00 00 00 00 00 00 00 00 
+	0107BD98 Cand    53
+			   0107BD9D 6  6  6  .  .  .  .  .  .  .  .     L     H  e  a  d  .  .  
+			            36 36 36 00 00 00 00 00 00 00 00 20 4C 20 48 65 61 64 00 00 
+			   0107BDB1 thru 0107BDC4 (1 lines) suppressed - all zero
+			   0107BDC5 .  .  .  .  .  .  P  @  
+			            00 00 00 00 00 80 50 40 
+	0107BDCD InUse   53   0
+			   0107BDD2 7  7  7  .  .  .  .  .  F  l  o     N     W  a  t  e  r  .  
+			            37 37 37 00 00 00 00 00 46 6C 6F 20 4E 20 57 61 74 65 72 00 
+			   0107BDE6 thru 0107BDF9 (1 lines) suppressed - all zero
+			   0107BDFA .  .  .  .  .  @  S  @  
+			            00 00 00 00 00 40 53 40 
+	0107BE02 Cand   106
+			   0107BE07 8  8  8  .  .  .  .  .  .  .  .     K  i  n  g  .  .  .  .  
+			            38 38 38 98 BD 07 01 00 00 00 00 20 4B 69 6E 67 00 00 00 00 
+			   0107BE1B thru 0107BE2E (1 lines) suppressed - all zero
+			   0107BE2F .  .  .  .  .  .  V  @  5  .  .  .  C  9  1  1  .  .  .  .  
+			            00 00 00 00 00 00 56 40 35 00 00 00 43 39 31 31 00 00 00 00 
+			   0107BE43 .  L  e  e     K  i  n  g  .  .  .  .  .  .  .  .  .  .  .  
+			            00 4C 65 65 20 4B 69 6E 67 00 00 00 00 00 00 00 00 00 00 00 
+			   0107BE57 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  V  
+			            00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 C0 56 
+			   0107BE6B @  
+			            40 
+	0107BE6C InUse   53   0
+			   0107BE71 9  2  2  .  .  .  .  .  M  a  e     K  i  n  g  .  .  .  .  
+			            39 32 32 00 00 00 00 00 4D 61 65 20 4B 69 6E 67 00 00 00 00 
+			   0107BE85 thru 0107BE98 (1 lines) suppressed - all zero
+			   0107BE99 .  .  .  .  .  .  W  @  
+			            00 00 00 00 00 00 57 40 
+	0107BEA1 Cand    37
+			   0107BEA6 M  C  W  .  .  .  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+			            4D 43 57 02 BE 07 01 00 00 00 00 00 01 00 00 00 66 66 66 66 
+			   0107BEBA f  .  (  @  5  .  .  .  .  .  .  .  
+			            66 E6 28 40 35 BF 07 01 00 00 00 00 
+	0107BEC6 InUse   53   0
+			   0107BECB 9  3  3  .  .  .  .  .  R  a  y     K  i  n  g  .  .  .  .  
+			            39 33 33 00 00 00 00 00 52 61 79 20 4B 69 6E 67 00 00 00 00 
+			   0107BEDF thru 0107BEF2 (1 lines) suppressed - all zero
+			   0107BEF3 .  .  .  .  .  @  W  @  
+			            00 00 00 00 00 40 57 40 
+	0107BEFB InUse   53   0
+			   0107BF00 9  4  4  .  .  .  .  .  F  r  e  i  d  a     K  i  n  g  .  
+			            39 34 34 00 00 00 00 00 46 72 65 69 64 61 20 4B 69 6E 67 00 
+			   0107BF14 thru 0107BF27 (1 lines) suppressed - all zero
+			   0107BF28 .  .  .  .  .  .  W  @  
+			            00 00 00 00 00 80 57 40 
+	0107BF30 Cand    37
+			   0107BF35 S  S  X  .  .  .  .  .  .  .  .  .  .  .  .  .  3  3  3  3  
+			            53 53 58 A1 BE 07 01 00 00 00 00 00 01 00 00 00 33 33 33 33 
+			   0107BF49 3  .  =  @  .  .  .  .  .  .  .  .  
+			            33 F3 3D 40 00 00 00 00 00 00 00 00 
+	0107BF55 InUse   37   1
+			   0107BF5A T  T  P  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+			            54 54 50 30 30 31 00 00 00 00 00 00 02 00 00 00 66 66 66 66 
+			   0107BF6E f  .  #  @  .  .  .  .  .  .  .  .  
+			            66 E6 23 40 00 00 00 00 00 00 00 00 
+	0107BF7A InUse   42   1
+			   0107BF7F N  H  C  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+			            4E 48 43 30 30 31 00 00 00 00 00 00 01 00 00 00 66 66 66 66 
+			   0107BF93 f  .  #  @  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            66 E6 23 40 00 00 00 00 00 00 00 00 00 00 00 00 00 
+*
+* Create a circular list, should not cause problems for GCOLL
+*
+>>> ASSOC C777 pNextCust C222
+>>> DEREF C777
+>>> DEREF C222
+*
+* Do a Garbage Collection which shouldn't change anything
+* but should verify that student's code doesn't infinite loop
+*
+>>> GCOLL
+	Collecting 0107BD98
+	Collecting 0107BE02
+	Collecting 0107BEA1
+	Collecting 0107BF30
+>>> DUMP
+	Address  Mem   Size NodeType
+	0107BC20 InUse   53   0
+			   0107BC25 1  1  1  .  .  .  .  .  S  a  l     A     M  a  n  d  e  r  
+			            31 31 31 00 00 00 00 00 53 61 6C 20 41 20 4D 61 6E 64 65 72 
+			   0107BC39 .  .  .  .  .  .  .  .  .  .  .  .  Z  .  .  .  .  .  .  .  
+			            00 00 00 00 8F BC 07 01 00 00 00 00 5A BC 07 01 00 00 00 00 
+			   0107BC4D .  .  .  .  .  .  Y  @  
+			            00 00 00 00 00 00 59 40 
+	0107BC55 InUse   53   0
+			   0107BC5A 2  2  2  .  .  .  .  .  B  a  r  b     W  i  r  e  .  .  .  
+			            32 32 32 00 00 00 00 00 42 61 72 62 20 57 69 72 65 00 00 00 
+			   0107BC6E .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 B4 BC 07 01 00 00 00 00 
+			   0107BC82 .  .  .  .  .  .  i  @  
+			            00 00 00 00 00 00 69 40 
+	0107BC8A InUse   37   1
+			   0107BC8F P  P  F  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+			            50 50 46 30 30 31 00 00 00 00 00 00 05 00 00 00 66 66 66 66 
+			   0107BCA3 f  .  #  @  .  .  .  .  .  .  .  .  
+			            66 E6 23 40 00 00 00 00 00 00 00 00 
+	0107BCAF InUse   53   0
+			   0107BCB4 3  3  3  .  .  .  .  .  M  i  s  t  y     W  i  n  d  .  .  
+			            33 33 33 00 00 00 00 00 4D 69 73 74 79 20 57 69 6E 64 00 00 
+			   0107BCC8 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 E9 BC 07 01 00 00 00 00 
+			   0107BCDC .  .  .  .  .  .  Q  @  
+			            00 00 00 00 00 80 51 40 
+	0107BCE4 InUse   53   0
+			   0107BCE9 4  4  4  .  .  .  .  .  E  m  o  r  y     B  o  a  r  d  .  
+			            34 34 34 00 00 00 00 00 45 6D 6F 72 79 20 42 6F 61 72 64 00 
+			   0107BCFD .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 D2 BD 07 01 00 00 00 00 
+			   0107BD11 .  .  .  .  Q  8  F  @  
+			            B8 1E 85 EB 51 38 46 40 
+	0107BD19 InUse   53   0
+			   0107BD1E 5  5  5  .  .  .  .  .  H  o  l  l  y     G  r  a  p  h  .  
+			            35 35 35 00 00 00 00 00 48 6F 6C 6C 79 20 47 72 61 70 68 00 
+			   0107BD32 .  .  .  .  S  .  .  .  .  .  .  .  Z  .  .  .  .  .  .  .  
+			            00 00 00 00 53 BD 07 01 00 00 00 00 5A BC 07 01 00 00 00 00 
+			   0107BD46 .  .  .  .  .  .  K  @  
+			            00 00 00 00 00 80 4B 40 
+	0107BD4E InUse   37   1
+			   0107BD53 S  B  B  0  0  1  .  .  .  .  .  .  .  .  .  .  3  3  3  3  
+			            53 42 42 30 30 31 00 00 00 00 00 00 02 00 00 00 33 33 33 33 
+			   0107BD67 3  .  3  @  x  .  .  .  .  .  .  .  
+			            33 F3 33 40 78 BD 07 01 00 00 00 00 
+	0107BD73 InUse   37   1
+			   0107BD78 B  O  M  0  0  1  .  .  .  .  .  .  .  .  .  .  3  3  3  3  
+			            42 4F 4D 30 30 31 00 00 00 00 00 00 01 00 00 00 33 33 33 33 
+			   0107BD8C 3  .  =  @  .  .  .  .  .  .  .  .  
+			            33 F3 3D 40 00 00 00 00 00 00 00 00 
+	0107BD98 Cand    53
+			   0107BD9D 6  6  6  .  .  .  .  .  .  .  .     L     H  e  a  d  .  .  
+			            36 36 36 00 00 00 00 00 00 00 00 20 4C 20 48 65 61 64 00 00 
+			   0107BDB1 thru 0107BDC4 (1 lines) suppressed - all zero
+			   0107BDC5 .  .  .  .  .  .  P  @  
+			            00 00 00 00 00 80 50 40 
+	0107BDCD InUse   53   0
+			   0107BDD2 7  7  7  .  .  .  .  .  F  l  o     N     W  a  t  e  r  .  
+			            37 37 37 00 00 00 00 00 46 6C 6F 20 4E 20 57 61 74 65 72 00 
+			   0107BDE6 .  .  .  .  .  .  .  .  .  .  .  .  Z  .  .  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 5A BC 07 01 00 00 00 00 
+			   0107BDFA .  .  .  .  .  @  S  @  
+			            00 00 00 00 00 40 53 40 
+	0107BE02 Cand   106
+			   0107BE07 8  8  8  .  .  .  .  .  .  .  .     K  i  n  g  .  .  .  .  
+			            38 38 38 98 BD 07 01 00 00 00 00 20 4B 69 6E 67 00 00 00 00 
+			   0107BE1B thru 0107BE2E (1 lines) suppressed - all zero
+			   0107BE2F .  .  .  .  .  .  V  @  5  .  .  .  C  9  1  1  .  .  .  .  
+			            00 00 00 00 00 00 56 40 35 00 00 00 43 39 31 31 00 00 00 00 
+			   0107BE43 .  L  e  e     K  i  n  g  .  .  .  .  .  .  .  .  .  .  .  
+			            00 4C 65 65 20 4B 69 6E 67 00 00 00 00 00 00 00 00 00 00 00 
+			   0107BE57 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  V  
+			            00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 C0 56 
+			   0107BE6B @  
+			            40 
+	0107BE6C InUse   53   0
+			   0107BE71 9  2  2  .  .  .  .  .  M  a  e     K  i  n  g  .  .  .  .  
+			            39 32 32 00 00 00 00 00 4D 61 65 20 4B 69 6E 67 00 00 00 00 
+			   0107BE85 thru 0107BE98 (1 lines) suppressed - all zero
+			   0107BE99 .  .  .  .  .  .  W  @  
+			            00 00 00 00 00 00 57 40 
+	0107BEA1 Cand    37
+			   0107BEA6 M  C  W  .  .  .  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+			            4D 43 57 02 BE 07 01 00 00 00 00 00 01 00 00 00 66 66 66 66 
+			   0107BEBA f  .  (  @  5  .  .  .  .  .  .  .  
+			            66 E6 28 40 35 BF 07 01 00 00 00 00 
+	0107BEC6 InUse   53   0
+			   0107BECB 9  3  3  .  .  .  .  .  R  a  y     K  i  n  g  .  .  .  .  
+			            39 33 33 00 00 00 00 00 52 61 79 20 4B 69 6E 67 00 00 00 00 
+			   0107BEDF thru 0107BEF2 (1 lines) suppressed - all zero
+			   0107BEF3 .  .  .  .  .  @  W  @  
+			            00 00 00 00 00 40 57 40 
+	0107BEFB InUse   53   0
+			   0107BF00 9  4  4  .  .  .  .  .  F  r  e  i  d  a     K  i  n  g  .  
+			            39 34 34 00 00 00 00 00 46 72 65 69 64 61 20 4B 69 6E 67 00 
+			   0107BF14 thru 0107BF27 (1 lines) suppressed - all zero
+			   0107BF28 .  .  .  .  .  .  W  @  
+			            00 00 00 00 00 80 57 40 
+	0107BF30 Cand    37
+			   0107BF35 S  S  X  .  .  .  .  .  .  .  .  .  .  .  .  .  3  3  3  3  
+			            53 53 58 A1 BE 07 01 00 00 00 00 00 01 00 00 00 33 33 33 33 
+			   0107BF49 3  .  =  @  .  .  .  .  .  .  .  .  
+			            33 F3 3D 40 00 00 00 00 00 00 00 00 
+	0107BF55 InUse   37   1
+			   0107BF5A T  T  P  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+			            54 54 50 30 30 31 00 00 00 00 00 00 02 00 00 00 66 66 66 66 
+			   0107BF6E f  .  #  @  .  .  .  .  .  .  .  .  
+			            66 E6 23 40 00 00 00 00 00 00 00 00 
+	0107BF7A InUse   42   1
+			   0107BF7F N  H  C  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+			            4E 48 43 30 30 31 00 00 00 00 00 00 01 00 00 00 66 66 66 66 
+			   0107BF93 f  .  #  @  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            66 E6 23 40 00 00 00 00 00 00 00 00 00 00 00 00 00 
+*
+>>> ALLOC C955 Customer 955,Harry King,NULL,NULL,95.00
+>>> ALLOC SSX002 LineItem SSX002,1,29.25,NULL
+>>> ALLOC SSX003 LineItem SSX003,1,29.35,NULL
+>>> ALLOC SSX004 LineItem SSX004,1,29.45,NULL
+*
+* XXXXXX 5
+>>> DUMP
+	Address  Mem   Size NodeType
+	0107BC20 InUse   53   0
+			   0107BC25 1  1  1  .  .  .  .  .  S  a  l     A     M  a  n  d  e  r  
+			            31 31 31 00 00 00 00 00 53 61 6C 20 41 20 4D 61 6E 64 65 72 
+			   0107BC39 .  .  .  .  .  .  .  .  .  .  .  .  Z  .  .  .  .  .  .  .  
+			            00 00 00 00 8F BC 07 01 00 00 00 00 5A BC 07 01 00 00 00 00 
+			   0107BC4D .  .  .  .  .  .  Y  @  
+			            00 00 00 00 00 00 59 40 
+	0107BC55 InUse   53   0
+			   0107BC5A 2  2  2  .  .  .  .  .  B  a  r  b     W  i  r  e  .  .  .  
+			            32 32 32 00 00 00 00 00 42 61 72 62 20 57 69 72 65 00 00 00 
+			   0107BC6E .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 B4 BC 07 01 00 00 00 00 
+			   0107BC82 .  .  .  .  .  .  i  @  
+			            00 00 00 00 00 00 69 40 
+	0107BC8A InUse   37   1
+			   0107BC8F P  P  F  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+			            50 50 46 30 30 31 00 00 00 00 00 00 05 00 00 00 66 66 66 66 
+			   0107BCA3 f  .  #  @  .  .  .  .  .  .  .  .  
+			            66 E6 23 40 00 00 00 00 00 00 00 00 
+	0107BCAF InUse   53   0
+			   0107BCB4 3  3  3  .  .  .  .  .  M  i  s  t  y     W  i  n  d  .  .  
+			            33 33 33 00 00 00 00 00 4D 69 73 74 79 20 57 69 6E 64 00 00 
+			   0107BCC8 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 E9 BC 07 01 00 00 00 00 
+			   0107BCDC .  .  .  .  .  .  Q  @  
+			            00 00 00 00 00 80 51 40 
+	0107BCE4 InUse   53   0
+			   0107BCE9 4  4  4  .  .  .  .  .  E  m  o  r  y     B  o  a  r  d  .  
+			            34 34 34 00 00 00 00 00 45 6D 6F 72 79 20 42 6F 61 72 64 00 
+			   0107BCFD .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 D2 BD 07 01 00 00 00 00 
+			   0107BD11 .  .  .  .  Q  8  F  @  
+			            B8 1E 85 EB 51 38 46 40 
+	0107BD19 InUse   53   0
+			   0107BD1E 5  5  5  .  .  .  .  .  H  o  l  l  y     G  r  a  p  h  .  
+			            35 35 35 00 00 00 00 00 48 6F 6C 6C 79 20 47 72 61 70 68 00 
+			   0107BD32 .  .  .  .  S  .  .  .  .  .  .  .  Z  .  .  .  .  .  .  .  
+			            00 00 00 00 53 BD 07 01 00 00 00 00 5A BC 07 01 00 00 00 00 
+			   0107BD46 .  .  .  .  .  .  K  @  
+			            00 00 00 00 00 80 4B 40 
+	0107BD4E InUse   37   1
+			   0107BD53 S  B  B  0  0  1  .  .  .  .  .  .  .  .  .  .  3  3  3  3  
+			            53 42 42 30 30 31 00 00 00 00 00 00 02 00 00 00 33 33 33 33 
+			   0107BD67 3  .  3  @  x  .  .  .  .  .  .  .  
+			            33 F3 33 40 78 BD 07 01 00 00 00 00 
+	0107BD73 InUse   37   1
+			   0107BD78 B  O  M  0  0  1  .  .  .  .  .  .  .  .  .  .  3  3  3  3  
+			            42 4F 4D 30 30 31 00 00 00 00 00 00 01 00 00 00 33 33 33 33 
+			   0107BD8C 3  .  =  @  .  .  .  .  .  .  .  .  
+			            33 F3 3D 40 00 00 00 00 00 00 00 00 
+	0107BD98 Cand    53
+			   0107BD9D 6  6  6  .  .  .  .  .  .  .  .     L     H  e  a  d  .  .  
+			            36 36 36 00 00 00 00 00 00 00 00 20 4C 20 48 65 61 64 00 00 
+			   0107BDB1 thru 0107BDC4 (1 lines) suppressed - all zero
+			   0107BDC5 .  .  .  .  .  .  P  @  
+			            00 00 00 00 00 80 50 40 
+	0107BDCD InUse   53   0
+			   0107BDD2 7  7  7  .  .  .  .  .  F  l  o     N     W  a  t  e  r  .  
+			            37 37 37 00 00 00 00 00 46 6C 6F 20 4E 20 57 61 74 65 72 00 
+			   0107BDE6 .  .  .  .  .  .  .  .  .  .  .  .  Z  .  .  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 5A BC 07 01 00 00 00 00 
+			   0107BDFA .  .  .  .  .  @  S  @  
+			            00 00 00 00 00 40 53 40 
+	0107BE02 InUse   53   0
+			   0107BE07 9  5  5  .  .  .  .  .  H  a  r  r  y     K  i  n  g  .  .  
+			            39 35 35 00 00 00 00 00 48 61 72 72 79 20 4B 69 6E 67 00 00 
+			   0107BE1B thru 0107BE2E (1 lines) suppressed - all zero
+			   0107BE2F .  .  .  .  .  .  W  @  
+			            00 00 00 00 00 C0 57 40 
+	0107BE37 InUse   37   1
+			   0107BE3C S  S  X  0  0  2  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            53 53 58 30 30 32 00 00 00 00 00 00 01 00 00 00 00 00 00 00 
+			   0107BE50 .  @  =  @  .  .  .  .  .  .  .  .  
+			            00 40 3D 40 00 00 00 00 00 00 00 00 
+	0107BE5C Free    16
+			Next:0107BD98
+	0107BE6C InUse   53   0
+			   0107BE71 9  2  2  .  .  .  .  .  M  a  e     K  i  n  g  .  .  .  .  
+			            39 32 32 00 00 00 00 00 4D 61 65 20 4B 69 6E 67 00 00 00 00 
+			   0107BE85 thru 0107BE98 (1 lines) suppressed - all zero
+			   0107BE99 .  .  .  .  .  .  W  @  
+			            00 00 00 00 00 00 57 40 
+	0107BEA1 InUse   37   1
+			   0107BEA6 S  S  X  0  0  4  .  .  .  .  .  .  .  .  .  .  3  3  3  3  
+			            53 53 58 30 30 34 00 00 00 00 00 00 01 00 00 00 33 33 33 33 
+			   0107BEBA 3  s  =  @  .  .  .  .  .  .  .  .  
+			            33 73 3D 40 00 00 00 00 00 00 00 00 
+	0107BEC6 InUse   53   0
+			   0107BECB 9  3  3  .  .  .  .  .  R  a  y     K  i  n  g  .  .  .  .  
+			            39 33 33 00 00 00 00 00 52 61 79 20 4B 69 6E 67 00 00 00 00 
+			   0107BEDF thru 0107BEF2 (1 lines) suppressed - all zero
+			   0107BEF3 .  .  .  .  .  @  W  @  
+			            00 00 00 00 00 40 57 40 
+	0107BEFB InUse   53   0
+			   0107BF00 9  4  4  .  .  .  .  .  F  r  e  i  d  a     K  i  n  g  .  
+			            39 34 34 00 00 00 00 00 46 72 65 69 64 61 20 4B 69 6E 67 00 
+			   0107BF14 thru 0107BF27 (1 lines) suppressed - all zero
+			   0107BF28 .  .  .  .  .  .  W  @  
+			            00 00 00 00 00 80 57 40 
+	0107BF30 InUse   37   1
+			   0107BF35 S  S  X  0  0  3  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            53 53 58 30 30 33 00 00 00 00 00 00 01 00 00 00 9A 99 99 99 
+			   0107BF49 .  Y  =  @  .  .  .  .  .  .  .  .  
+			            99 59 3D 40 00 00 00 00 00 00 00 00 
+	0107BF55 InUse   37   1
+			   0107BF5A T  T  P  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+			            54 54 50 30 30 31 00 00 00 00 00 00 02 00 00 00 66 66 66 66 
+			   0107BF6E f  .  #  @  .  .  .  .  .  .  .  .  
+			            66 E6 23 40 00 00 00 00 00 00 00 00 
+	0107BF7A InUse   42   1
+			   0107BF7F N  H  C  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+			            4E 48 43 30 30 31 00 00 00 00 00 00 01 00 00 00 66 66 66 66 
+			   0107BF93 f  .  #  @  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            66 E6 23 40 00 00 00 00 00 00 00 00 00 00 00 00 00 
+*
+>>> DEREF C933
+>>> DEREF C944
+>>> DEREF SSX003
+*
+* XXXXXX 6
+* 32-bit: Collection should have one existing and gather three adj
+* 64-bit: Collection should have two existing and gather three adj
+*
+>>> GCOLL
+	Collecting 0107BD98
+	Collecting 0107BE5C
+	Combining 0107BEC6 with 0107BEFB
+	Combining 0107BEC6 with 0107BF30
+	Collecting 0107BEC6
+>>> DUMP
+	Address  Mem   Size NodeType
+	0107BC20 InUse   53   0
+			   0107BC25 1  1  1  .  .  .  .  .  S  a  l     A     M  a  n  d  e  r  
+			            31 31 31 00 00 00 00 00 53 61 6C 20 41 20 4D 61 6E 64 65 72 
+			   0107BC39 .  .  .  .  .  .  .  .  .  .  .  .  Z  .  .  .  .  .  .  .  
+			            00 00 00 00 8F BC 07 01 00 00 00 00 5A BC 07 01 00 00 00 00 
+			   0107BC4D .  .  .  .  .  .  Y  @  
+			            00 00 00 00 00 00 59 40 
+	0107BC55 InUse   53   0
+			   0107BC5A 2  2  2  .  .  .  .  .  B  a  r  b     W  i  r  e  .  .  .  
+			            32 32 32 00 00 00 00 00 42 61 72 62 20 57 69 72 65 00 00 00 
+			   0107BC6E .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 B4 BC 07 01 00 00 00 00 
+			   0107BC82 .  .  .  .  .  .  i  @  
+			            00 00 00 00 00 00 69 40 
+	0107BC8A InUse   37   1
+			   0107BC8F P  P  F  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+			            50 50 46 30 30 31 00 00 00 00 00 00 05 00 00 00 66 66 66 66 
+			   0107BCA3 f  .  #  @  .  .  .  .  .  .  .  .  
+			            66 E6 23 40 00 00 00 00 00 00 00 00 
+	0107BCAF InUse   53   0
+			   0107BCB4 3  3  3  .  .  .  .  .  M  i  s  t  y     W  i  n  d  .  .  
+			            33 33 33 00 00 00 00 00 4D 69 73 74 79 20 57 69 6E 64 00 00 
+			   0107BCC8 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 E9 BC 07 01 00 00 00 00 
+			   0107BCDC .  .  .  .  .  .  Q  @  
+			            00 00 00 00 00 80 51 40 
+	0107BCE4 InUse   53   0
+			   0107BCE9 4  4  4  .  .  .  .  .  E  m  o  r  y     B  o  a  r  d  .  
+			            34 34 34 00 00 00 00 00 45 6D 6F 72 79 20 42 6F 61 72 64 00 
+			   0107BCFD .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 D2 BD 07 01 00 00 00 00 
+			   0107BD11 .  .  .  .  Q  8  F  @  
+			            B8 1E 85 EB 51 38 46 40 
+	0107BD19 InUse   53   0
+			   0107BD1E 5  5  5  .  .  .  .  .  H  o  l  l  y     G  r  a  p  h  .  
+			            35 35 35 00 00 00 00 00 48 6F 6C 6C 79 20 47 72 61 70 68 00 
+			   0107BD32 .  .  .  .  S  .  .  .  .  .  .  .  Z  .  .  .  .  .  .  .  
+			            00 00 00 00 53 BD 07 01 00 00 00 00 5A BC 07 01 00 00 00 00 
+			   0107BD46 .  .  .  .  .  .  K  @  
+			            00 00 00 00 00 80 4B 40 
+	0107BD4E InUse   37   1
+			   0107BD53 S  B  B  0  0  1  .  .  .  .  .  .  .  .  .  .  3  3  3  3  
+			            53 42 42 30 30 31 00 00 00 00 00 00 02 00 00 00 33 33 33 33 
+			   0107BD67 3  .  3  @  x  .  .  .  .  .  .  .  
+			            33 F3 33 40 78 BD 07 01 00 00 00 00 
+	0107BD73 InUse   37   1
+			   0107BD78 B  O  M  0  0  1  .  .  .  .  .  .  .  .  .  .  3  3  3  3  
+			            42 4F 4D 30 30 31 00 00 00 00 00 00 01 00 00 00 33 33 33 33 
+			   0107BD8C 3  .  =  @  .  .  .  .  .  .  .  .  
+			            33 F3 3D 40 00 00 00 00 00 00 00 00 
+	0107BD98 Cand    53
+			   0107BD9D 6  6  6  .  .  .  .  .  .  .  .     L     H  e  a  d  .  .  
+			            36 36 36 00 00 00 00 00 00 00 00 20 4C 20 48 65 61 64 00 00 
+			   0107BDB1 thru 0107BDC4 (1 lines) suppressed - all zero
+			   0107BDC5 .  .  .  .  .  .  P  @  
+			            00 00 00 00 00 80 50 40 
+	0107BDCD InUse   53   0
+			   0107BDD2 7  7  7  .  .  .  .  .  F  l  o     N     W  a  t  e  r  .  
+			            37 37 37 00 00 00 00 00 46 6C 6F 20 4E 20 57 61 74 65 72 00 
+			   0107BDE6 .  .  .  .  .  .  .  .  .  .  .  .  Z  .  .  .  .  .  .  .  
+			            00 00 00 00 00 00 00 00 00 00 00 00 5A BC 07 01 00 00 00 00 
+			   0107BDFA .  .  .  .  .  @  S  @  
+			            00 00 00 00 00 40 53 40 
+	0107BE02 InUse   53   0
+			   0107BE07 9  5  5  .  .  .  .  .  H  a  r  r  y     K  i  n  g  .  .  
+			            39 35 35 00 00 00 00 00 48 61 72 72 79 20 4B 69 6E 67 00 00 
+			   0107BE1B thru 0107BE2E (1 lines) suppressed - all zero
+			   0107BE2F .  .  .  .  .  .  W  @  
+			            00 00 00 00 00 C0 57 40 
+	0107BE37 InUse   37   1
+			   0107BE3C S  S  X  0  0  2  .  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            53 53 58 30 30 32 00 00 00 00 00 00 01 00 00 00 00 00 00 00 
+			   0107BE50 .  @  =  @  .  .  .  .  .  .  .  .  
+			            00 40 3D 40 00 00 00 00 00 00 00 00 
+	0107BE5C Cand    16
+			   0107BE61 .  .  .  .  .  .  .  .  .  .  .  
+			            00 00 00 98 BD 07 01 00 00 00 00 
+	0107BE6C InUse   53   0
+			   0107BE71 9  2  2  .  .  .  .  .  M  a  e     K  i  n  g  .  .  .  .  
+			            39 32 32 00 00 00 00 00 4D 61 65 20 4B 69 6E 67 00 00 00 00 
+			   0107BE85 thru 0107BE98 (1 lines) suppressed - all zero
+			   0107BE99 .  .  .  .  .  .  W  @  
+			            00 00 00 00 00 00 57 40 
+	0107BEA1 InUse   37   1
+			   0107BEA6 S  S  X  0  0  4  .  .  .  .  .  .  .  .  .  .  3  3  3  3  
+			            53 53 58 30 30 34 00 00 00 00 00 00 01 00 00 00 33 33 33 33 
+			   0107BEBA 3  s  =  @  .  .  .  .  .  .  .  .  
+			            33 73 3D 40 00 00 00 00 00 00 00 00 
+	0107BEC6 Cand   143
+			   0107BECB 9  3  3  \  .  .  .  .  .  .  .     K  i  n  g  .  .  .  .  
+			            39 33 33 5C BE 07 01 00 00 00 00 20 4B 69 6E 67 00 00 00 00 
+			   0107BEDF thru 0107BEF2 (1 lines) suppressed - all zero
+			   0107BEF3 .  .  .  .  .  @  W  @  5  .  .  .  C  9  4  4  .  .  .  .  
+			            00 00 00 00 00 40 57 40 35 00 00 00 43 39 34 34 00 00 00 00 
+			   0107BF07 .  F  r  e  i  d  a     K  i  n  g  .  .  .  .  .  .  .  .  
+			            00 46 72 65 69 64 61 20 4B 69 6E 67 00 00 00 00 00 00 00 00 
+			   0107BF1B .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  W  
+			            00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 80 57 
+			   0107BF2F @  %  .  .  .  C  S  S  X  0  0  3  .  .  .  .  .  .  .  .  
+			            40 25 00 01 00 43 53 53 58 30 30 33 00 00 00 00 00 00 01 00 
+			   0107BF43 .  .  .  .  .  .  .  Y  =  @  .  .  .  .  .  .  .  .  
+			            00 00 9A 99 99 99 99 59 3D 40 00 00 00 00 00 00 00 00 
+	0107BF55 InUse   37   1
+			   0107BF5A T  T  P  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+			            54 54 50 30 30 31 00 00 00 00 00 00 02 00 00 00 66 66 66 66 
+			   0107BF6E f  .  #  @  .  .  .  .  .  .  .  .  
+			            66 E6 23 40 00 00 00 00 00 00 00 00 
+	0107BF7A InUse   42   1
+			   0107BF7F N  H  C  0  0  1  .  .  .  .  .  .  .  .  .  .  f  f  f  f  
+			            4E 48 43 30 30 31 00 00 00 00 00 00 01 00 00 00 66 66 66 66 
+			   0107BF93 f  .  #  @  .  .  .  .  .  .  .  .  .  .  .  .  .  
+			            66 E6 23 40 00 00 00 00 00 00 00 00 00 00 00 00 00 
+
+
