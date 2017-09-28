@@ -1,0 +1,8 @@
+# duplicated.txt
+Hello world
+Hello world
+Hi
+Guten tag
+Hi
+Hi
+Hola
