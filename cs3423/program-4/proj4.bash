@@ -13,9 +13,10 @@ mkdir "Emails"
         echo "$inp" | awk -f initBashGen.awk -v "date=$1" >gForm.bash
         #exports the variables from gform and stores them in this bash file
         . ./gForm.bash
+        #echo "$ammLeft"
         #this massive line of code essentially replaces the need for sed and uses the template to form a propper email
-        if [ $paid -lt $owed ]; then
-            awk -f createEmail.awk -v "data=$data" -v "title=$title" -v "email=$email" -v "date=$1" -v "ammount=$paid" -v "fullName=$fullName" -v "lastName=$lastName" template.txt >Emails/$email
+        if [ $ammLeft -gt 0 ]; then
+            awk -f createEmail.awk -v "ammLeft=$ammLeft" -v "data=$data" -v "title=$title" -v "email=$email" -v "date=$1" -v "ammount=$paid" -v "fullName=$fullName" -v "lastName=$lastName" template.txt >Emails/$email
         fi
     done
 }<p4Customer.txt #this allows the while loop to read out the lines in the customer txt file

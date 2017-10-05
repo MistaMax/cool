@@ -5,5 +5,6 @@
     gsub("NAME", lastName)
     gsub("DATE", date)
     gsub("DATA", data)
+    gsub("AMOUNT", ammLeft)
     print $0
 }

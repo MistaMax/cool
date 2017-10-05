@@ -9,8 +9,7 @@ BEGIN{
     print "email=\""$1"\""
     print "fullName=\""$2"\""
     print "title=\""$3"\""
-    print "paid="$4
-    print "owed="$5
+    print "ammLeft="$5-$4
     print "lastName=\""name[l]"\""
-    print "export email fullName title ammount lastName"
+    print "export email fullName title ammLeft lastName"
 }
