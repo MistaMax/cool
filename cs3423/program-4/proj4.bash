@@ -15,7 +15,7 @@ mkdir "Emails"
         . ./gForm.bash
         #this massive line of code essentially replaces the need for sed and uses the template to form a propper email
         if [ $paid -lt $owed ]; then
-            awk -f createEmail -v "data=$data" -v "title=$title" -v "email=$email" -v "date=$1" -v "ammount=$paid" -v "fullName=$fullName" -v "lastName=$lastName" template.txt >Emails/$email
+            awk -f createEmail.awk -v "data=$data" -v "title=$title" -v "email=$email" -v "date=$1" -v "ammount=$paid" -v "fullName=$fullName" -v "lastName=$lastName" template.txt >Emails/$email
         fi
     done
 }<p4Customer.txt #this allows the while loop to read out the lines in the customer txt file
