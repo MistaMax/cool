@@ -1,8 +1,9 @@
+#creates the base of the generated bash script
 BEGIN{
     print "#!/bin/bash\n"
     FS = ","
 }
-
+#sets up the data to be exported
 {
     l = split($2,name," ")
     print "data=\""$0"\""
