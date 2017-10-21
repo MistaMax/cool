@@ -8,30 +8,25 @@ use strict;
 
 my $dir = "/home/max/git/schoolCode/cs3423/program-6/DataB";
 
-if (! -d $dir)
+if(!(-d $dir))
 {
     die "Not a directory\n";
 }
 
-my $dirName;
+my @fNArr = glob($dir . /*);
 
-my @filesArr = glob($dir);
-
-foreach my $file (@filesArr)
+foreach my $fN (@fNArr)
 {
-    my $assignment = $file;
-    if($assignment =~ m/^proj/)
+    my $end = $fN;
+    my $dirName = "misc";
+    if($end =~ m/^proj/)
     {
-        $assignment =~ s/^proj|\..*$//g;
-        $dirName = join("","assignment",$assignment);
+        $end =~ s/^proj|\..*$//g;
+        $dirName = join("","assignment",$end);
     }
-    else
-    {
-        $dirName = "misc";
-    }
-    if (! -d $dirName)
+    if(!(-d $dir))
     {
         print `mkdir $dirName`;
     }
-    print `cp $dir/$file $dirName`;
+    print `cp $dir/$fN $dirName`;
 }
