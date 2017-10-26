@@ -1,0 +1,158 @@
+[1]> (load "p2Lisp.txt" :echo T :print T)
+;; Loading file p2Lisp.txt ...
+;;;repeats an atom n times
+(defun repeat (A N)
+    (COND ((ZEROP N) NIL)
+        (T  (CONS A (repeat A (- N 1))))
+    )
+)
+REPEAT
+
+;;;duplicates every atom in a list L
+(defun duplicate (L)
+    (COND ((NULL L) NIL)
+        ((ATOM (CAR L))(APPEND
+                            (repeat (CAR L) 2)
+                            (duplicate (CDR L))
+                        )
+        )
+        (T (CONS (CAR L) (duplicate (CDR L))))
+    )
+)
+DUPLICATE
+
+;;;duplicates every atom in the top list L N times
+(defun duplicateN (L N)
+    (COND ((NULL L) NIL)
+        ((ATOM (CAR L))(APPEND
+                            (repeat (CAR L) N)
+                            (duplicateN (CDR L) N)
+                        )
+        )
+        (T (CONS (CAR L) (duplicateN (CDR L) N)))
+    )
+)
+DUPLICATEN
+
+;;;duplicates every atom in a list through all sublists
+(defun duplicateDeep (L)
+    (COND ((NULL L) NIL)
+        ((ATOM (CAR L))(APPEND
+                            (repeat (CAR L) 2)
+                            (duplicateDeep (CDR L))
+                        )
+        )
+        ((LIST (CAR L))(CONS
+                            (duplicateDeep (CAR L))
+                            (duplicateDeep (CDR L))
+                       )
+        )
+        (T (CONS (CAR L) (duplicateDeep (CDR L))))
+    )
+)
+DUPLICATEDEEP
+
+
+;;;the recursive function used to scan through a list and print it
+(defun printWOP2 (L)
+    (COND ((NULL L) NIL)
+        (T (PRINC (CAR L)) (PRINC " ") (printWOP2 (CDR L)))
+    )
+)
+PRINTWOP2
+
+;;;prints a list out
+(defun printWOP (L)
+    (terpri)
+    (COND ((ATOM L) (PRINC L))
+            (T (printWOP2 L))
+    )
+    (terpri)
+    (COND (T T))
+)
+PRINTWOP
+
+;;;runs the code inside a list
+(defun evalEach (L)
+    (COND ((NULL L) NIL)
+        ((NULL (CDR L)) (EVAL (CAR L)))
+        (T (EVAL (CAR L)) (evalEach (CDR L)))
+    )
+)
+EVALEACH
+;; Loaded file p2Lisp.txt
+T
+[2]> (load "p2LispRun.txt" :echo T :print T)
+;; Loading file p2LispRun.txt ...
+;;; ****** PGM2 RUN ******
+(repeat 'A 5)
+(A A A A A)
+
+
+(duplicate ' (A B C))
+(A A B B C C)
+
+(duplicate ' (GUM (HAS BEEN) CHEWED))
+(GUM GUM (HAS BEEN) CHEWED CHEWED)
+
+
+(duplicateN  ' (A B C) 2)
+(A A B B C C)
+
+(duplicateN  ' (A B C) 3)
+(A A A B B B C C C)
+
+(duplicateN ' (GUM (HAS BEEN) CHEWED) 2)
+(GUM GUM (HAS BEEN) CHEWED CHEWED)
+
+
+(duplicateDeep  ' (A B C) )
+(A A B B C C)
+
+(duplicateDeep  ' (A (B D) E (F)) )
+(A A (B B D D) E E (F F))
+
+(duplicateDeep '(A (B (D E) (F G)) (H I)) )
+(A A (B B (D D E E) (F F G G)) (H H I I))
+
+
+(printWOP '(A B D))
+A B D
+T
+
+
+(printWOP '(A (B D) E F) )
+A (B D) E F
+T
+
+
+(printWOP NIL)
+NIL
+T
+
+
+(printWOP 'Hello)
+HELLO
+T
+
+
+(evalEach '( (setf A 5) (print 'hello) (print 'there) A))
+HELLO
+THERE
+5
+
+
+(evalEach '( (setf x 10 ) (setf A '(x y z)) (print A) (setf B (car A)) (set B (+ 5 x)) ))
+(X Y Z)
+15
+
+(print B)
+X
+X
+
+(print X)
+15
+15
+
+;; Loaded file p2LispRun.txt
+T

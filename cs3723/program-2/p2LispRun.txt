@@ -14,14 +14,14 @@
 
 (printWOP '(A B D))
 
-;;;(printWOP '(A (B D) E F) )
+(printWOP '(A (B D) E F) )
 
-;;;(printWOP NIL)
+(printWOP NIL)
 
-;;;(printWOP 'Hello)
+(printWOP 'Hello)
 
-;;;(evalEach '( (setf A 5) (print 'hello) (print 'there) A)) 
+(evalEach '( (setf A 5) (print 'hello) (print 'there) A)) 
 
-;;;(evalEach '( (setf x 10 ) (setf A '(x y z)) (print A) (setf B (car A)) (set B (+ 5 x)) ))
-;;;(print B)
-;;;(print X)
+(evalEach '( (setf x 10 ) (setf A '(x y z)) (print A) (setf B (car A)) (set B (+ 5 x)) ))
+(print B)
+(print X)

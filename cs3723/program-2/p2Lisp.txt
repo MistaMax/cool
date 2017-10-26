@@ -1,9 +1,10 @@
+;;;repeats an atom n times
 (defun repeat (A N)
     (COND ((ZEROP N) NIL)
         (T  (CONS A (repeat A (- N 1))))
     )
 )
-
+;;;duplicates every atom in a list L
 (defun duplicate (L)
     (COND ((NULL L) NIL)
         ((ATOM (CAR L))(APPEND
@@ -14,7 +15,7 @@
         (T (CONS (CAR L) (duplicate (CDR L))))
     )
 )
-
+;;;duplicates every atom in the top list L N times
 (defun duplicateN (L N)
     (COND ((NULL L) NIL)
         ((ATOM (CAR L))(APPEND
@@ -25,7 +26,7 @@
         (T (CONS (CAR L) (duplicateN (CDR L) N)))
     )
 )
-
+;;;duplicates every atom in a list through all sublists
 (defun duplicateDeep (L)
     (COND ((NULL L) NIL)
         ((ATOM (CAR L))(APPEND
@@ -42,17 +43,25 @@
     )
 )
 
-(defun printWOP (L)
+;;;the recursive function used to scan through a list and print it
+(defun printWOP2 (L)
     (COND ((NULL L) NIL)
-            ((ATOM (CAR L)) (PRINC (CAR L) PRINC " " (printWOP (CDR L)))
-            )
-            (T (PRINC "T"))
+        (T (PRINC (CAR L)) (PRINC " ") (printWOP2 (CDR L)))
     )
 )
-
+;;;prints a list out
+(defun printWOP (L)
+    (terpri)
+    (COND ((ATOM L) (PRINC L))
+            (T (printWOP2 L))
+    )
+    (terpri)
+    (COND (T T))
+)
+;;;runs the code inside a list
 (defun evalEach (L)
     (COND ((NULL L) NIL)
-        ()
-        (T ())
+        ((NULL (CDR L)) (EVAL (CAR L)))
+        (T (EVAL (CAR L)) (evalEach (CDR L)))
     )
 )
