@@ -53,7 +53,7 @@ else
             open(my $file, "<", $fileName) or die "Couldnt open file\n";
             while(my $line = <$file>){
                 if($line =~ m/$ARGV[0]/){
-                    print "$fileName\n";
+                    print "$fileName : $line";
                     last;
                 }
             }
