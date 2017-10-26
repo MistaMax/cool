@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -w
 use strict;
 
 if($#ARGV == -1){
@@ -30,7 +30,9 @@ if($ARGV[0] eq "-i")
             close $file;
             if($tick==0)
             {
-                print "$fileName\n";
+                my @direcNames = split("/",$fileName);
+                my $namesies = $direcNames[$#direcNames];
+                print "$namesies\n";
             }
         }
     }
@@ -46,14 +48,18 @@ else
     {
         if($fileName =~ m/$ARGV[0]/)
         {
-            print "$fileName\n";
+            my @direcNames = split("/",$fileName);
+            my $namesies = $direcNames[$#direcNames];
+            print "$namesies\n";
         }
         else
         {
             open(my $file, "<", $fileName) or die "Couldnt open file\n";
             while(my $line = <$file>){
                 if($line =~ m/$ARGV[0]/){
-                    print "$fileName\n";
+                    my @direcNames = split("/",$fileName);
+                    my $namesies = $direcNames[$#direcNames];
+                    print "$namesies : $line";
                     last;
                 }
             }

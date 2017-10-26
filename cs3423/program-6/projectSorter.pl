@@ -6,7 +6,7 @@ use strict;
 #    die "Not enough args";
 #}
 
-my $dir = "/home/max/git/schoolCode/cs3423/program-6/DataB";
+my $dir = $ARGV[0];
 
 if(!(-d $dir))
 {
