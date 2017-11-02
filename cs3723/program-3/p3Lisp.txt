@@ -1,0 +1,34 @@
+;;;makes a macro that subtracts the value of num from dec and sets it to that value
+(defmacro -= (num dec)
+    `(SETF ,num (- ,num ,dec))
+)
+;;;runs a function if a value is in a list, can be used multiple times
+(defmacro select (value &rest pair)
+    (let ((g (gensym)) )
+        `( do   ((,g ' ,pair (cdr ,g)) )
+                ((null ,g) NIL)
+                (if
+                    (eql 'DEFAULT (caar ,g))
+                    (return (evaleach (cdar ,g)))
+                )
+                (if
+                    (memset ,value (nth 1 (car ,g)))
+                    (return (evaleach (cddar ,g)))
+                )
+         )
+    )
+)
+;;;runs the code inside a list
+(defun evalEach (L)
+    (COND ((NULL L) NIL)
+        ((NULL (CDR L)) (EVAL (CAR L)))
+        (T (EVAL (CAR L)) (evalEach (CDR L)))
+    )
+)
+;;;Included function from notes that checks to see if an atom is in a list
+(defun MEMSET (atm L)
+    (cond ( (NULL L) NIL )
+        ( (EQL atm (CAR L)) T )
+        ( T        (MEMSET atm (CDR L)) ) 
+    )
+)

@@ -1,0 +1,182 @@
+[1]> (load "p3Lisp.txt" :echo T :print T)
+;; Loading file p3Lisp.txt ...
+;;;makes a macro that subtracts the value of num from dec and sets it to that value
+(defmacro -= (num dec)
+    `(SETF ,num (- ,num ,dec))
+)
+-=
+
+;;;runs a function if a value is in a list, can be used multiple times
+(defmacro select (value &rest pair)
+    (let ((g (gensym)) )
+        `( do   ((,g ' ,pair (cdr ,g)) )
+                ((null ,g) NIL)
+                (if
+                    (eql 'DEFAULT (caar ,g))
+                    (return (evaleach (cdar ,g)))
+                )
+                (if
+                    (memset ,value (nth 1 (car ,g)))
+                    (return (evaleach (cddar ,g)))
+                )
+         )
+    )
+)
+SELECT
+
+;;;runs the code inside a list
+(defun evalEach (L)
+    (COND ((NULL L) NIL)
+        ((NULL (CDR L)) (EVAL (CAR L)))
+        (T (EVAL (CAR L)) (evalEach (CDR L)))
+    )
+)
+EVALEACH
+
+;;;Included function from notes that checks to see if an atom is in a list
+(defun MEMSET (atm L)
+    (cond ( (NULL L) NIL )
+        ( (EQL atm (CAR L)) T )
+        ( T        (MEMSET atm (CDR L)) )
+    )
+)
+MEMSET
+;; Loaded file p3Lisp.txt
+T
+[2]> (load "p3LispRun.txt" :echo T :print T)
+;; Loading file p3LispRun.txt ...
+;;; -=
+(setf x 5 y 10)
+10
+
+(-= x 1)
+4
+
+x
+4
+(-= y x)
+6
+
+y
+6
+
+;;; select A.
+(setf good 0)
+0
+
+(setf bad 0)
+0
+
+(defvar grade)
+GRADE
+
+(defun gradeStuff (grade)
+    (select grade
+        (when (A B)
+           (setf good (+ 1 good))
+           (print "doing well")
+        )
+        (when (C)
+           (print "average"))
+        (when (D F)
+           (setf bad (+ bad 1))
+           (print "oh no")
+        )
+        (default
+           (print (list "unknown value=" grade)))
+    )
+)
+GRADESTUFF
+
+(gradeStuff 'A)
+"doing well"
+"doing well"
+
+(gradeStuff 'B)
+"doing well"
+"doing well"
+
+(gradeStuff 'C)
+"average"
+"average"
+
+(gradeStuff 'D)
+"oh no"
+"oh no"
+
+(gradeStuff 'F)
+"oh no"
+"oh no"
+
+(gradestuff 'U)
+("unknown value=" U)
+("unknown value=" U)
+
+(print (list "good=" good "bad=" bad))
+("good=" 2 "bad=" 2)
+("good=" 2 "bad=" 2)
+
+
+;;; select B.
+
+(setf x 5 y 10)
+10
+
+(select (- y x)
+    (when (2 4 6 8)
+        (print "it is even")
+        (* y 2)
+    )
+    (when (1 3 5 7)
+        (print "it is odd")
+        (+ (* y 2) 1)
+    )
+    (default
+        (print "default")
+        y
+    )
+)
+"it is odd"
+21
+
+(setf x 4 y 6)
+6
+
+(select (- y x)
+    (when (2 4 6 8)
+        (print "it is even")
+        (* y 2)
+    )
+    (when (1 3 5 7)
+        (print "it is odd")
+        (+ (* y 2) 1)
+    )
+    (default
+        (print "default")
+        y
+    )
+)
+"it is even"
+12
+
+(setf x 5 y 20)
+20
+
+(select (- y x)
+    (when (2 4 6 8)
+        (print "it is even")
+        (* y 2)
+    )
+    (when (1 3 5 7)
+        (print "it is odd")
+        (+ (* y 2) 1)
+    )
+    (default
+        (print "default")
+        y
+    )
+)
+"default"
+20
+;; Loaded file p3LispRun.txt
+T
