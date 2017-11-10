@@ -1,0 +1,310 @@
+[1]> (load "p4LispDef.txt" :echo T :print T)
+;; Loading file p4LispDef.txt ...
+;;; putp
+;;;    Parameters:
+;;;       symbol   - symbol to be given the property
+;;;       ht       - hash table to store the symbol and its property value
+;;;       value    - the property value
+;;;    Purpose:
+;;;       stores the property value for the symbol in the specified hash table
+(defun putp (symbol ht value)
+    (setf (gethash symbol ht) value) )
+PUTP
+
+
+;;; getp
+;;;    Parameters:
+;;;       symbol   - symbol about which we want its property value
+;;;       ht       - hash table to store the symbol and its property value
+;;;    Purpose:
+;;;       returns the property value for the symbol in the specified hash table
+;;;    Returns
+;;;       The property value for the symbol in the specified hash table.
+;;;       If not found, NIL is returned.
+(defun getp (symbol ht)
+     (gethash symbol ht) )
+GETP
+
+
+;;; set up question and diag hash tables
+(setf question-HT (MAKE-HASH-TABLE))
+#S(HASH-TABLE :TEST FASTHASH-EQL)
+
+(setf diag-HT (MAKE-HASH-TABLE))
+#S(HASH-TABLE :TEST FASTHASH-EQL)
+
+
+;;; since the key for both the symptom and isa hash tables is a list,
+;;; we have to tell LISP to use EQUAL for the entry comparison instead of EQ.
+
+(setf symptom-HT (MAKE-HASH-TABLE  :test #'equal))
+#S(HASH-TABLE :TEST FASTHASH-EQUAL)
+
+(setf isa-HT (MAKE-HASH-TABLE  :test #'equal))
+#S(HASH-TABLE :TEST FASTHASH-EQUAL)
+
+
+;;; qyn macro
+;;; Parameters:
+;;;    qid - unique ID of a question
+;;;    ex - the rest of the arguments make up a list which represents the question
+;;; Purpose:
+;;;    Inserts an entry into the question-HT with qid as the key and ex as the value.
+;;; Notes:
+;;;    A macro is used instead of a function so that the arguments do not have to be
+;;;    quoted.
+
+(defmacro qyn (qid &rest ex)
+    `(putp ' ,qid question-HT  ' ,ex ) )
+QYN
+
+
+;;; clearSymptoms
+;;;    Parameters:
+;;;       n/a
+;;;    Purpose:
+;;;       Clears (i.e., deletes) all entries in the symptom-HT.
+;;;    Returns:
+;;;       n/a
+
+(defun clearSymptoms()
+   (clrhash symptom-HT))
+CLEARSYMPTOMS
+
+;; Loaded file p4LispDef.txt
+T
+[2]> (load "p4Lisp.txt" :echo T :print T)
+;; Loading file p4Lisp.txt ...
+;;; adds an expression to the diagnosis hash table
+(defmacro diag (did &rest ex)
+        `(putp ' ,did diag-HT ' ,ex) )
+DIAG
+
+
+;;; adds an expression to the isa hash table
+(defmacro isa (expr type)
+        `(putp ' ,expr isa-HT  ' ,type ) )
+ISA
+
+
+(defmacro symptom (&rest expr)
+    `(COND ((getp ' ,expr isa-HT) (putp ',expr symptom-HT ' T) (putp (list (getp ' ,expr isa-HT)) symptom-HT T))
+        (T (putp ' ,expr symptom-HT ' T))
+    )
+)
+SYMPTOM
+
+
+;;;recursive call of printWOP that prints a list without parentheses
+(defun printWOPRec (L)
+        (cond ( (NULL L)  )
+            (T (princ (CAR L))(princ " ")(printWOPRec (CDR L)))) )
+PRINTWOPREC
+
+
+;;;prints a list
+(defun printWOP (L)
+        (cond ( (ATOM L) (princ L))
+                (T (printWOPRec L)) )
+        (cond (T T)) )
+PRINTWOP
+
+
+;;;prints the tree through the recursive call
+(defun printTree (id)
+        (printTreeRec id 0 "") )
+PRINTTREE
+
+
+;;;indents the tree according to the position
+(defun indent (x)
+        (if (NOT (ZEROP x) )
+                (progn
+                        (princ " ")
+                        (indent (- x 1)) )
+                 ))
+INDENT
+
+
+;;;Recursive call of print Tree that goes through printing all of the tree with the appropriate quetions
+(defun printTreeRec (id count side)
+        (cond ( (NULL id) NIL)
+                ( (if (getp id question-HT)
+                        (progn
+                                (terpri)
+                                (indent count)
+                                (printWOP `(,side ,id "Question: " ))
+                                (printWOP (cddr (getp id question-HT)))
+                                (princ "?"))
+                        (progn
+                                (terpri)
+                                (indent count)
+                                (printWOP `(,side ,id "Diagnosis: "))
+                                (printWOP (getp id diag-HT)) ) )
+                (printTreeRec (car (getp id question-HT)) (+ count 4) "Y:")
+                (printTreeRec (cadr (getp id question-HT)) (+ count 4) "N:") ) ) )
+PRINTTREEREC
+
+
+;;;;Recursive call of triage
+(defun triageRec(id)
+
+  (PROG(result)
+       (setf result (getp id question-ht))
+
+       (COND (result
+                  (cond((getp (append (cddr result) ()) symptom-ht)
+                        (printWOP (list "id:" id result "Y"))(terpri)
+                        (triageRec (car result)))
+                      (T (printWOP (list "id:" id result "N"))(terpri)
+                        (triageRec (cadr result)))
+                   )
+             )
+             (T
+                (princ (getp id diag-ht))
+             )
+       )
+   )
+
+)
+TRIAGEREC
+
+
+;;;starts the recursive call of triage at the root to fine the diagnosis based on the symptoms
+(defun triage()
+        (terpri)
+    (triageRec root)
+        (terpri)
+)
+TRIAGE
+;; Loaded file p4Lisp.txt
+T
+[3]> (load "p4LispRun.txt" :echo T :print T)
+;; Loading file p4LispRun.txt ...
+;;; p4LispRun.txt - defines the diagnosis tree and runs your functions
+
+(QYN Q1  Q5 Q2 Pain)
+(Q5 Q2 PAIN)
+
+(QYN Q2  D1 Q3 Cough)
+(D1 Q3 COUGH)
+
+(QYN Q3  D2 D3 Fever)
+(D2 D3 FEVER)
+
+(QYN Q5  Q8 Q6 Tenderness in abdomen)
+(Q8 Q6 TENDERNESS IN ABDOMEN)
+
+(QYN Q6  D7 Q7 Pain in throat)
+(D7 Q7 PAIN IN THROAT)
+
+(QYN Q7  D6 D5 Fever)
+(D6 D5 FEVER)
+
+(QYN Q8  D9 D8 X-ray shows stones)
+(D9 D8 X-RAY SHOWS STONES)
+
+(DIAG D1 Treat common cold)
+(TREAT COMMON COLD)
+
+(DIAG D2 Treat Flu)
+(TREAT FLU)
+
+(DIAG D3 Thank you for visiting)
+(THANK YOU FOR VISITING)
+
+(DIAG d5 Prescribe acetaminophen)
+(PRESCRIBE ACETAMINOPHEN)
+
+(DIAG D6 Treat Flu)
+(TREAT FLU)
+
+(DIAG D7 Administer Strep Test)
+(ADMINISTER STREP TEST)
+
+(DIAG D8 Schedule appendectomy)
+(SCHEDULE APPENDECTOMY)
+
+(DIAG d9 Treat kindey stones)
+(TREAT KINDEY STONES)
+
+
+(isa (tenderness in abdomen) pain)
+PAIN
+
+(isa (pain in throat) pain)
+PAIN
+
+(isa (x-ray shows stones) stones)
+STONES
+
+
+(setf ROOT 'Q1)
+Q1
+
+(printTree ROOT)
+ Q1 Question:  PAIN ?
+    Y: Q5 Question:  TENDERNESS IN ABDOMEN ?
+        Y: Q8 Question:  X-RAY SHOWS STONES ?
+            Y: D9 Diagnosis:  TREAT KINDEY STONES
+            N: D8 Diagnosis:  SCHEDULE APPENDECTOMY
+        N: Q6 Question:  PAIN IN THROAT ?
+            Y: D7 Diagnosis:  ADMINISTER STREP TEST
+            N: Q7 Question:  FEVER ?
+                Y: D6 Diagnosis:  TREAT FLU
+                N: D5 Diagnosis:  PRESCRIBE ACETAMINOPHEN
+    N: Q2 Question:  COUGH ?
+        Y: D1 Diagnosis:  TREAT COMMON COLD
+        N: Q3 Question:  FEVER ?
+            Y: D2 Diagnosis:  TREAT FLU
+            N: D3 Diagnosis:  THANK YOU FOR VISITING
+NIL
+
+
+(Symptom fever)
+T
+
+(symptom pain in throat)
+T
+
+(triage)
+id: Q1 (Q5 Q2 PAIN) Y
+id: Q5 (Q8 Q6 TENDERNESS IN ABDOMEN) N
+id: Q6 (D7 Q7 PAIN IN THROAT) Y
+(ADMINISTER STREP TEST)
+NIL
+
+
+(CLEARSYMPTOMS)
+#S(HASH-TABLE :TEST FASTHASH-EQUAL)
+
+
+(symptom fever)
+T
+
+(triage)
+id: Q1 (Q5 Q2 PAIN) N
+id: Q2 (D1 Q3 COUGH) N
+id: Q3 (D2 D3 FEVER) Y
+(TREAT FLU)
+NIL
+
+
+(CLEARSYMPTOMS)
+#S(HASH-TABLE :TEST FASTHASH-EQUAL)
+
+
+(symptom tenderness in abdomen)
+T
+
+(symptom x-ray shows stones)
+T
+
+(triage)
+id: Q1 (Q5 Q2 PAIN) Y
+id: Q5 (Q8 Q6 TENDERNESS IN ABDOMEN) Y
+id: Q8 (D9 D8 X-RAY SHOWS STONES) Y
+(TREAT KINDEY STONES)
+NIL
+;; Loaded file p4LispRun.txt
+T

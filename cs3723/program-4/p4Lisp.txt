@@ -1,47 +1,33 @@
-;;; diag
+;;; adds an expression to the diagnosis hash table
 (defmacro diag (did &rest ex)
 	`(putp ' ,did diag-HT ' ,ex) )
 
-;;; isa
+;;; adds an expression to the isa hash table
 (defmacro isa (expr type)
 	`(putp ' ,expr isa-HT  ' ,type ) )
 
-;;; symptom
-(defmacro symptom (&rest symp)
-	(putp symp symptom-HT T)
-	(setf key (getp symp isa-HT))
-	(cond ( (NOT (NULL key) ) (putp key symptom-HT T) )) )
+(defmacro symptom (&rest expr)
+    `(COND ((getp ' ,expr isa-HT) (putp ',expr symptom-HT ' T) (putp (list (getp ' ,expr isa-HT)) symptom-HT T)) 
+        (T (putp ' ,expr symptom-HT ' T))
+    )
+)
 
-;;;printW
-;;;		Parameters:
-;;;			L - a list of items to print
-;;;		Purpose:
-;;;			used with printWOP to recursively 
-;;;			print the values in a list
-(defun printW (L)
+;;;recursive call of printWOP that prints a list without parentheses
+(defun printWOPRec (L)
         (cond ( (NULL L)  )
-            (T (princ (CAR L))(princ " ")(printW (CDR L)))) )
+            (T (princ (CAR L))(princ " ")(printWOPRec (CDR L)))) )
 
-;;;printWOP
-;;;		Parameters:
-;;;			L - a list of items to print
-;;;		Purpose:
-;;;			Print the values of the list without parentheses
+;;;prints a list
 (defun printWOP (L)
 	(cond ( (ATOM L) (princ L))
-		(T (printW L)) )
+		(T (printWOPRec L)) )
        	(cond (T T)) )
 
-;;;printTree
-;;;
-;;;
-;;;
+;;;prints the tree through the recursive call
 (defun printTree (id)
-	(printTreeHelper id 0 "") )
+	(printTreeRec id 0 "") )
 
-;;;indent 
-;;;
-;;;
+;;;indents the tree according to the position
 (defun indent (x)
 	(if (NOT (ZEROP x) ) 
 		(progn
@@ -49,32 +35,49 @@
 			(indent (- x 1)) ) 
 		 ))
 
-;;;printTreeHelper
-;;;
-;;;
-;;;FINISHED
-(defun printTreeHelper (id space side)
+;;;Recursive call of print Tree that goes through printing all of the tree with the appropriate quetions
+(defun printTreeRec (id count side)
 	(cond ( (NULL id) NIL) 
 		( (if (getp id question-HT)
 			(progn
 				(terpri)
-				(indent space)
+				(indent count)
 				(printWOP `(,side ,id "Question: " )) 
 				(printWOP (cddr (getp id question-HT)))
 				(princ "?")) 
 			(progn
 				(terpri)
-				(indent space)
+				(indent count)
 				(printWOP `(,side ,id "Diagnosis: "))
 				(printWOP (getp id diag-HT)) ) )  
-		(printTreeHelper (car (getp id question-HT)) (+ space 4) "Y:")
-		(printTreeHelper (cadr (getp id question-HT)) (+ space 4) "N:") ) ) )
+		(printTreeRec (car (getp id question-HT)) (+ count 4) "Y:")
+		(printTreeRec (cadr (getp id question-HT)) (+ count 4) "N:") ) ) )
 
-;;;triage 
-;;;
-;;; NOT FINISHED
-;;;
-(defun triage ()
-	(cond ( (getp 'Q1 question-HT) )
-		(if (getp (car (getp key question-HT)) symptom-HT)
-			(printWOP `("ID: " ,key ,(getp key question-HT) "Y")) ) ) )
+;;;;Recursive call of triage
+(defun triageRec(id)
+
+  (PROG(result)
+       (setf result (getp id question-ht))
+       
+       (COND (result
+                  (cond((getp (append (cddr result) ()) symptom-ht)
+                        (printWOP (list "id:" id result "Y"))(terpri)
+                        (triageRec (car result)))
+                      (T (printWOP (list "id:" id result "N"))(terpri)
+                        (triageRec (cadr result)))
+                   )
+             )  
+             (T
+                (princ (getp id diag-ht))
+             )
+       )
+   )
+
+)
+
+;;;starts the recursive call of triage at the root to fine the diagnosis based on the symptoms
+(defun triage()
+	(terpri)
+    (triageRec root)
+	(terpri)
+)
