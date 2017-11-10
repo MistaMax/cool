@@ -12,14 +12,8 @@
     (NOT (NULL (getp ' ,expr isa-HT)) NIL)
 )
 
-(defun printTNode (node)
-    (COND ((NULL node) NIL)
-        (PRINC (printTNode ()))
-    )
-)
-
 (defun printTree (rootID)
-    (PRINC )
+    
 )
 
 
