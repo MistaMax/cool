@@ -292,9 +292,10 @@ void listAllFilesR(const char *szDirName, int indent) //lists all non-hidden and
 	}
 	closedir(dir);
 }
-//
-void listAllFileDataR(char *szDirName, int indent)
+
+void listAllFileDataR(char *szDirName, int indent)// list all files and the data with them
 {
+	//directory scanning variables
 	DIR *dir;
 	struct dirent *pDirent;
 	struct stat statBuf;
@@ -309,8 +310,9 @@ void listAllFileDataR(char *szDirName, int indent)
 	if (!(dir = opendir(szDirName)))
 		return;
 
-	while ((pDirent = readdir(dir)) != NULL)
+	while ((pDirent = readdir(dir)) != NULL)//reads through the files in a directory
 	{
+		//making the path to the files
 		char path[500];
 		snprintf(path, sizeof(path), "%s/%s", szDirName, pDirent->d_name);
 		rc = stat(path, &statBuf);
@@ -319,19 +321,19 @@ void listAllFileDataR(char *szDirName, int indent)
 			errExit("stat: %s", strerror(errno));
 		}
 
-		if (S_ISDIR(statBuf.st_mode))
+		if (S_ISDIR(statBuf.st_mode))//Checks to see if it is a directory
 		{
 			if (strcmp(pDirent->d_name, ".") == 0 || strcmp(pDirent->d_name, "..") == 0)
 			{
-				printf("%*s%s D %ld blks %ld bytes\n", indent, " ", pDirent->d_name, statBuf.st_blocks, statBuf.st_size);
-				continue;
+				printf("%*s%s D %ld blks %ld bytes\n", indent, " ", pDirent->d_name, statBuf.st_blocks, statBuf.st_size);//gets the data of the hidden directories
+				continue;//jumps to the next increment in the loop
 			}
-			printf("%*s%s:\n", indent, " ", pDirent->d_name);
-			listAllFileDataR(path, indent + 4);
+			printf("%*s%s:\n", indent, " ", pDirent->d_name);//prints the directory name after all the spaces
+			listAllFileDataR(path, indent + 4);//recurses through the function if it is a directory
 		}
 		else
 		{
-			printf("%*s%s F %ld blks %ld bytes\n", indent, " ", pDirent->d_name, statBuf.st_blocks, statBuf.st_size);
+			printf("%*s%s F %ld blks %ld bytes\n", indent, " ", pDirent->d_name, statBuf.st_blocks, statBuf.st_size);//prints the file names
 		}
 	}
 	closedir(dir);
@@ -345,7 +347,7 @@ void listFileDataR(char *szDirName, int indent)
 
 	int rc = 0;
 
-	if (indent == 4)
+	if (indent == 4)//lists the initial name of the directory
 	{
 		printf("%s:\n", szDirName);
 	}
@@ -354,7 +356,8 @@ void listFileDataR(char *szDirName, int indent)
 		return;
 
 	while ((pDirent = readdir(dir)) != NULL)
-	{
+	{//loops through all the files in the directory
+		//creates the path
 		char path[500];
 		snprintf(path, sizeof(path), "%s/%s", szDirName, pDirent->d_name);
 		rc = stat(path, &statBuf);
@@ -363,11 +366,11 @@ void listFileDataR(char *szDirName, int indent)
 			errExit("stat: %s", strerror(errno));
 		}
 
-		if (S_ISDIR(statBuf.st_mode))
+		if (S_ISDIR(statBuf.st_mode))//checks to see if it is a directory
 		{
 			if (pDirent->d_name[0] == '.')
 				continue;
-			printf("%*s%s:\n", indent, " ", pDirent->d_name);
+			printf("%*s%s:\n", indent, " ", pDirent->d_name);//prints the directory name then recurses through the rest of the directory
 			listFileDataR(path, indent + 4);
 		}
 		else
