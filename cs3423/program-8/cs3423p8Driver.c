@@ -119,9 +119,9 @@ void processCommands(FILE *pfileCommand)
         }
         else if (strcmp(tokenM[0], "pipe")==0)
         {   // pipe command
-            //rc = pipeCmd(cmdM, iCmdCnt, tokenM, iTokenCnt);
-            //if (rc != 0)
-            //    printf("*** pipeCmd returned %d\n", rc);
+            rc = pipeCmd(cmdM, iCmdCnt, tokenM, iTokenCnt);
+            if (rc != 0)
+                printf("*** pipeCmd returned %d\n", rc);
         }
         else
             errExit("Invalid command: '%s'", tokenM[0]);
