@@ -1,0 +1,37 @@
+> (* 2 15)
+30
+
+> (+  (* 12 4)(* 2 3 ))
+54
+
+> (-  (* 12 2)(* 2 3 ))
+18
+
+> (* 5 (/ 5 2))
+12.5
+
+> (or (> 6 13) (< 15 2))
+False
+
+> (and (> 13 6) (> 17 3))
+True
+
+> (or (and (> 13 25) (< 6 5)) (and (> 14 2) (< 31 65)))
+True
+
+> (+  1 (* 12 4)(weird 3 2))
+Function Error: Not an operator weird
+> (+  1 (* 12 4 )(* 2 2)
+Prefix Syntax: Missing parentheses
+> (/ (+ 3 5))
+Function Error: Incorrect Number of Operands
+> (+ (- 4 2 3) 8))
+Function Error: Too many digits for opperand
+> (* (+ 3 X) 5)
+Function Error: Not an operator X
+> +
+Prefix Syntax: Missing parentheses
+> (+  1 * 12 4)(* 3 2))
+Function Error: Too many digits for opperand
+> (+  1 (* 12 4)(* 2 3 ))
+Function Error: Too many arguments
