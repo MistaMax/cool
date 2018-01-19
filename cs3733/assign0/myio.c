@@ -3,72 +3,99 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define MAX_INPUT_VALUE 100
-
-#define true 1
-#define false 0
-typedef int bool;
+#define DEFAULT_INPUT_SIZE 120
 
 int ReadInteger()
 {
-    int i = 0;
-    int iScanfCnt = 0;
-    int iLoopCnt;
-    char *lineIn = NULL;
-    while(1)
-    {
-        iLoopCnt = 0;
-        printf("Please input a single integer:\n");
-        lineIn = ReadLine();
-        sscanf(lineIn, "%d", &i);
-        break;
-        /*if(iLoopCnt == 1)break;
-        else printf("ERROR: Imporopper Input, please try again\n");*/
+    string line;
+    int iVal;
+    char termch;
+
+    while (true) {
+        printf("Please enter an integer:\n");
+        line = ReadLine();
+        switch (sscanf(line, " %d %c", &iVal, &termch)) {
+          case 1:
+            free(line);
+            return (iVal);
+          case 2:
+            printf("Unexpected character: '%c'\n", termch);
+            break;
+          default:
+            printf("Error: not an integer");
+            break;
+        }
+        free(line);
     }
-    return i;
 }
 
 double ReadDouble()
 {
-    double d = 0;
-    int iScanfCnt = 0;
-    int iLoopCnt;
-    char *lineIn = NULL;
-    while(1)
-    {
-        iLoopCnt = 0;
-        printf("Please input a single integer:\n");
-        lineIn = ReadLine();
-        sscanf(lineIn, "%lf", &d);
-        break;
-        /*if(iLoopCnt == 1)break;
-        else printf("ERROR: Imporopper Input, please try again\n");*/
+    string line;
+    double dVal;
+    char termch;
+
+    while (true) {
+        printf("Please enter a double:\n");
+        line = ReadLine();
+        switch (sscanf(line, " %lf %c", &dVal, &termch)) {
+          case 1:
+            free(line);
+            return (dVal);
+          case 2:
+            printf("Unexpected character: '%c'\n", termch);
+            break;
+          default:
+            printf("Error: not a double\n");
+            break;
+        }
+        free(line);
     }
-    return d;
 }
-
-char *ReadLine()
+/*****************************************************************
+ * ReadLine()
+ * 
+ * Description:
+ *  reads in a line from stdin
+******************************************************************/
+string ReadLine()
 {
-    char *line = NULL;
-    size_t size = 0;
-    getline(&line, &size, stdin);
-    line[strlen(line)-1] = '\0';
-    return line;
+    return ReadLineFile(stdin);
 }
-
-char *ReadLineFile(FILE *infile)
+/*****************************************************************
+ * ReadLineFile(FILE *fIn)
+ * 
+ * Description:
+ *  reads in a line from a file
+ * 
+ * Parameters:
+ *  - FILE *fIn:
+ *      should contain a preopened file
+******************************************************************/
+string ReadLineFile(FILE *fIn)
 {
-    char *line = NULL;
-    size_t size = 0;
-    getline(&line, &size, infile);
-    line[strlen(line)-1] = '\0';
-    return line;
-}
-
-
-int main()
-{
-    //printf("%s\n",ReadLine());
-    printf("%d\n",ReadDouble());
-    return 0;
+    string szTmpLine, line;
+    int n, iCharacter, iSize;
+    n = 0;
+    iSize = DEFAULT_INPUT_SIZE;
+    line = malloc(iSize + 1);
+    while ((iCharacter = getc(fIn)) != '\n' && iCharacter != EOF) {
+        if (n == iSize) {
+            iSize *= 2;
+            szTmpLine = (string) malloc(iSize + 1);
+            strncpy(szTmpLine, line, n);
+            free(line);
+            line = szTmpLine;
+        }
+        line[n++] = iCharacter;
+    }
+    if (n == 0 && iCharacter == EOF) {
+        free(line);
+        return (NULL);
+    }
+    line[n] = '\0';
+    szTmpLine = (string) malloc(n + 1);
+    strcpy(szTmpLine, line);
+    free(line);
+    return (szTmpLine);
 }

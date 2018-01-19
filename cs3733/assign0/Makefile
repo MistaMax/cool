@@ -1,5 +1,5 @@
 CFLAGS = gcc -g
-OBJ = myio.o
+OBJ = myio.o driver1.o driver2.o
 
 # Automatic substitution using suffix rules to
 # make .o files from either .c or .cpp files
@@ -7,8 +7,11 @@ OBJ = myio.o
 	${CFLAGS} -c $< 
 
 # Build xdir based on the required .o files
-run: ${OBJ}
-	${CFLAGS} -o run ${OBJ}
+driver1: myio.o driver1.o
+	${CFLAGS} -o run1 myio.o driver1.o
+
+driver2: myio.o driver2.o
+	${CFLAGS} -o run2 myio.o driver2.o
 
 clean:
 	rm ${OBJ}

@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "cs3423p8.h": "c"
+        "cs3423p8.h": "c",
+        "stdlib.h": "c",
+        "myio.h": "c"
     }
 }
