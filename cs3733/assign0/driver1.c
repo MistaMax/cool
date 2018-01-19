@@ -10,28 +10,22 @@ int main(int argc, char *argv[])
         fprintf(stderr,"Wrong ammount of arguments");
         return 1;
     }
-
+    //scanning in all the data required
     int iMultInt, iMultDoub, iMultLine, iScanfCnt = 0;
-
     iScanfCnt += sscanf(argv[1],"%d",&iMultInt);
     iScanfCnt += sscanf(argv[2],"%d",&iMultDoub);
     iScanfCnt += sscanf(argv[3],"%d",&iMultLine);
-
+    //checks to see if the scanf
     if(iScanfCnt < 3)
     {
         fprintf(stderr,"ERROR: Count not inputted correctly");
         return 2;
     }
-    
+    //initializes all the variables
     int iMax = 0;
     double dMax = 0.00;
     int iLongLine = 0;
     string szBigLine = NULL;
-    //tmp variables
-    /*int iTmp = 0;
-    double dTmp = 0.00;
-    int iTmpLine = 0;
-    string szTmpLine = NULL;*/
     int i;
     //reading in the int
     for(i = 0; i < iMultInt;i++)
@@ -60,7 +54,7 @@ int main(int argc, char *argv[])
         }
         if(szTmpLine != NULL)free(szTmpLine);
     }
-
+    //prints out the outcome
     printf("\n****************************************\n\n");
     printf("Max Int: %d\n", iMax);
     printf("Max Double: %.2lf\n", dMax);

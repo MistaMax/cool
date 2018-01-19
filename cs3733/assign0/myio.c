@@ -4,49 +4,59 @@
 #include <stdlib.h>
 
 #define DEFAULT_INPUT_SIZE 120
-
+/*****************************************************************
+ * ReadInteger()
+ * 
+ * Description:
+ *      Reads in an integer from stdin
+******************************************************************/
 int ReadInteger()
 {
     string line;
     int iVal;
-    char termch;
+    char test;
 
     while (true) {
         printf("Please enter an integer:\n");
         line = ReadLine();
-        switch (sscanf(line, " %d %c", &iVal, &termch)) {
+        switch (sscanf(line, " %d %c", &iVal, &test)) {
           case 1:
             free(line);
             return (iVal);
           case 2:
-            printf("Unexpected character: '%c'\n", termch);
+            fprintf(stderr, "Unexpected character: '%c'\n", test);
             break;
           default:
-            printf("Error: not an integer");
+            fprintf(stderr, "Error: not an integer");
             break;
         }
         free(line);
     }
 }
-
+/*****************************************************************
+ * ReadDouble()
+ * 
+ * Description:
+ *      Reads in a double from stdin
+******************************************************************/
 double ReadDouble()
 {
     string line;
     double dVal;
-    char termch;
+    char test;
 
     while (true) {
         printf("Please enter a double:\n");
         line = ReadLine();
-        switch (sscanf(line, " %lf %c", &dVal, &termch)) {
+        switch (sscanf(line, " %lf %c", &dVal, &test)) {
           case 1:
             free(line);
             return (dVal);
           case 2:
-            printf("Unexpected character: '%c'\n", termch);
+            fprintf(stderr,"Unexpected character: '%c'\n", test);
             break;
           default:
-            printf("Error: not a double\n");
+            fprintf(stderr, "Error: not a double\n");
             break;
         }
         free(line);
@@ -79,10 +89,24 @@ string ReadLineFile(FILE *fIn)
     n = 0;
     iSize = DEFAULT_INPUT_SIZE;
     line = malloc(iSize + 1);
+
+    if(line == NULL)
+    {
+        fprintf(stderr,"ERROR: unable to allocate line\n");
+        exit(1);
+    }
+
     while ((iCharacter = getc(fIn)) != '\n' && iCharacter != EOF) {
         if (n == iSize) {
             iSize *= 2;
             szTmpLine = (string) malloc(iSize + 1);
+
+            if(szTmpLine == NULL)
+            {
+                fprintf(stderr,"ERROR: unable to allocate\n");
+                exit(1);
+            }
+
             strncpy(szTmpLine, line, n);
             free(line);
             line = szTmpLine;
@@ -95,6 +119,11 @@ string ReadLineFile(FILE *fIn)
     }
     line[n] = '\0';
     szTmpLine = (string) malloc(n + 1);
+    if(szTmpLine == NULL)
+    {
+        fprintf(stderr,"ERROR: unable to allocate\n");
+        exit(1);
+    }
     strcpy(szTmpLine, line);
     free(line);
     return (szTmpLine);

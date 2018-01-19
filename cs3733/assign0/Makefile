@@ -8,10 +8,10 @@ OBJ = myio.o driver1.o driver2.o
 
 # Build xdir based on the required .o files
 driver1: myio.o driver1.o
-	${CFLAGS} -o run1 myio.o driver1.o
+	${CFLAGS} -o driver1 myio.o driver1.o
 
 driver2: myio.o driver2.o
-	${CFLAGS} -o run2 myio.o driver2.o
+	${CFLAGS} -o driver2 myio.o driver2.o
 
 clean:
 	rm ${OBJ}
