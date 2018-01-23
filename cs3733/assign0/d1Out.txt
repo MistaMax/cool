@@ -1,0 +1,25 @@
+max@max-laptop  ~/git/schoolCode/cs3733/assign0   master  ./driver1 2 4 2
+Please enter an integer:
+10231023           
+Please enter an integer:
+5045 
+Please enter a double:
+8.45
+Please enter a double:
+2015.32
+Please enter a double:
+50.39
+Please enter a double:
+12.16
+Please Input a line: 
+C is fun
+Please Input a line: 
+Os is really fun
+
+****************************************
+
+Max Int: 10231023
+Max Double: 2015.32
+Longest Line: Os is really fun
+
+

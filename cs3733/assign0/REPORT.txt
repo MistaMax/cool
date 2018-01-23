@@ -1,0 +1,5 @@
+REPORT
+1. No one helped me, I did this by myself, however I helped a few other people by showing them a few sections of my code
+2. Yes, everything should be correct.
+3. N/a
+4. The challenging part was dealing with all the segfaults originally.  I coded everything without testing sections so it took me a while to figure it out.  But once I got all the segfaults out of the way and all the memory was freed up correctly it was easy.
