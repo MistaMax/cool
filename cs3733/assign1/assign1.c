@@ -26,8 +26,9 @@ int main(int argc, char *argv[])
     string s1, s2;
     s1 = (string) malloc(sumSubIntArray(iIn,1,6)+1);
     s2 = (string) malloc(sumSubIntArray(iIn,1,6)+1);
-    part0(s1,s2);
-    display("Part 0\n",s1,s2);
+    //part0(s1,s2);
+    fcfsa(s1,s2,iIn[1],iIn[2],iIn[3],iIn[4],iIn[5],iIn[6]);
+    display("Part 1\n",s1,s2);
     return 0;
 }
 

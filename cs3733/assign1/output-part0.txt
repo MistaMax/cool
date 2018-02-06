@@ -1,0 +1,8 @@
+Assignment 1 program was written by Max Crookshanks
+inputs:1 2 3 4 5 6 7 
+
+Part 0
+
+RRwwwwwRRRRRRRRR
+rrRRRRwwwwwwwwrrRRRRRRR
+0, 4, 2.0, 0.95652
