@@ -1,0 +1,13 @@
+1. I did this with no one
+2. YES, everything outputs correctly and runs to perfection
+3. N/a
+4. This was a fun and interactive project, i really enjoyed how program didnt work until it did.
+5. BELOW
+ max@max-laptop  ~/git/schoolCode/cs3733/assign1   master ± cc -o runalla runalla.c pslibrary.c
+ max@max-laptop  ~/git/schoolCode/cs3733/assign1   master ± ./runalla
+ max@max-laptop  ~/git/schoolCode/cs3733/assign1   master ± ls -l fcfsa.all
+-rw-rw-r-- 1 max max 44344517 Feb  8 14:01 fcfsa.all
+ max@max-laptop  ~/git/schoolCode/cs3733/assign1   master ± wc fcfsa.all
+ 2000001  2000003 44344517 fcfsa.all
+ max@max-laptop  ~/git/schoolCode/cs3733/assign1   master ± md5sum fcfsa.all
+ca6f6876a9d3049247ebc1146cf9be8d  fcfsa.all

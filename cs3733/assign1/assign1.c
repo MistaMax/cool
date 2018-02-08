@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     else
     {
         printf("Assignment 1 program was written by Max Crookshanks\n");
-        printf("inputs:");
+        printf("inputs: ");
         int i;
         for(i=1;i<argc;i++)sscanf(argv[i],"%i",&iIn[i-1]);
         printIntArray(iIn, 7);

@@ -12,7 +12,7 @@ void part0(string s1, string s2)
 
 void display(string heading, string s1, string s2)
 {
-    fprintf(stdout,"\n");
+    //fprintf(stdout,"\n");
     fprintf(stdout,"%s\n",heading);
     fprintf(stdout,"%s\n", s1);
     fprintf(stdout,"%s\n",s2);
@@ -56,14 +56,32 @@ void fcfsa(string s1, string s2, int x1, int y1, int z1, int x2, int y2, int z2)
         s1[i1] = 'w';
     for(i = i2+x2; i2 < i; i2++)
         s2[i2] = 'R';
-    for(; i1 < i2; i1++)
-        s1[i1] = 'r';
-    for(i = i2+y2; i2 < i; i2++)
-        s2[i2] = 'w';
-    for(i = i1+z1; i1 < i; i1++)
-        s1[i1] = 'R';
-    for(; i2 < i1; i2++)
-        s2[i2] = 'r';
-    for(i = i2+z2; i2 < i; i2++)
-        s2[i2] = 'R';
+    
+    if(i2+y2<i1)
+    {
+        for(i = i2+y2; i2 < i; i2++)
+            s2[i2] = 'w';
+        for(i = i2+z2; i2 < i; i2++)
+            s2[i2] = 'R';
+        for(; i1 < i2; i1++)
+            s1[i1] = 'r';
+        for(i = i1+z1; i1 < i; i1++)
+            s1[i1] = 'R';
+    }
+    else
+    {
+        for(; i1 < i2; i1++)
+            s1[i1] = 'r';
+        for(i = i2+y2; i2 < i; i2++)
+            s2[i2] = 'w';
+        for(i = i1+z1; i1 < i; i1++)
+            s1[i1] = 'R';
+        for(; i2 < i1; i2++)
+            s2[i2] = 'r';
+        for(i = i2+z2; i2 < i; i2++)
+            s2[i2] = 'R';
+    }
+
+    s1[i1] = '\0';
+    s2[i2] = '\0';
 }
