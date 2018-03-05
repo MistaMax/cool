@@ -1,0 +1,27 @@
+1. I colaborated with no one
+
+2. Yes, everything I did is correct
+
+3. N/A
+
+4. the psjf took me a whole 5 minutes to figure out, 
+in total I spent about 10 minutes making this program,  
+so I guess you can say it somewhat challenged me.
+
+5. Program Output
+max@max-laptop  ~/git/schoolCode/cs3733/assign2   master ± ls -l *.all
+-rw-rw-r-- 1 max max 44344517 Mar  5 12:43 fcfs.all
+-rw-rw-r-- 1 max max 42267266 Mar  5 12:43 psjf.all
+-rw-rw-r-- 1 max max 46409196 Mar  5 12:43 rr.all
+-rw-rw-r-- 1 max max 43243801 Mar  5 12:43 sjf.all
+ max@max-laptop  ~/git/schoolCode/cs3733/assign2   master ± wc *.all
+  2000001   2000003  44344517 fcfs.all
+  2000001   2000003  42267266 psjf.all
+  2000001   2000003  46409196 rr.all
+  2000001   2000003  43243801 sjf.all
+  8000004   8000012 176264780 total
+ max@max-laptop  ~/git/schoolCode/cs3733/assign2   master ± md5sum *.all
+ca6f6876a9d3049247ebc1146cf9be8d  fcfs.all
+385126a67b78e5c4c8b1351961de0da6  psjf.all
+0d9f1d3a30869d4e5b64f521f9ac7910  rr.all
+23f74dc6923b9601d2d54bbe0287278b  sjf.all
