@@ -1,0 +1,17 @@
+6. The total is incorrect but the size of the files are correct.
+The total is incorrect because the child and the parent are
+not using the same memory, the child is using a copy of a
+stack.
+
+7. If the parent waited the results would still be the same.
+
+8. All the values are correct for the pthread.
+
+9. You only print out one of the file sizes because the thread
+was not linked back to the main thread to print out the first
+file size or add the first size.
+
+10. The results are back to normal
+
+12. The program did not compile because it was not compiled with
+the thread library.

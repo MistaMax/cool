@@ -1,0 +1,9 @@
+6. count should be 1000 and it was
+7. ran the same
+8. still did run and I still got 1000 as the resultant 
+because the count is static and is shared amongst all the threads.
+9. does not work because it is saving the value into a local var
+to the thread and not to a static variable.
+10. works again with the mutex calls because it stops all the 
+other threads from running while working on the same variable.
+11. 
