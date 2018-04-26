@@ -2,6 +2,7 @@
 static int count = 0;
 static pthread_mutex_t countlock = PTHREAD_MUTEX_INITIALIZER;
 
+
 int increment(void)
 { /* increment the counter */
     /*int error;
