@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include "philosopher.h"
 
 void philosopherThread(void *pVoid);
 void creatPhilosophers(int nthreads);
@@ -33,26 +32,26 @@ int main(int argc, char *argv[])
 
 void philosopherThread(void *pVoid)
 {
-    printf("This is philosopher %li\n", ((thread_info_t) pVoid)->n);
+    printf("This is philosopher %i\n", *((int *)pVoid));
 
-    printf("Philosopher %i: Thinking\n", ((thread_info_t) pVoid)->n);
+    printf("Philosopher %i: Thinking\n", *((int *)pVoid));
     thinking();
 
     pthread_mutex_lock(&syncro);
 
-    while(nextIndex!=((thread_info_t) pVoid)->n)
+    while(nextIndex!=*((int *)pVoid))
     {
         pthread_cond_wait(&cond,&syncro);
         pthread_cond_signal(&cond);
     }
 
-    pickUpChopsticks(((thread_info_t) pVoid)->n);
+    pickUpChopsticks(*((int *)pVoid));
 
-    printf("Philosopher %i: Eating\n", ((thread_info_t) pVoid)->n);
+    printf("Philosopher %i: Eating\n", *((int *)pVoid));
     eating();
 
-    printf("Philosopher %i: Done Eating\n", ((thread_info_t) pVoid)->n);
-    putDownChopsticks(((thread_info_t) pVoid)->n);
+    printf("Philosopher %i: Done Eating\n", *((int *)pVoid));
+    putDownChopsticks(*((int *)pVoid));
 
     nextIndex++;
     pthread_cond_signal(&cond);
@@ -75,12 +74,12 @@ void creatPhilosophers(int nthreads)
         pthread_mutex_init(chopsticks+i,NULL);
     
     for (i = 0; i < nthreads; i++){
-        thread_info_t info = newThreadInfo();
-        info->n = i;
-        if (pthread_create(tids + i, NULL, philosopherThread, info))
+        int *n = (int *)malloc(sizeof(int));
+        *n = i;
+        if (pthread_create(tids + i, NULL, philosopherThread, (void *)n))
         {
             printf("Error creating thread %i\n", i + 1);
-            return 1;
+            exit(1);
         }
     }
 
@@ -88,7 +87,7 @@ void creatPhilosophers(int nthreads)
         if (pthread_join(tids[i], NULL))
         {
             fprintf(stderr, "Error joining thread %i\n", i + 1);
-            return 1;
+            exit(1);
         }
     free(tids);
 }

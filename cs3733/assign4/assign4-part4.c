@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include "philosopher.h"
 
 void philosopherThread(void *pVoid);
 void creatPhilosophers(int nthreads);
@@ -12,6 +11,7 @@ void eating();
 void putDownChopsticks(int threadIndex);
 
 static pthread_mutex_t *chopsticks;
+static pthread_cond_t *cond;
 int threadCount;
 
 int main(int argc, char *argv[])
@@ -29,14 +29,14 @@ int main(int argc, char *argv[])
 }
 void philosopherThread(void *pVoid)
 {
-    printf("This is philosopher %li\n", ((thread_info_t) pVoid)->n);
-    printf("Philosopher %i: Thinking\n", ((thread_info_t) pVoid)->n);
+    printf("This is philosopher %i\n", *((int *)pVoid));
+    printf("Philosopher %i: Thinking\n", *((int *)pVoid));
     thinking();
-    pickUpChopsticks(((thread_info_t) pVoid)->n);
-    printf("Philosopher %i: Eating\n", ((thread_info_t) pVoid)->n);
+    pickUpChopsticks(*((int *)pVoid));
+    printf("Philosopher %i: Eating\n", *((int *)pVoid));
     eating();
-    printf("Philosopher %i: Done Eating\n", ((thread_info_t) pVoid)->n);
-    putDownChopsticks(((thread_info_t) pVoid)->n);
+    printf("Philosopher %i: Done Eating\n", *((int *)pVoid));
+    putDownChopsticks(*((int *)pVoid));
     free(pVoid);
     return NULL;
 }
@@ -46,18 +46,23 @@ void creatPhilosophers(int nthreads)
     pthread_t *tids;
     tids = (pthread_t *)malloc(nthreads * sizeof(pthread_t *));
     chopsticks = (pthread_mutex_t *)malloc(nthreads * sizeof(pthread_mutex_t));
+    cond = (pthread_cond_t *)malloc(nthreads * sizeof(pthread_cond_t));
     threadCount = nthreads;
+    
     int i;
     for(i=0;i<nthreads;i++)
         pthread_mutex_init(chopsticks+i,NULL);
     
+    for(i=0;i<nthreads;i++)
+        pthread_cond_init(cond+i,NULL);
+    
     for (i = 0; i < nthreads; i++){
-        thread_info_t info = newThreadInfo();
-        info->n = i;
-        if (pthread_create(tids + i, NULL, philosopherThread, info))
+        int *n = (int *)malloc(sizeof(int));
+        *n = i;
+        if (pthread_create(tids + i, NULL, philosopherThread, (void *)n))
         {
             printf("Error creating thread %i\n", i + 1);
-            return 1;
+            exit(1);
         }
     }
 
@@ -65,7 +70,7 @@ void creatPhilosophers(int nthreads)
         if (pthread_join(tids[i], NULL))
         {
             fprintf(stderr, "Error joining thread %i\n", i + 1);
-            return 1;
+            exit(1);
         }
     free(tids);
 }

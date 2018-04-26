@@ -1,8 +1,8 @@
 CFLAGS = gcc -g
-OBJ = assign4p1.o assign4p2.o assign4p3.o assign4p4.o philosopher.o
+OBJ = assign4-part1.o assign4-part2.o assign4-part3.o assign4-part4.o
 LIBTHREAD = -lpthread
 
-all: assign4p1 assign4p2 assign4p3 assign4p4
+all: assign4-part1 assign4-part2 assign4-part3 assign4-part4
 # Automatic substitution using suffix rules to
 # make .o files from either .c or .cpp files
 %.o: %.c
@@ -10,17 +10,17 @@ all: assign4p1 assign4p2 assign4p3 assign4p4
 
 # Build xdir based on the required .o files
 
-assign4p1: assign4p1.o philosopher.o
-	${CFLAGS} -o assign4p1 assign4p1.o philosopher.o $(LIBTHREAD)
+assign4-part1: assign4-part1.o 
+	${CFLAGS} -o assign4-part1 assign4-part1.o  $(LIBTHREAD)
 
-assign4p2: assign4p2.o philosopher.o
-	${CFLAGS} -o assign4p2 assign4p2.o philosopher.o $(LIBTHREAD)
+assign4-part2: assign4-part2.o 
+	${CFLAGS} -o assign4-part2 assign4-part2.o  $(LIBTHREAD)
 
-assign4p3: assign4p3.o philosopher.o
-	${CFLAGS} -o assign4p3 assign4p3.o philosopher.o $(LIBTHREAD)
+assign4-part3: assign4-part3.o 
+	${CFLAGS} -o assign4-part3 assign4-part3.o  $(LIBTHREAD)
 
-assign4p4: assign4p4.o philosopher.o
-	${CFLAGS} -o assign4p4 assign4p4.o philosopher.o $(LIBTHREAD)
+assign4-part4: assign4-part4.o 
+	${CFLAGS} -o assign4-part4 assign4-part4.o  $(LIBTHREAD)
 
 clean:
 	rm ${OBJ}

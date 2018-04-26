@@ -1,0 +1,205 @@
+Coding:
+
+1. I joined all the threads using pthread_join() in a for loop.
+Output:
+ max@max-laptop  ~/git/schoolCode/cs3733/assign4   master ± ./assign4-part1 5
+Max Crookshanks
+Assignment 4: # of threads = 5
+This is philosopher 0
+This is philosopher 2
+This is philosopher 3
+This is philosopher 1
+This is philosopher 4
+ max@max-laptop  ~/git/schoolCode/cs3733/assign4   master ± ./assign4-part1 20
+Max Crookshanks
+Assignment 4: # of threads = 20
+This is philosopher 0
+This is philosopher 1
+This is philosopher 4
+This is philosopher 2
+This is philosopher 6
+This is philosopher 5
+This is philosopher 8
+This is philosopher 9
+This is philosopher 3
+This is philosopher 11
+This is philosopher 10
+This is philosopher 12
+This is philosopher 14
+This is philosopher 15
+This is philosopher 16
+This is philosopher 17
+This is philosopher 13
+This is philosopher 19
+This is philosopher 18
+This is philosopher 7
+
+
+2. I encountered 0 deadlocks. 
+Output:
+ max@max-laptop  ~/git/schoolCode/cs3733/assign4   master ± ./assign4-part2 5
+Max Crookshanks
+Assignment 4: # of threads = 5
+This is philosopher 0
+Philosopher 0: Thinking
+This is philosopher 2
+Philosopher 2: Thinking
+This is philosopher 3
+Philosopher 3: Thinking
+This is philosopher 4
+Philosopher 4: Thinking
+Philosopher 2: Eating
+Philosopher 0: Eating
+Philosopher 0: Done Eating
+Philosopher 4: Eating
+Philosopher 2: Done Eating
+Philosopher 4: Done Eating
+This is philosopher 1
+Philosopher 1: Thinking
+Philosopher 3: Eating
+Philosopher 1: Eating
+Philosopher 3: Done Eating
+Philosopher 1: Done Eating
+ max@max-laptop  ~/git/schoolCode/cs3733/assign4   master ± ./assign4-part2 20
+Max Crookshanks
+Assignment 4: # of threads = 20
+This is philosopher 0
+Philosopher 0: Thinking
+This is philosopher 1
+Philosopher 1: Thinking
+This is philosopher 2
+Philosopher 2: Thinking
+This is philosopher 4
+Philosopher 4: Thinking
+This is philosopher 5
+Philosopher 5: Thinking
+Philosopher 1: Eating
+This is philosopher 3
+This is philosopher 6
+Philosopher 4: Eating
+Philosopher 3: Thinking
+This is philosopher 9
+Philosopher 9: Thinking
+This is philosopher 8
+This is philosopher 10
+Philosopher 10: Thinking
+This is philosopher 7
+Philosopher 7: Thinking
+Philosopher 6: Thinking
+Philosopher 4: Done Eating
+Philosopher 9: Eating
+Philosopher 8: Thinking
+This is philosopher 11
+Philosopher 11: Thinking
+Philosopher 5: Eating
+This is philosopher 12
+Philosopher 3: Eating
+This is philosopher 15
+Philosopher 15: Thinking
+Philosopher 1: Done Eating
+Philosopher 12: Thinking
+This is philosopher 17
+Philosopher 17: Thinking
+This is philosopher 18
+Philosopher 18: Thinking
+Philosopher 0: Eating
+This is philosopher 13
+Philosopher 13: Thinking
+This is philosopher 19
+Philosopher 19: Thinking
+This is philosopher 14
+Philosopher 14: Thinking
+This is philosopher 16
+Philosopher 16: Thinking
+Philosopher 12: Eating
+Philosopher 16: Eating
+Philosopher 14: Eating
+Philosopher 9: Done Eating
+Philosopher 8: Eating
+Philosopher 8: Done Eating
+Philosopher 7: Eating
+Philosopher 5: Done Eating
+Philosopher 0: Done Eating
+Philosopher 19: Eating
+Philosopher 12: Done Eating
+Philosopher 16: Done Eating
+Philosopher 11: Eating
+Philosopher 14: Done Eating
+Philosopher 11: Done Eating
+Philosopher 13: Eating
+Philosopher 15: Eating
+Philosopher 10: Eating
+Philosopher 7: Done Eating
+Philosopher 6: Eating
+Philosopher 13: Done Eating
+Philosopher 6: Done Eating
+Philosopher 19: Done Eating
+Philosopher 18: Eating
+Philosopher 15: Done Eating
+Philosopher 10: Done Eating
+Philosopher 18: Done Eating
+Philosopher 3: Done Eating
+Philosopher 17: Eating
+Philosopher 2: Eating
+Philosopher 2: Done Eating
+Philosopher 17: Done Eating
+
+3. I designed my single conditional variable to work along with the next index and the syncro mutex to get all of these philosophers to eat in order.  I mutex
+locked syncro after each philosopher was done thinking.  I then proceeded to create a while loop that tests to see if the nextIndex is the index of the thread.
+inside the while loop i had a wait function on a conditional and a signal conditional to temporarily release the lock on each thread and test the index.
+as soon as the next index is equal to the thread index, it will proceed to pickup the chopsticks, eat, then place them down.  Then I incremented the nextIndex,
+signaled the conditional variable, and then I unlocked the syncro mutex.  This would continue until all the threads are completed.
+
+pthread_mutex_lock(&syncro);
+
+    while(nextIndex!=*((int *)pVoid))
+    {
+        pthread_cond_wait(&cond,&syncro);
+        pthread_cond_signal(&cond);
+    }
+
+    pickUpChopsticks(*((int *)pVoid));
+
+    printf("Philosopher %i: Eating\n", *((int *)pVoid));
+    eating();
+
+    printf("Philosopher %i: Done Eating\n", *((int *)pVoid));
+    putDownChopsticks(*((int *)pVoid));
+
+    nextIndex++;
+    pthread_cond_signal(&cond);
+    pthread_mutex_unlock(&syncro);
+
+
+Output:
+ max@max-laptop  ~/git/schoolCode/cs3733/assign4   master ± ./assign4-part3 5
+Max Crookshanks
+Assignment 4: # of threads = 5
+This is philosopher 0
+Philosopher 0: Thinking
+This is philosopher 3
+Philosopher 3: Thinking
+This is philosopher 1
+Philosopher 1: Thinking
+This is philosopher 2
+Philosopher 2: Thinking
+This is philosopher 4
+Philosopher 4: Thinking
+Philosopher 0: Eating
+Philosopher 0: Done Eating
+Philosopher 1: Eating
+Philosopher 1: Done Eating
+Philosopher 2: Eating
+Philosopher 2: Done Eating
+Philosopher 3: Eating
+Philosopher 3: Done Eating
+Philosopher 4: Eating
+Philosopher 4: Done Eating
+
+
+Summary:
+1. I collaborated with no one.
+2. Everything I did is correct.
+3. Everything is working as intended.
+4. This assignment was fun.
+

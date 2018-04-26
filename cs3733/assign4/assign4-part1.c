@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include "philosopher.h"
 
 void philosopherThread(void *pVoid);
 void creatPhilosophers(int nthreads);
@@ -22,7 +21,7 @@ int main(int argc, char *argv[])
 
 void philosopherThread(void *pVoid)
 {
-    printf("This is philosopher %li\n", ((thread_info_t) pVoid)->n);
+    printf("This is philosopher %i\n", *((int *)pVoid));
     free(pVoid);
     return NULL;
 }
@@ -33,12 +32,12 @@ void creatPhilosophers(int nthreads)
     tids = (pthread_t *)malloc(nthreads * sizeof(pthread_t *));
     int i;
     for (i = 0; i < nthreads; i++){
-        thread_info_t info = newThreadInfo();
-        info->n = i;
-        if (pthread_create(tids + i, NULL, philosopherThread, info))
+        int *n = (int *)malloc(sizeof(int));
+        *n = i;
+        if (pthread_create(tids + i, NULL, philosopherThread, (void *)n))
         {
             printf("Error creating thread %i\n", i + 1);
-            return 1;
+            exit(1);
         }
     }
 
@@ -46,7 +45,7 @@ void creatPhilosophers(int nthreads)
         if (pthread_join(tids[i], NULL))
         {
             fprintf(stderr, "Error joining thread %i\n", i + 1);
-            return 1;
+            exit(1);
         }
     free(tids);
 }
