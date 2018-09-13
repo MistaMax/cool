@@ -24,13 +24,11 @@
 *
  >> INSERT MOVIE TITANS001,Remember the Titans,DRAMA,PG,120
             Hash RBN is 5
-Inserting: szMovieId null TITANS001
  >> PRINTALL MOVIE movie.dat
     Primary=19, HighOverflow=19, RecSize=72
      5 Next=0       TITANS001 Remember the Titans             DRAMA       PG    120 
  >> INSERT MOVIE TRADIN001,Trading Places,COMEDY,R,118
             Hash RBN is 7
-Inserting: loc not found TRADIN001
  >> PRINTALL MOVIE movie.dat
     Primary=19, HighOverflow=19, RecSize=72
      5 Next=0       TITANS001 Remember the Titans             DRAMA       PG    120 
@@ -55,10 +53,8 @@ Inserting: loc not found TRADIN001
 *
  >> INSERT MOVIE HARSAL001,When Harry Met Sally,ROMCOMEDY,R,96
             Hash RBN is 19
-Inserting: loc not found HARSAL001
  >> INSERT MOVIE HUNGER001,Hunger Games,SCIFI,PG13,142
             Hash RBN is 14
-Inserting: szMovieId null HUNGER001
  >> PRINTALL MOVIE movie.dat
     Primary=19, HighOverflow=19, RecSize=72
      5 Next=0       TITANS001 Remember the Titans             DRAMA       PG    120 
@@ -70,7 +66,7 @@ Inserting: szMovieId null HUNGER001
 * 
  >> INSERT MOVIE HUNGER001,Hunger Games,SCIFIADV,XXX,333
             Hash RBN is 14
-Id is equal: HUNGER001 to HUNGER001    **** ERROR: record already exists
+    **** ERROR: record already exists
  >> READ MOVIE HUNGER001
             Hash RBN is 14
     .. Next=0       HUNGER001 Hunger Games                    SCIFI       PG13  142 
@@ -79,25 +75,19 @@ Id is equal: HUNGER001 to HUNGER001    **** ERROR: record already exists
 *
  >> INSERT MOVIE LASTSF001,Last Starfighter,SCIFI,PG,108
             Hash RBN is 18
-Inserting: szMovieId null LASTSF001
  >> INSERT MOVIE SANDLOT01,The Sandlot,COMEDY,PG,101
             Hash RBN is 4
-Inserting: szMovieId null SANDLOT01
  >> INSERT MOVIE FRCUMP001,Forrest Gump,COMDEY,PG13,142
             Hash RBN is 18
     **** ERROR: Synonym exists at the specified location
  >> INSERT MOVIE SWISFR001,Swiss Family Robinson,ADVENTURE,G,126
             Hash RBN is 16
-Inserting: szMovieId null SWISFR001
  >> INSERT MOVIE KHEROE001,Kelly's Heroes,ACTION,PG,149
             Hash RBN is 3
-Inserting: szMovieId null KHEROE001
  >> INSERT MOVIE ANIMAL001,Animal House,COMEDY,R,109
             Hash RBN is 10
-Inserting: szMovieId null ANIMAL001
  >> INSERT MOVIE EXTERR001,E.T. the Extra-Terrestrial,SCIFI,PG,121
             Hash RBN is 12
-Inserting: szMovieId null EXTERR001
  >> INSERT MOVIE STWARS001,Star Wars: A new Hope,SCIFI,PG,125
             Hash RBN is 3
     **** ERROR: Synonym exists at the specified location
@@ -109,7 +99,6 @@ Inserting: szMovieId null EXTERR001
     **** ERROR: Synonym exists at the specified location
  >> INSERT MOVIE IAWLIF001,It's a Wonderful Life,DRAMA,PG,135
             Hash RBN is 1
-Inserting: szMovieId null IAWLIF001
  >> INSERT MOVIE VACAYY001,National Lampoon's Vacation,COMEDY,R,99
             Hash RBN is 18
     **** ERROR: Synonym exists at the specified location
@@ -118,7 +107,6 @@ Inserting: szMovieId null IAWLIF001
     **** ERROR: Synonym exists at the specified location
  >> INSERT MOVIE VACAYC001,Christmas Vacation,COMEDY,PG13,97
             Hash RBN is 15
-Inserting: szMovieId null VACAYC001
  >> INSERT MOVIE ANCHOR001,Anchorman: Ron Burgundy,COMEDY,PG13,104
             Hash RBN is 19
     **** ERROR: Synonym exists at the specified location
@@ -127,7 +115,6 @@ Inserting: szMovieId null VACAYC001
     **** ERROR: Synonym exists at the specified location
  >> INSERT MOVIE GALAXY001,Galaxy Quest,COMEDY,PG,102
             Hash RBN is 11
-Inserting: szMovieId null GALAXY001
  >> INSERT MOVIE BDOCKS001,The Boondock Saints,DRAMA,R,110
             Hash RBN is 14
     **** ERROR: Synonym exists at the specified location
