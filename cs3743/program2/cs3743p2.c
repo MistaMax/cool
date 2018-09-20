@@ -113,6 +113,7 @@ int movieInsert(HashFile *pHashFile, Movie *pMovie)
         return RC_REC_EXISTS;
     }
     //returns RC_SYNONYM if there is already a file at that hash location that is not the same movie entry
+    iRBN+=pHashFile->hashHeader.iNumPrimary;
     int count = 0;
     while (pCursor->iNextChain)
     {
@@ -131,6 +132,7 @@ int movieInsert(HashFile *pHashFile, Movie *pMovie)
     pCursor->iNextChain = iRBN;
     movieUpdate(pHashFile, pCursor);
     free(pCursor);
+    pMovie->iNextChain = 0;
     writeRec(pHashFile, iRBN, pMovie);
     return RC_OK;
 }
@@ -147,19 +149,40 @@ int movieRead(HashFile *pHashFile, Movie *pMovie, int *piRBN)
     if (strcmp(pCursor->szMovieId, pMovie->szMovieId) == 0)
     {
         memcpy(pMovie, pCursor, sizeof(Movie));
+        memcpy(piRBN,&iRBN,sizeof(int));
         free(pCursor);
         return RC_OK;
     }
-    else
+    while (pCursor->iNextChain)
     {
-        free(pCursor);
-        return RC_REC_NOT_FOUND;
+        iRBN = pCursor->iNextChain;
+        readRec(pHashFile,pCursor->iNextChain,pCursor);
+        if (strcmp(pCursor->szMovieId, pMovie->szMovieId) == 0)
+        {
+            memcpy(pMovie, pCursor, sizeof(Movie));
+            memcpy(piRBN,&iRBN,sizeof(int));
+            free(pCursor);
+            return RC_OK;
+        }
     }
+    free(pCursor);
+    return RC_REC_NOT_FOUND;
 }
 
 int movieUpdate(HashFile *pHashFile, Movie *pMovie)
 {
-
+    int *piRBN = (int *)malloc(sizeof(int));
+    Movie *pCursor = (Movie *)malloc(sizeof(Movie));
+    memcpy(pCursor,pMovie,sizeof(Movie));
+    if(movieRead(pHashFile,pCursor,piRBN) == RC_REC_NOT_FOUND)
+    {
+        free(piRBN);
+        free(pCursor);
+        return RC_REC_NOT_FOUND;
+    }
+    free(pCursor);
+    writeRec(pHashFile,*piRBN,pMovie);
+    free(piRBN);
 }
 
 int movieDelete(HashFile *pHashFile, Movie *pMovie)
