@@ -7,6 +7,11 @@
  * Author: Max Crookshanks
  * Purpose: Create a data file containing certain record entries for movies
  *********************************************************************************************/
+void headerUpdate(HashFile *pHashFile)
+{
+    fseek(pHashFile->pFile, 0, SEEK_SET);
+    fwrite(&(pHashFile->hashHeader), sizeof(HashHeader), 1L, pHashFile->pFile);
+}
 /*hashCreate
 This creates a hash header file with the designated filename, and using the current hash header.
 This returns a code to ensure everything went fine or if the file already exists
@@ -112,12 +117,9 @@ int movieInsert(HashFile *pHashFile, Movie *pMovie)
         free(pCursor);
         return RC_REC_EXISTS;
     }
-    //returns RC_SYNONYM if there is already a file at that hash location that is not the same movie entry
-    iRBN+=pHashFile->hashHeader.iNumPrimary;
-    int count = 0;
+
     while (pCursor->iNextChain)
     {
-        count++;
         if (readRec(pHashFile, pCursor->iNextChain, pCursor) == RC_LOC_NOT_FOUND)
             break;
         else if (pCursor->szMovieId[0] == '\0')
@@ -128,9 +130,12 @@ int movieInsert(HashFile *pHashFile, Movie *pMovie)
             return RC_REC_EXISTS;
         }
     }
-    iRBN += count * (pHashFile->hashHeader.iNumPrimary);
+     
+    pHashFile->hashHeader.iHighOverflowRBN++;
+    headerUpdate(pHashFile);
+    iRBN = pHashFile->hashHeader.iHighOverflowRBN;
     pCursor->iNextChain = iRBN;
-    movieUpdate(pHashFile, pCursor);
+    movieUpdate(pHashFile,pCursor);
     free(pCursor);
     pMovie->iNextChain = 0;
     writeRec(pHashFile, iRBN, pMovie);
