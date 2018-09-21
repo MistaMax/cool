@@ -10,7 +10,7 @@
 void headerUpdate(HashFile *pHashFile)
 {
     fseek(pHashFile->pFile, 0, SEEK_SET);
-    fwrite(&(pHashFile->hashHeader), sizeof(HashHeader), 1L, pHashFile->pFile);
+    //fwrite(&(pHashFile->hashHeader), sizeof(HashHeader), 1, pHashFile->pFile);
 }
 /*hashCreate
 This creates a hash header file with the designated filename, and using the current hash header.
@@ -101,45 +101,55 @@ int movieInsert(HashFile *pHashFile, Movie *pMovie)
     if (readRec(pHashFile, iRBN, pCursor) == RC_LOC_NOT_FOUND)
     {
         pMovie->iNextChain = 0;
-        writeRec(pHashFile, iRBN, pMovie);
         free(pCursor);
-        return RC_OK;
+        return writeRec(pHashFile, iRBN, pMovie);
     }
     else if (pCursor->szMovieId[0] == '\0')
     {
-        pMovie->iNextChain = 0;
-        writeRec(pHashFile, iRBN, pMovie);
+        if(!(pMovie->iNextChain > pHashFile->hashHeader.iNumPrimary && pMovie->iNextChain < pHashFile->hashHeader.iNumPrimary))
+        {
+            pMovie->iNextChain = 0;
+        }
         free(pCursor);
-        return RC_OK;
+        return writeRec(pHashFile, iRBN, pMovie);
     }
     else if (strcmp(pCursor->szMovieId, pMovie->szMovieId) == 0) //if there is already the same movie at that location, return RC_REC_EXISTS
     {
         free(pCursor);
         return RC_REC_EXISTS;
     }
-
+    int iCursRBN = iRBN;
     while (pCursor->iNextChain)
     {
+        iCursRBN = pCursor->iNextChain;
         if (readRec(pHashFile, pCursor->iNextChain, pCursor) == RC_LOC_NOT_FOUND)
             break;
         else if (pCursor->szMovieId[0] == '\0')
-            break;
+        {
+            pHashFile->hashHeader.iHighOverflowRBN++;
+            headerUpdate(pHashFile);
+            iRBN = pHashFile->hashHeader.iHighOverflowRBN;
+            pCursor->iNextChain = iRBN;
+            movieUpdate(pHashFile, pCursor);
+            free(pCursor);
+            return writeRec(pHashFile, iRBN, pMovie);
+        }
         else if (strcmp(pCursor->szMovieId, pMovie->szMovieId) == 0) //if there is already the same movie at that location, return RC_REC_EXISTS
         {
             free(pCursor);
             return RC_REC_EXISTS;
         }
     }
-     
+
     pHashFile->hashHeader.iHighOverflowRBN++;
-    headerUpdate(pHashFile);
     iRBN = pHashFile->hashHeader.iHighOverflowRBN;
     pCursor->iNextChain = iRBN;
-    movieUpdate(pHashFile,pCursor);
+    writeRec(pHashFile,iCursRBN,pCursor);
+    //movieUpdate(pHashFile, pCursor);
     free(pCursor);
     pMovie->iNextChain = 0;
-    writeRec(pHashFile, iRBN, pMovie);
-    return RC_OK;
+    headerUpdate(pHashFile);
+    return writeRec(pHashFile, iRBN, pMovie);
 }
 /**
  * movieRead
@@ -154,18 +164,19 @@ int movieRead(HashFile *pHashFile, Movie *pMovie, int *piRBN)
     if (strcmp(pCursor->szMovieId, pMovie->szMovieId) == 0)
     {
         memcpy(pMovie, pCursor, sizeof(Movie));
-        memcpy(piRBN,&iRBN,sizeof(int));
+        memcpy(piRBN, &iRBN, sizeof(int));
         free(pCursor);
         return RC_OK;
     }
+
     while (pCursor->iNextChain)
     {
         iRBN = pCursor->iNextChain;
-        readRec(pHashFile,pCursor->iNextChain,pCursor);
+        readRec(pHashFile, pCursor->iNextChain, pCursor);
         if (strcmp(pCursor->szMovieId, pMovie->szMovieId) == 0)
         {
             memcpy(pMovie, pCursor, sizeof(Movie));
-            memcpy(piRBN,&iRBN,sizeof(int));
+            memcpy(piRBN, &iRBN, sizeof(int));
             free(pCursor);
             return RC_OK;
         }
@@ -178,19 +189,20 @@ int movieUpdate(HashFile *pHashFile, Movie *pMovie)
 {
     int *piRBN = (int *)malloc(sizeof(int));
     Movie *pCursor = (Movie *)malloc(sizeof(Movie));
-    memcpy(pCursor,pMovie,sizeof(Movie));
-    if(movieRead(pHashFile,pCursor,piRBN) == RC_REC_NOT_FOUND)
+    memcpy(pCursor, pMovie, sizeof(Movie));
+    if (movieRead(pHashFile, pCursor, piRBN) == RC_REC_NOT_FOUND)
     {
         free(piRBN);
         free(pCursor);
         return RC_REC_NOT_FOUND;
     }
+    pMovie->iNextChain = pCursor->iNextChain;
+    writeRec(pHashFile, *piRBN, pMovie);
     free(pCursor);
-    writeRec(pHashFile,*piRBN,pMovie);
     free(piRBN);
+    return RC_OK;
 }
 
 int movieDelete(HashFile *pHashFile, Movie *pMovie)
 {
-    return RC_NOT_IMPLEMENTED;
 }
