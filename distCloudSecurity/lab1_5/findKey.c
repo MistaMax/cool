@@ -7,6 +7,7 @@
 #define MAX_INPUT_SIZE 100
 #define MAX_CIPHERED_TEXT_LENGTH 100
 
+int handleErrors();
 int encryptText(char *text, int textLength, unsigned char *key, unsigned char *iv, char *output);
 void addSpacesToK(unsigned char *k);
 
@@ -106,4 +107,8 @@ int encryptText(char *text, int textLength, unsigned char *key, unsigned char *i
     EVP_CIPHER_CTX_free(ctx);
 
     return ciphertext_len;
+}
+
+int handleErrors(){
+    return 1;
 }
