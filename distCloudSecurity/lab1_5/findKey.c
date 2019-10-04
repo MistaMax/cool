@@ -33,7 +33,7 @@ int main(int argc, char *argv[]){
     }
     //loop to pull the dictionary terms and test them as the key
     char inputBuffer[MAX_INPUT_SIZE];
-    int keyfound = 0;
+    int keyFound = 0;
     char *output;
     while(fgets(inputBuffer, MAX_INPUT_SIZE, dictionary) != NULL){
         //read in the input buffer from the dictionary to k
@@ -43,7 +43,7 @@ int main(int argc, char *argv[]){
             k[i] = inputBuffer[i];
         }
         //encrypt text file
-        encryptText(inText,textLength,k,iv,output)
+        encryptText(inText,textLength,k,iv,output);
         //check to see if the output matches the ciphertext
         if(strcmp(output, cipherText) == 0){
             keyFound = 1;
